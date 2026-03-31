@@ -81,17 +81,6 @@
           <div class="field">
             <input
               type="text"
-              id="AddressAddress2New"
-              name="address[address2]"
-              value="{{ form.address2 }}"
-              autocomplete="address-line2"
-              placeholder="{{ 'customer.addresses.address2' | t }}"
-            >
-            <label for="AddressAddress2New">{{ 'customer.addresses.address2' | t }}</label>
-          </div>
-          <div class="field">
-            <input
-              type="text"
               id="AddressCityNew"
               name="address[city]"
               value="{{ form.city }}"
@@ -236,17 +225,6 @@
                   placeholder="{{ 'customer.addresses.address1' | t }}"
                 >
                 <label for="AddressAddress1_{{ form.id }}">{{ 'customer.addresses.address1' | t }}</label>
-              </div>
-              <div class="field">
-                <input
-                  type="text"
-                  id="AddressAddress2_{{ form.id }}"
-                  name="address[address2]"
-                  value="{{ form.address2 }}"
-                  autocomplete="address-line2"
-                  placeholder="{{ 'customer.addresses.address2' | t }}"
-                >
-                <label for="AddressAddress2_{{ form.id }}">{{ 'customer.addresses.address2' | t }}</label>
               </div>
               <div class="field">
                 <input
