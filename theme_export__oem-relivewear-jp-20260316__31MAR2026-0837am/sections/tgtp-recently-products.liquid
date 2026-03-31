@@ -1,0 +1,566 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'tgtp-recently-products-flex.css' | asset_url | stylesheet_tag }}
+{{ 'tgtp-recently-products.css' | asset_url | stylesheet_tag }}
+
+
+<script>
+  // First Block
+  function setRecentlyViewedPdp() {
+    const pdpData = {
+      productId: "{{ product.id }}",
+      productTitle: "{{ product.title | escape }}",
+      productPrice: "{{ product.price | money }}",
+      productImg: "{{ product.featured_image | img_url: '1024x' }}",
+      productImgRatio: {{ product.featured_image.aspect_ratio | default: 1 }},
+      productUrl: "{{ product.url }}",
+      available: {{ product.available | json }},
+      tags: {{ product.tags | json }},
+      isHiddenPriceUntilSelling: "{{ product.metafields.custom.hidden_price_until_selling }}",
+      startDate: "{{ product.metafields.datetime.start }}"
+    };
+
+    // Check if productTitle is empty and return if true
+    if (!pdpData.productTitle) {
+      return;
+    }
+
+    // Init Empty Array to push data
+    const productArr = [];
+    let jsonResp, jsonRespArr, jsonRespArrStr;
+    const numberOfProduct = {{ section.settings.display_quantity }}; //表示商品数の設定
+    productArr.push(pdpData);
+    const currPdpTitle = pdpData.productTitle;
+    const pdpDataString = JSON.stringify(productArr);
+    const localData = localStorage.getItem('recently_viewed');
+
+    if (localData == null) {
+      localStorage.setItem('recently_viewed', pdpDataString);
+    } else if (localData != null) {
+      const oldPdpData = localStorage.getItem('recently_viewed');
+      const countPdpData = (oldPdpData.match(/productTitle/g) || []).length;
+      const reVisitPdp = oldPdpData.includes(currPdpTitle);
+      if (countPdpData < numberOfProduct && !reVisitPdp) {
+        jsonResp = JSON.parse(oldPdpData);
+        jsonRespArr = productArr.concat(jsonResp);
+        jsonRespArrStr = JSON.stringify(jsonRespArr);
+        localStorage.setItem('recently_viewed', jsonRespArrStr);
+      } else if (countPdpData >= numberOfProduct && !reVisitPdp) {
+        jsonResp = JSON.parse(oldPdpData);
+        jsonResp.pop();
+        jsonRespArr = productArr.concat(jsonResp);
+        jsonRespArrStr = JSON.stringify(jsonRespArr);
+        localStorage.setItem('recently_viewed', jsonRespArrStr);
+      }
+    }
+  }
+
+  setRecentlyViewedPdp();
+</script>
+
+<div class="tgtp-recently-products section-{{ section.id }}-padding">
+  <div class="{% if section.settings.page_width %}page-width{% endif %}">
+    {% render 'tgtp-section__heading' %}
+  </div>
+
+  <div class="tgtp-recently-products__slider">
+    <div class="tgtp-recently-products__container product-grid-container scroll-trigger animate--slide-in {% if section.settings.page_width %}page-width{% endif %}"" data-cascade="">
+      <div class="loading-overlay gradient"></div>
+      <ul class="tgtp-recently-products__wrapper grid product-grid grid--{{ section.settings.row_quantity_mobile }}-col-tablet-down grid--{{ section.settings.row_quantity }}-col-desktop js-recentPdpBlock"></ul>
+      <p class="no-recent-items" style="display: none;text-align:center;margin:40px 0">{{ 'sections.recently_checked.empty_text' | t }}</p>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .tgtp-recently-products {
+    --tgtp-row-quantity: {{ section.settings.row_quantity }};
+    --tgtp-row-quantity-mobile: {{ section.settings.row_quantity_mobile }};
+
+    --tgtp-grid-desktop-spacing: {{ section.settings.column_gap }}px;
+
+    --tgtp-grid-mobile-spacing: {{ section.settings.column_gap_sp }}px;
+  }
+{% endstyle %}
+
+{% style %}
+  .tgtp-recently-products {
+    --tgtp-width: 100vw;
+    --tgtp-base-width: 100vw;
+    --tgtp-negative-bias: 2vw;
+    --tgtp-margin: 50px;
+  }
+  @media screen and (min-width: 1200px) {
+    .tgtp-recently-products {
+      --tgtp-width: 1100px;
+      --tgtp-base-width: 1100px;
+      --tgtp-negative-bias: 2%;
+      --tgtp-margin: (100vw - 1100px) / 2;
+    }
+  }
+  @media screen and (min-width: 750px and max-width: 1199px) {
+    .tgtp-recently-products {
+      --tgtp-base-width: calc(100vw - 100px);
+    }
+  }
+  @media screen and (max-width: 749px) {
+    .tgtp-recently-products {
+      --tgtp-margin: 10px;
+    }
+  }
+{% endstyle %}
+
+<script>
+  // Third Block
+  function getRecentPdp() {
+    const pdpData = JSON.parse(localStorage.getItem('recently_viewed'));
+    if (!pdpData || pdpData.length === 0) {
+      document.querySelector('.no-recent-items').style.display = 'block';
+      return;
+    }
+
+    // section.settings の値を取得
+    const rowQuantity = {{ section.settings.row_quantity }};
+    const rowQuantityMobile = {{ section.settings.row_quantity_mobile }};
+
+    // スタイル要素を取得または作成
+    let styleElement = document.getElementById('dynamic-style');
+    if (!styleElement) {
+      styleElement = document.createElement('style');
+      styleElement.id = 'dynamic-style';
+      document.head.appendChild(styleElement);
+    }
+
+    let newStyles = `
+      .tgtp-recently-products {
+        --tgtp-width: 100vw;
+        --tgtp-base-width: 100vw;
+        --tgtp-negative-bias: 2vw;
+        --tgtp-margin: 50px;
+      }
+      @media screen and (min-width: 1200px) {
+        .tgtp-recently-products {
+          --tgtp-width: 1100px;
+          --tgtp-base-width: 1100px;
+          --tgtp-negative-bias: 2%;
+          --tgtp-margin: (100vw - 1100px) / 2;
+        }
+      }
+      @media screen and (min-width: 750px and max-width: 1199px) {
+        .tgtp-recently-products {
+          --tgtp-base-width: calc(100vw - 100px);
+        }
+      }
+      @media screen and (max-width: 749px) {
+        .tgtp-recently-products {
+          --tgtp-margin: 10px;
+        }
+      }
+    `;
+
+    // 条件に応じて --tgtp-margin を 0 に変更
+    if (pdpData.length < rowQuantity) {
+      newStyles += `
+        .tgtp-recently-products {
+          --tgtp-margin: 0px !important;
+        }
+      `;
+    } else if (window.innerWidth <= 749 && pdpData.length < rowQuantityMobile) {
+      newStyles += `
+        @media screen and (max-width: 749px) {
+          .tgtp-recently-products {
+            --tgtp-margin: 0px !important;
+          }
+        }
+      `;
+    }
+
+    // スタイルを更新
+    styleElement.innerHTML = newStyles;
+
+    // アイテム数を CSS 変数 --tgtp-display-quantity に設定
+    document.documentElement.style.setProperty('--tgtp-display-quantity', pdpData.length);
+
+    const recentViewHtml = [];
+    pdpData.forEach(function (item) {
+      if (!item) return;
+
+      const isDisabled = item.tags.some((tag) => tag.includes('_disabled:'));
+      const isAvailable = (item.available && !isDisabled) ?? false;
+      const isComingSoon = item.tags && item.tags.includes('comingsoon');
+      const ratioPercent = item.productImgRatio ? (100 / item.productImgRatio).toFixed(2) : 100;
+
+      const shouldDisplayPrice = item.isHiddenPriceUntilSelling !== "true";
+      const startDate = item.startDate ? new Date(item.startDate) : null;
+      const currentDate = new Date();
+      const isDisplayPrice = (startDate === null || startDate <= currentDate || shouldDisplayPrice);
+      recentViewHtml.push(`
+        <li class="grid__item scroll-trigger animate--slide-in" data-cascade="" style="--animation-order: 0;">
+          <div class="card-wrapper product-card-wrapper underline-links-hover">
+            <div class="card card--standard card--media">
+              <div class="card__inner color-background-2 gradient ratio" style="--ratio-percent: ${ratioPercent}%;">
+                <div class="card__media">
+                  <div class="media media--transparent media--hover-effect">
+                    <img srcset="${item.productImg}" src="${item.productImg}" sizes="(min-width: 1400px) 317px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)" alt="${item.productTitle}" class="motion-reduce" width="1178" height="1578">
+                  </div>
+                </div>
+                <div class="card__content">
+                  <div class="card__information">
+                    <h3 class="card__heading">
+                      <a href="${item.productUrl}" id="StandardCardNoMediaLink-{{ section.id }}" class="full-unstyled-link" aria-labelledby="StandardCardNoMediaLink-{{ section.id }} NoMediaStandardBadge-{{ section.id }}">
+                        ${item.productTitle}
+                      </a>
+                    </h3>
+                  </div>
+                </div>
+                ${!isAvailable ? `
+                  <div class="card__image-overlay">
+                    <div class='card__image-overlay-text'>SOLD OUT</div>
+                  </div>
+                ` : ''}
+                ${isComingSoon ? `
+                  <div class="card__image-overlay">
+                    <div class='card__image-overlay-text'>COMING SOON</div>
+                  </div>
+                ` : ''}
+              </div>
+              <div class="card__content">
+                <div class="card__information">
+                  <h3 class="card__heading h5" id="title-{{ section.id }}">
+                    <a href="${item.productUrl}" id="CardLink-{{ section.id }}" class="full-unstyled-link" aria-labelledby="CardLink-{{ section.id }} Badge-{{ section.id }}">
+                      <span>
+                        ${item.productTitle}
+                      </span>
+                    </a>
+                  </h3>
+                  ${isDisplayPrice ? `
+                    <div class="card-information">
+                      <div class="price">
+                        <div class="price__container" style="padding-bottom:.4em;">
+                          <div class="price__regular">
+                            <span class="price-item price-item--regular">${item.productPrice}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      `);
+    });
+
+    const recentBlock = `${recentViewHtml.join('')}`;
+    const contentBlock = document.querySelectorAll('.js-recentPdpBlock');
+    contentBlock.forEach(element => {
+      element.innerHTML = recentBlock;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', getRecentPdp);
+  window.addEventListener('resize', getRecentPdp);
+</script>
+
+
+{% schema %}
+{
+  "name": "TGTP Recently Viewed",
+  "settings": [
+    {
+      "type": "header",
+      "content": "セクション情報"
+    },
+    {
+      "type": "checkbox",
+      "id": "page_width",
+      "label": "ページ幅に合わせる",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "use_default_padding",
+      "label": "デフォルトの間隔を適用",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "section_upper_padding",
+      "label": "セクション上部 間隔",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_upper_padding_sp",
+      "label": "セクション上部 間隔 スマホ",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_lower_padding",
+      "label": "セクション下部 間隔",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_lower_padding_sp",
+      "label": "セクション下部 間隔 スマホ",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "グリッド左右間隔",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "column_gap_sp",
+      "label": "グリッド左右間隔 スマホ",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "グリッド上下間隔",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "row_gap_sp",
+      "label": "グリッド上下間隔 スマホ",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "タイトル情報"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Recently viewed"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_iscenter",
+      "label": "見出し中央寄せ",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "heading_design",
+      "label": "見出しデザイン",
+      "options": [
+        {
+          "label": "通常",
+          "value": "normal"
+        },
+        {
+          "label": "蛍光ペン",
+          "value": "highlight"
+        },
+        {
+          "label": "ボーダー(中央)",
+          "value": "border_center"
+        },
+        {
+          "label": "ボーダー(見出し下)",
+          "value": "border_bottom"
+        },
+        {
+          "label": "ボーダー(左)",
+          "value": "border_left"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_text",
+      "label": "見出し文字色",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_sub1",
+      "label": "見出しサブ色",
+      "default": "#fff100"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_sub2",
+      "label": "見出しサブ色2",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "text",
+      "id": "heading_color_sub3",
+      "info": "グラデーションを指定したい場合、見出しサブ色1,2の代わりに記載",
+      "label": "見出しサブ色(グラデーション)",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color_textshadow",
+      "label": "見出しテキストシャドウ",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "image_picker",
+      "id": "heading_image",
+      "label": "見出しアイコン"
+    },
+    {
+      "type": "range",
+      "id": "image_picker_size",
+      "label": "見出しアイコン width",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 38,
+      "unit": "px"
+    },
+    {
+      "type": "image_picker",
+      "id": "heading_alternateimage",
+      "label": "見出し差し替え画像"
+    },
+    {
+      "type": "range",
+      "id": "heading_alternateimage_size",
+      "label": "見出し差し替え画像 maxwidth",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "default": 200,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading 文字色",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "range",
+      "id": "title_lower_margin",
+      "label": "タイトル下部 間隔",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_lower_margin_sp",
+      "label": "タイトル下部 間隔 スマホ",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "その他基本スタイル情報"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景色",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "text",
+      "id": "background_color_grad",
+      "info": "背景色(グラデーションを指定したい場合)",
+      "label": "背景色(グラデーション)",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "背景画像"
+    },
+    {
+      "type": "header",
+      "content": "最近見た商品の情報"
+    },
+    {
+      "type": "range",
+      "id": "display_quantity",
+      "label": "商品の表示点数",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 10,
+      "unit": "点"
+    },
+    {
+      "type": "range",
+      "id": "row_quantity",
+      "label": "PCでの表示点数",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "unit": "点"
+    },
+    {
+      "type": "range",
+      "id": "row_quantity_mobile",
+      "label": "モバイルでの表示点数",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "unit": "点"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

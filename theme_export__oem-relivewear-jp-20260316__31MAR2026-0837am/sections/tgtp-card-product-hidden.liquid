@@ -1,0 +1,29 @@
+{%- if product -%}
+  <div class="product-contents" style="display: none;" aria-hidden="true">
+    {% render 'tgtp-card-product',
+        card_product: product,
+        media_aspect_ratio: "square",
+        image_shape: "default",
+        show_secondary_image: true,
+        show_vendor: true,
+        show_type: true,
+        show_rating: false,
+        visible_product_price: true,
+        hidden_tag: true,
+      %}
+  </div>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "TGTP Hidden Goods",
+    "tag": "section",
+    "class": "section",
+    "presets": [
+      {
+        "name": "閲覧履歴用 隠し商品カード"
+      }
+    ]
+  }
+  {% endschema %}
+  

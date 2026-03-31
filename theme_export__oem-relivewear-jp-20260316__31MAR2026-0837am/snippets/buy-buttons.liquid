@@ -1,0 +1,1187 @@
+{% comment %}
+  Renders product buy-buttons.
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} product form id.
+  - section_id: {String} id of section to which this snippet belongs.
+  - show_pickup_availability: {Boolean} for the pickup availability. If true the pickup availability is rendered, false - not rendered (optional).
+
+  Usage:
+  {% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}
+{% endcomment %}
+
+
+{% comment %} 時間制御 {% endcomment %}
+{% comment %} メタフィールドがある場合に比較 {% endcomment %}
+{% assign before_sale = false %}
+{% assign disable_sale = false %}
+{% if shop.metafields.time.now %}
+  {% comment %} 開始日時 {% endcomment %}
+  {% if product.metafields.datetime.start %}
+    {% assign timenow = shop.metafields.time.now | date: '%s' %}
+    {% assign producttime_start = product.metafields.datetime.start | date: '%s' %}
+    {% if timenow < producttime_start %}
+      {% assign before_sale = true %}
+    {% endif %}
+  {% endif %}
+  {% comment %} 終了日時 {% endcomment %}
+  {% if product.metafields.datetime.end %}
+    {% assign timenow = shop.metafields.time.now | date: '%s' %}
+    {% assign producttime = product.metafields.datetime.end | date: '%s' %}
+    {% if timenow >= producttime %}
+      {% assign disable_sale = true %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% comment %} 特殊要件 {% endcomment %}
+{% comment %} 買い合わせ商品、チケット側の設定日と現在時刻を比較。チケットの日程が現在日時のn日前を超えていたら、商品側を購入不可にする {% endcomment %}
+{% comment %}  {% endcomment %}
+{% assign disable_sale_days_ago = false %}
+{% if product.tags contains '_会場引換:商品' %}
+
+  {% comment %} カートに入っているチケットの日時を取得 {% endcomment %}
+  {% assign ticket_date_minus = '' %}
+  {% assign flug = false %}
+  {% assign error = false %}
+  {% assign minus_day = '' %}
+
+  {% for item in cart.items %}
+    {% assign minus_num = '' %}
+    {% if item.product.tags contains '_会場引換:受付枠' or item.product.tags contains '_会場引換:受付枠_単体複数購入可' %}
+      {% if item.product.metafields.ticket.date != blank %}
+        {% if flug == true %}
+          {% comment %} 2つ以上チケットが入っていた場合はNGに {% endcomment %}
+          {% assign error = true %}
+        {% endif %}
+        {% comment %} カートに入っているチケットのn日前を取得 {% endcomment %}
+
+      {% if settings.minus_num != blank %}
+        {% assign minus_num =  settings.minus_num | plus: 0  %}
+      {% endif %}
+
+      {% if settings.minus_num_tags != blank %}
+        {% assign minus_num_tags = settings.minus_num_tags | split: "," %}
+        {% for minus_num_tag in minus_num_tags %}
+          {% assign minus_num_tag_split = minus_num_tag | split: "||" %}
+          {% if item.product.tags contains minus_num_tag_split[0] %}
+            {% assign minus_num = minus_num_tag_split[1] | plus: 0 %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if minus_num != blank  %}
+        {% assign minus_day = minus_num %}
+        {% assign minus_num = minus_num | times: 86400 %}
+        {% assign ticket_date_minus = item.product.metafields.ticket.date | date: '%s' | minus: minus_num %}
+      {% endif %}
+        {% assign flug = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  {% if ticket_date_minus != blank %}
+    {% assign now = '' %}
+    {% if shop.metafields.time.now %}
+      {% assign now = shop.metafields.time.now | date: '%s' | plus: 0 %}
+      {% if now >= ticket_date_minus %}
+        {% assign disable_sale_days_ago = true %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+{% comment %} 特殊要件 {% endcomment %}
+
+{% comment %}
+会員連携(リダイレクト型リファラー認証)
+{% endcomment %}
+
+{% comment %} 会員サイト区別のためのアーティストタグ1 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_1 = settings.specialtags_app_member_only_artist_1 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ2 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_2 = settings.specialtags_app_member_only_artist_2 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ3 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_3 = settings.specialtags_app_member_only_artist_3 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ4 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_4 = settings.specialtags_app_member_only_artist_4 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ5 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_5 = settings.specialtags_app_member_only_artist_5 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ6 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_6 = settings.specialtags_app_member_only_artist_6 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ7 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_7 = settings.specialtags_app_member_only_artist_7 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ8 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_8 = settings.specialtags_app_member_only_artist_8 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ9 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_9 = settings.specialtags_app_member_only_artist_9 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ10 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_10 = settings.specialtags_app_member_only_artist_10 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ11 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_11 = settings.specialtags_app_member_only_artist_11 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ12 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_12 = settings.specialtags_app_member_only_artist_12 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ13 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_13 = settings.specialtags_app_member_only_artist_13 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ14 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_14 = settings.specialtags_app_member_only_artist_14 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ15 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_15 = settings.specialtags_app_member_only_artist_15 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ16 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_16 = settings.specialtags_app_member_only_artist_16 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ17 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_17 = settings.specialtags_app_member_only_artist_17 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ18 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_18 = settings.specialtags_app_member_only_artist_18 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ19 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_19 = settings.specialtags_app_member_only_artist_19 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{% comment %} 会員サイト区別のためのアーティストタグ20 {% endcomment %}
+{%- assign specialtags_app_member_only_artist_20 = settings.specialtags_app_member_only_artist_20 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' -%}
+
+
+
+{% comment %} 会員サイト区別のためのアーティストタグの配列 {% endcomment %}
+{%- assign array_specialtags_app_member_only_artist = array_specialtags_app_member_only_artist |
+  append: specialtags_app_member_only_artist_1 | append: specialtags_app_member_only_artist_2 | append: specialtags_app_member_only_artist_3 | append: specialtags_app_member_only_artist_4 | append: specialtags_app_member_only_artist_5 |
+  append: specialtags_app_member_only_artist_6 | append: specialtags_app_member_only_artist_7 | append: specialtags_app_member_only_artist_8 | append: specialtags_app_member_only_artist_9 | append: specialtags_app_member_only_artist_10 |
+  append: specialtags_app_member_only_artist_11 | append: specialtags_app_member_only_artist_12 | append: specialtags_app_member_only_artist_13 | append: specialtags_app_member_only_artist_14 | append: specialtags_app_member_only_artist_15 |
+  append: specialtags_app_member_only_artist_16 | append: specialtags_app_member_only_artist_17 | append: specialtags_app_member_only_artist_18 | append: specialtags_app_member_only_artist_19 | append: specialtags_app_member_only_artist_20 |
+  split: "," -%}
+
+
+{% comment %} アプリ判定用のリファラー 個別アーティスト用 {% endcomment %}
+{%- assign app_members_only_valid_text_artist_1 = settings.app_members_only_valid_text_artist_1 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_2 = settings.app_members_only_valid_text_artist_2 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_3 = settings.app_members_only_valid_text_artist_3 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_4 = settings.app_members_only_valid_text_artist_4 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_5 = settings.app_members_only_valid_text_artist_5 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_6 = settings.app_members_only_valid_text_artist_6 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_7 = settings.app_members_only_valid_text_artist_7 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_8 = settings.app_members_only_valid_text_artist_8 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_9 = settings.app_members_only_valid_text_artist_9 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_10 = settings.app_members_only_valid_text_artist_10 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_11 = settings.app_members_only_valid_text_artist_11 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_12 = settings.app_members_only_valid_text_artist_12 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_13 = settings.app_members_only_valid_text_artist_13 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_14 = settings.app_members_only_valid_text_artist_14 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_15 = settings.app_members_only_valid_text_artist_15 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_16 = settings.app_members_only_valid_text_artist_16 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_17 = settings.app_members_only_valid_text_artist_17 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_18 = settings.app_members_only_valid_text_artist_18 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_19 = settings.app_members_only_valid_text_artist_19 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+{%- assign app_members_only_valid_text_artist_20 = settings.app_members_only_valid_text_artist_20 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' -%}
+{% comment %} アプリ判定用のリファラー 個別アーティスト用 配列{% endcomment %}
+{%- assign array_app_members_only_valid_text_artist = array_app_members_only_valid_text_artist |
+  append: app_members_only_valid_text_artist_1 | append: app_members_only_valid_text_artist_2 | append: app_members_only_valid_text_artist_3 |
+  append: app_members_only_valid_text_artist_4 | append: app_members_only_valid_text_artist_5 | append: app_members_only_valid_text_artist_6 |
+  append: app_members_only_valid_text_artist_7 |
+  append: app_members_only_valid_text_artist_8 | append: app_members_only_valid_text_artist_9 | append: app_members_only_valid_text_artist_10 |
+  append: app_members_only_valid_text_artist_11 | append: app_members_only_valid_text_artist_12 | append: app_members_only_valid_text_artist_13 |
+  append: app_members_only_valid_text_artist_14 | append: app_members_only_valid_text_artist_15 | append: app_members_only_valid_text_artist_16 |
+  append: app_members_only_valid_text_artist_17 | append: app_members_only_valid_text_artist_18 | append: app_members_only_valid_text_artist_19 |
+  append: app_members_only_valid_text_artist_20 | split: "," -%}
+
+
+
+
+{% comment %}
+  購入数制限スクリプト
+{% endcomment %}
+{% liquid
+  comment
+    exceed_quantity: 購入数制限を超えているかどうか
+
+    current_product_quantity_in_cart: この商品がカートに入っている数量
+    remain_purchasable_quantity: 残りの購入数
+  endcomment
+
+  assign exceed_quantity = false
+  assign cant_purchase_twice = false
+
+  assign current_product_quantity_in_cart = nil
+  assign remain_purchasable_quantity = nil
+  assign this_product = product
+%}
+
+{% comment %}
+・商品単位の購入数制限(metafields.purchase_limit.quantity)
+・バリエーション単位の購入数制限(product.metafields.variant_purchase_limit.quantity)
+・注文単位(商品毎)の購入数制限(_limitタグを入れる+Flow併用)
+・注文単位(バリエーション毎)の購入数制限(_limit-variantタグを入れる+Flow併用)
+・group制御(買い合せ制御、_group:タグで制御)
+・購入無効制御(_disable:タグでボタン無効化)
+・会場引き換え
+・抽選販売→未実装
+
+{% endcomment %}
+{% liquid
+  comment
+    productがあるとき: 商品ページ
+    ないとき: カートページ
+  endcomment
+
+  unless product
+    assign this_product = item.product
+  endunless
+
+  assign max_quantity = this_product.metafields.purchase_limit.quantity
+
+
+    comment
+    【特殊要件】カートに入っている受付枠のバリエーションに応じて商品側の個数制御
+    endcomment
+
+    assign is_ticket = false
+    assign is_ticket_prod = false
+    for tag in this_product.tags
+      if tag == '_会場引換:受付枠'
+        assign is_ticket = true
+      endif
+      if tag contains '_会場引換:商品'
+        assign is_ticket_prod = true
+      endif
+    endfor
+
+    unless this_product.metafields.purchase_limit.quantity
+      if is_ticket_prod
+        for item in cart.items
+          for tag in item.product.tags
+          if tag == '_会場引換:受付枠'
+            for option in item.variant.options
+                if option contains 'ペア席'
+                  assign max_quantity = 2
+                  break
+                elsif option contains 'テーブル席'
+                  assign max_quantity = 4
+                  break
+                endif
+              endfor
+          endif
+          endfor
+        endfor
+      endif
+    endunless
+
+    if is_ticket
+      assign max_quantity = 1
+    endif
+
+    comment
+    【特殊要件終わり】
+    endcomment
+
+  if this_product and max_quantity != blank
+    comment
+      商品の購入数制限が掛かっている場合
+    endcomment
+
+    comment
+      現在、この商品はカートに入っている数量を数える
+    endcomment
+    assign current_product_quantity_in_cart = 0
+    for item in cart.items
+      if item.product.id == this_product.id
+        assign current_product_quantity_in_cart = current_product_quantity_in_cart | plus: item.quantity
+      endif
+    endfor
+
+    comment
+      残り購入可能な数量
+    endcomment
+    assign remain_purchasable_quantity = max_quantity | minus: current_product_quantity_in_cart
+
+    if remain_purchasable_quantity <= 0
+      assign exceed_quantity = true
+    endif
+  endif
+
+  comment
+    残り購入可能な数量
+  endcomment
+  if customer
+    for tag in product.tags
+      if tag contains '_limit:'
+        if customer.tags contains tag
+          assign cant_purchase_twice = true
+        endif
+      endif
+    endfor
+  endif
+
+  comment
+  variantごとのユーザ単位購入制限
+  variant_idで購入有無を判断
+  variantは一意なので、一回購入時にflowでid名でタグ付け。買えなくなる形（limit-variant）
+  endcomment
+  if customer
+
+    assign this_variant = product.selected_or_first_available_variant
+    unless product
+      assign this_variant = item.variant
+    endunless
+
+    for tag in customer.tags
+      if tag contains '_limit-variant:'
+        if tag contains this_variant.id
+          assign cant_purchase_twice = true
+        endif
+      endif
+    endfor
+  endif
+
+%}
+
+
+{% liquid
+  comment
+    variantごとの購入数制限
+  endcomment
+
+  assign this_variant = product.selected_or_first_available_variant
+
+  unless product
+    assign this_variant = item.variant
+  endunless
+
+  assign max_variant_quantity = product.metafields.variant_purchase_limit.quantity
+
+  if this_variant and max_variant_quantity != blank
+    comment
+      商品の購入数制限が掛かっている場合
+    endcomment
+
+    comment
+      現在カートに入っている数量を数える
+    endcomment
+    assign current_product_quantity_in_cart_variant = 0
+    for item in cart.items
+      if item.variant_id == this_variant.id
+        assign current_product_quantity_in_cart_variant = current_product_quantity_in_cart_variant | plus: item.quantity
+      endif
+    endfor
+
+    comment
+      残り購入可能な数量
+    endcomment
+    assign remain_purchasable_quantity_variant = max_variant_quantity | minus: current_product_quantity_in_cart_variant
+
+    if remain_purchasable_quantity_variant <= 0
+      assign exceed_quantity = true
+    endif
+  endif
+%}
+
+{% comment %} 買い合わせ制限仕様 {% endcomment %}
+{% comment %} _group:とつくもの→買い合わせ制御+通常商品買い合わせOK {% endcomment %}
+{% comment %} ng_with_normal_groupとつくもの→買い合わせ制御+通常商品との買い合わせNG {% endcomment %}
+
+{% comment %} 買い合わせ制限スクリプト（カートに入れるボタン版） {% endcomment %}
+{%- liquid
+  comment
+    現在の商品のpurchase_groupを取り出し
+  endcomment
+
+  assign purchase_group = ''
+  for tag in product.tags
+    if tag contains '_group:'
+      assign label = tag | split: ':'
+      assign purchase_group = label[1]
+    endif
+  endfor
+-%}
+{%- liquid
+  comment
+    現在、カートに入っている商品の全てのpurchase_groupを取り出し
+  endcomment
+
+  assign cart_item_purchase_groups = ''
+
+  for item in cart.items
+    for tag in item.product.tags
+      if tag contains '_group:'
+        assign label = tag | split: ':'
+        assign cart_item_purchase_groups = cart_item_purchase_groups | append: label[1] | append: ','
+      endif
+    endfor
+  endfor
+  assign cart_item_purchase_groups = cart_item_purchase_groups | split: ','
+-%}
+
+{%- liquid
+  comment
+    カートに入っている商品と、購入しようとしている商品との買い合わせに問題がないか判定
+
+    purchase_group: 商品のグループタグ
+    exist_group: カート内のグループタグ配列
+
+    exist_group != purchase_group → 違うグループタグだったら同時購入禁止フラグ(bad_combination)をON
+    purchase_group != blank → 入れようとしている商品がグループタグ無しの通常商品だったらチェックを抜けるようにする。
+  endcomment
+
+  assign bad_combination = false
+  for exist_group in cart_item_purchase_groups
+    if exist_group != purchase_group and purchase_group != blank
+      assign bad_combination = true
+      break
+    endif
+  endfor
+-%}
+
+
+
+{% comment %} 買い合わせ制限スクリプト追加実装（通常商品との購入NG版。） {% endcomment %}
+{%- liquid
+  comment
+    現在の商品のpurchase_groupを取り出し
+  endcomment
+
+  assign purchase_group = ''
+  for tag in product.tags
+    if tag contains '_group:'
+      assign label = tag | split: ':'
+      assign purchase_group = label[1]
+    endif
+  endfor
+
+  assign purchase_group_ng_with_normal = ''
+  for tag in product.tags
+    if tag contains '_ng_with_normal_group:'
+      assign label = tag | split: ':'
+      assign purchase_group_ng_with_normal = label[1]
+    endif
+  endfor
+-%}
+{%- liquid
+  comment
+    現在、カートに入っている商品の全てのpurchase_groupを取り出し
+  endcomment
+
+  assign cart_item_purchase_groups_ng_with_normal = ''
+  assign cart_item_purchase_groups = ''
+  for item in cart.items
+    for tag in item.product.tags
+      if tag contains '_ng_with_normal_group:'
+        assign label = tag | split: ':'
+        assign cart_item_purchase_groups_ng_with_normal = cart_item_purchase_groups_ng_with_normal | append: label[1] | append: ','
+      endif
+      if tag contains '_group:'
+        assign label = tag | split: ':'
+        assign cart_item_purchase_groups = cart_item_purchase_groups | append: label[1] | append: ','
+      endif
+    endfor
+  endfor
+  assign cart_item_purchase_groups_ng_with_normal = cart_item_purchase_groups_ng_with_normal | split: ','
+  assign cart_item_purchase_groups = cart_item_purchase_groups | split: ','
+-%}
+
+{%- liquid
+  comment
+    カートに入っている商品と、購入しようとしている商品との買い合わせに問題がないか判定
+
+    purchase_group: 商品のグループタグ
+    exist_group: カート内のグループタグ配列
+
+    exist_group != blank → カート内に、ng_with_normal_groupグループタグが1つでも存在する
+    purchase_group == blank → 入れようとしている商品がグループタグ無しの通常商品だったらNGにする
+  endcomment
+
+  assign bad_combination_ng_with_normal = false
+  for exist_group in cart_item_purchase_groups_ng_with_normal
+    if exist_group != blank and purchase_group == blank
+      assign bad_combination_ng_with_normal = true
+      break
+    endif
+  endfor
+
+  if cart_item_purchase_groups == blank and purchase_group_ng_with_normal != blank and cart.items != blank
+    assign bad_combination_ng_with_normal = true
+  endif
+
+%}
+
+
+
+
+
+{% comment %} 会場引き換えの受付枠はひとつまで {% endcomment %}
+{%- liquid
+  assign is_pickup_ticket_in_cart = false
+  for item in cart.items
+    if item.product.tags contains '_会場引換:受付枠' or item.product.tags contains '_会場引換:受付枠_単体複数購入可'
+      assign is_pickup_ticket_in_cart = true
+    endif
+  endfor
+-%}
+
+{% comment %} オプションが有るときのボタンのスタイル変更 {% endcomment %}
+{%- if product.selling_plan_groups.size > 0 -%}
+  {%- assign use_primary_button = true -%}
+{%- else -%}
+  {%- assign use_primary_button = false -%}
+{%- endif -%}
+
+{%- liquid
+  comment
+    販売停止タグ
+  endcomment
+  for tag in product.tags
+    if tag contains '_disabled:'
+      assign label = tag | split: ':'
+      assign stop_tag_name = label[1]
+    endif
+  endfor
+-%}
+
+
+
+{% comment %}
+
+{%- liquid
+  assign group_key = '_group:'
+
+  assign disabled_label = ''
+  assign product_group_name = ''
+  for tag in product.tags
+    assign temp = tag | split: ':' | last
+    if tag contains '_disabled:'
+      assign disabled_label = temp
+    endif
+
+    if tag contains group_key
+      assign product_group_name = temp
+    endif
+  endfor
+
+  assign in_cart_product_groups = ''
+  for item in cart.items
+    for tag in item.product.tags
+      if tag contains group_key
+        if in_cart_product_groups != blank
+          assign in_cart_product_groups = in_cart_product_groups | append: ','
+        endif
+
+        assign temp = tag | split: ':' | last
+        assign in_cart_product_groups = in_cart_product_groups | append: temp
+      endif
+    endfor
+  endfor
+
+  assign is_multiple_group = false
+  if in_cart_product_groups != blank and product_group_name != blank
+    assign groups = in_cart_product_groups | split: ','
+    for group in groups
+      if group != product_group_name
+        assign is_multiple_group = true
+        break
+      endif
+    endfor
+  endif
+-%} {% endcomment %}
+
+{% comment %} 顧客タグで制限 {% endcomment %}
+
+{% assign is_specific_customers_product_tag = false %}
+{% assign is_purchase = true %}
+
+{% if settings.valid_specific_customer_purchase %}
+
+  {% if settings.specific_customers_tag and settings.specific_customers_product_tag %}
+    {% for tag in product.tags %}
+      {% if tag == settings.specific_customers_product_tag %}
+        {% assign is_specific_customers_product_tag = true %}
+      {% endif %}
+    {% endfor %}
+
+    {% if is_specific_customers_product_tag %}
+      {% assign is_purchase = false %}
+      {% if customer %}
+        {% for tag in customer.tags %}
+          {% if tag == settings.specific_customers_tag %}
+            {% assign is_purchase = true %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+{% comment %}  {% endcomment %}
+
+{% comment %} 特定テンプレ限定で数量を縛る {% endcomment %}
+{% assign isdouble = false %}
+{% if template == 'product.seat-regular' %}
+  {% for item in cart.items %}
+    {% if item.product.id == product.id %}
+      {% assign isdouble = true %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+
+<div {{ block.shopify_attributes }}>
+  {% unless customer %}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <a href="{{ routes.account_login_url }}" class="product-form__submit button button--full-width button--primary">
+          {{ 'products.product.login_to_purchase' | t }}
+        </a>
+      </div>
+    </div>
+  {% else %}
+  {% capture product_add_to_cart %}
+  {%- if product != blank -%}
+    {% if is_purchase == false %}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            {{settings.valid_specific_customer_purchase_text | default: '有料会員限定商品です'}}
+          </button>
+        </div>
+      </div>
+    {%- elsif stop_tag_name -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            {%- if stop_tag_name == '売り切れ' -%}
+              売り切れ
+            {%- else -%}
+              {{ stop_tag_name }}
+            {%- endif -%}
+          </button>
+        </div>
+      </div>
+    {%- elsif disable_sale_days_ago -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            購入できません
+          </button>
+          {% if minus_day != blank %}
+            <div style="font-size:.9em;padding:.8em;color: red;border-radius:10px;background-color:#fff0f3;border:1px solid #ff6565;">現地引渡しをご希望の際は、ご入場日程の{{minus_day | plus: 1}}日前までにグッズの同時購入をお願いします。ご入場日程の{{minus_day}}日以内に謎解きキットを購入する際は、現地引渡しのグッズ同時購入はできません。</div>
+          {% endif %}
+        </div>
+      </div>
+    {%- elsif before_sale -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            {{ product.metafields.datetime.start | date: "%Y年%m月%d日%H:%M" }}〜販売開始！
+          </button>
+        </div>
+      </div>
+    {%- elsif disable_sale -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            販売期間外です
+          </button>
+        </div>
+      </div>
+    {%- elsif cant_purchase_twice -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            購入済み
+          </button>
+        </div>
+      </div>
+      {%- elsif is_pickup_ticket_in_cart and product.tags contains '_会場引換:受付枠_単体複数購入可' -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            {% if product.tags contains "_テイクアウトチケットC" %}
+              テイクアウトチケットはすでに選択済みです
+            {% else %}
+              {{settings.disable_ticket_button_text | default: '受取希望枠は選択済みです'}}
+            {% endif %}
+          </button>
+          {% if product.tags contains "_テイクアウトチケットC" %}
+            <span style="font-size:.9em;color:red;">
+              ※テイクアウトチケットをすでに選択済みの方は<a href="/cart">こちら</a>からカートに進んでください。
+            </span>
+          {% elsif section.settings.disable_ticket_button_liquid != blank %}
+            <span style="font-size:.9em;color:red;">
+              {{ section.settings.disable_ticket_button_liquid }}
+            </span>
+          {% elsif settings.disable_ticket_button_liquid != blank %}
+            <span style="font-size:.9em;color:red;">
+              {{ settings.disable_ticket_button_liquid }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    {%- elsif is_pickup_ticket_in_cart and product.tags contains '_会場引換:受付枠' -%}
+      <div class="product-form">
+        <div class="product-form__buttons form">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            disabled
+          >
+            {% if product.tags contains "_テイクアウトチケットC" %}
+              テイクアウトチケットはすでに選択済みです
+            {% else %}
+              {{settings.disable_ticket_button_text | default: '受取希望枠は選択済みです'}}
+            {% endif %}
+          </button>
+          {% if product.tags contains "_テイクアウトチケットC" %}
+            <span style="font-size:.9em;color:red;">
+              ※テイクアウトチケットをすでに選択済みの方は<a href="/cart">こちら</a>からカートに進んでください。
+            </span>
+          {% elsif section.settings.disable_ticket_button_liquid != blank %}
+            <span style="font-size:.9em;color:red;">
+              {{ section.settings.disable_ticket_button_liquid }}
+            </span>
+          {% elsif settings.disable_ticket_button_liquid != blank %}
+            <span style="font-size:.9em;color:red;">
+              {{ settings.disable_ticket_button_liquid }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+     {%- elsif isdouble -%}
+      <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          人数・メニューは選択済みです
+        </button>
+        <div class="product-form__caution">※人数やメニューを変更される場合は、カートから選択済みの商品を削除してください。</div>
+      </div>
+    </div>
+    {%- elsif bad_combination or bad_combination_ng_with_normal -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          同時購入できない商品です
+        </button>
+        {%- if product.tags contains '_会場引換:受付枠' -%}
+          <div class="product-form__caution">※同時購入できない商品がカート内にあります。別会計でご購入いただくか、カート内の商品を削除してください。</div>
+        {%- elsif product.tags contains '_会場引換:商品' -%}
+          <div class="product-form__caution">※同時購入できない商品がカート内にあります。別会計でご購入いただくか、カート内の商品を削除してください。</div>
+        {%- else -%}
+          <div class="product-form__caution">※同時購入できない商品がカート内にあります。別会計でご購入いただくか、カート内の商品を削除してください。</div>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- elsif exceed_quantity -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          {%- if remain_purchasable_quantity <= 0 -%}
+            購入可能点数を超えています
+          {%- elsif remain_purchasable_quantity_variant <= 0 -%}
+            購入可能点数を超えています
+          {%- else -%}
+            購入できません
+          {%- endif -%}
+        </button>
+      </div>
+    </div>
+    {% else %}
+      {%- liquid
+        assign gift_card_recipient_feature_active = false
+        if block.settings.show_gift_card_recipient and product.gift_card?
+          assign gift_card_recipient_feature_active = true
+        endif
+
+        assign show_dynamic_checkout = false
+        if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+          assign show_dynamic_checkout = true
+        endif
+      -%}
+
+      <product-form class="product-form" data-hide-errors="{{ gift_card_recipient_feature_active }}">
+        <div class="product-form__error-message-wrapper" role="alert" hidden>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="icon icon-error"
+            viewBox="0 0 13 13"
+          >
+            <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+            <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+            <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+            <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+          </svg>
+          <span class="product-form__error-message"></span>
+        </div>
+
+        {%- form 'product',
+          product,
+          id: product_form_id,
+          class: 'form',
+          novalidate: 'novalidate',
+          data-type: 'add-to-cart-form'
+        -%}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ product.selected_or_first_available_variant.id }}"
+            disabled
+            class="product-variant-id"
+          >
+
+            {% assign num = lineitem_property_id.size | minus: 1 %}
+            {% for i in (1..num) %}
+              {% if is_radio[i] == 'true' %}
+              <div class="lineitem-property-wrapper {{set_id[i]}}" style="display:none;">
+                <div class="lineitem-property-radio-title">{{lineitem_property_label[i]}}</div>
+                <div class="lineitem-property-radio-wrapper">
+                {% if lineitem_property_select_value_1[i] != blank and lineitem_property_select_text_1[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}" id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_1[i]}}" value="{{lineitem_property_select_value_1[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_1[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_1[i]}}">{{lineitem_property_select_text_1[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_1[i]}}</span>
+                  {% if lineitem_property_image_1[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_1[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_2[i] != blank and lineitem_property_select_text_2[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_2[i]}}" value="{{lineitem_property_select_value_2[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_2[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_2[i]}}">{{lineitem_property_select_text_2[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_2[i]}}</span>
+                  {% if lineitem_property_image_2[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_2[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_3[i] != blank and lineitem_property_select_text_3[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_3[i]}}" value="{{lineitem_property_select_value_3[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_3[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_3[i]}}">{{lineitem_property_select_text_3[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_3[i]}}</span>
+                  {% if lineitem_property_image_3[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_3[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_4[i] != blank and lineitem_property_select_text_4[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_4[i]}}" value="{{lineitem_property_select_value_4[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_4[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_4[i]}}">{{lineitem_property_select_text_4[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_4[i]}}</span>
+                  {% if lineitem_property_image_4[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_4[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_5[i] != blank and lineitem_property_select_text_5[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_5[i]}}" value="{{lineitem_property_select_value_5[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_5[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_5[i]}}">{{lineitem_property_select_text_5[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_5[i]}}</span>
+                  {% if lineitem_property_image_5[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_5[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_6[i] != blank and lineitem_property_select_text_6[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_6[i]}}" value="{{lineitem_property_select_value_6[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_6[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_6[i]}}">{{lineitem_property_select_text_6[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_6[i]}}</span>
+                  {% if lineitem_property_image_6[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_6[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_7[i] != blank and lineitem_property_select_text_7[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_7[i]}}" value="{{lineitem_property_select_value_7[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_7[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_7[i]}}">{{lineitem_property_select_text_7[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_7[i]}}</span>
+                  {% if lineitem_property_image_7[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_7[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_8[i] != blank and lineitem_property_select_text_8[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_8[i]}}" value="{{lineitem_property_select_value_8[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_8[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_8[i]}}">{{lineitem_property_select_text_8[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_8[i]}}</span>
+                  {% if lineitem_property_image_8[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_8[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if lineitem_property_select_value_9[i] != blank and lineitem_property_select_text_9[i] != blank %}
+                  <div class="lineitem-property-radio-item">
+                  <input  type="radio" {% if is_required[i] == 'true' %} class="required" {% endif %} name="{{lineitem_property_name[i]}}"  id="{{lineitem_property_id[i]}}{{lineitem_property_select_value_9[i]}}" value="{{lineitem_property_select_value_9[i]}}">
+                  <label class="lineitem-property-radio-label" style="background-image: url('{{lineitem_property_image_9[i]}}');" for="{{lineitem_property_id[i]}}{{lineitem_property_select_value_9[i]}}">{{lineitem_property_select_text_9[i]}}</label>
+                  <span class="lineitem-property-radio-span" >{{lineitem_property_select_text_9[i]}}</span>
+                  {% if lineitem_property_image_9[i] != blank %}
+                    <img class="lineitem-property-radio-image" src="{{lineitem_property_image_9[i]}}">
+                  {% endif %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+              {% else %}
+              <div class="lineitem-property-wrapper {{set_id[i]}}" style="display:none;">
+                <label>{{lineitem_property_label[i]}}</label><br>
+                <div class="select">  <select class="select__select {% if is_required[i] == 'true' %} required {% endif %}" id="{{lineitem_property_id[i]}}" name="{{lineitem_property_name[i]}}">
+                    <option value="" hidden>選択してください</option>
+                  {% if lineitem_property_select_value_1[i] != blank and lineitem_property_select_text_1[i] != blank %}
+                    <option value="{{lineitem_property_select_value_1[i]}}">{{lineitem_property_select_text_1[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_2[i] != blank and lineitem_property_select_text_2[i] != blank %}
+                    <option value="{{lineitem_property_select_value_2[i]}}">{{lineitem_property_select_text_2[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_3[i] != blank and lineitem_property_select_text_3[i] != blank %}
+                    <option value="{{lineitem_property_select_value_3[i]}}">{{lineitem_property_select_text_3[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_4[i] != blank and lineitem_property_select_text_4[i] != blank %}
+                    <option value="{{lineitem_property_select_value_4[i]}}">{{lineitem_property_select_text_4[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_5[i] != blank and lineitem_property_select_text_5[i] != blank %}
+                    <option value="{{lineitem_property_select_value_5[i]}}">{{lineitem_property_select_text_5[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_6[i] != blank and lineitem_property_select_text_6[i] != blank %}
+                    <option value="{{lineitem_property_select_value_6[i]}}">{{lineitem_property_select_text_6[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_7[i] != blank and lineitem_property_select_text_7[i] != blank %}
+                    <option value="{{lineitem_property_select_value_7[i]}}">{{lineitem_property_select_text_7[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_8[i] != blank and lineitem_property_select_text_8[i] != blank %}
+                    <option value="{{lineitem_property_select_value_8[i]}}">{{lineitem_property_select_text_8[i]}}</option>
+                  {% endif %}
+                  {% if lineitem_property_select_value_9[i] != blank and lineitem_property_select_text_9[i] != blank %}
+                    <option value="{{lineitem_property_select_value_9[i]}}">{{lineitem_property_select_text_9[i]}}</option>
+                  {% endif %}
+                  </select>
+                {% render 'icon-caret' %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          {% if lineitem_property_memo_label != blank and lineitem_property_memo_id != blank and lineitem_property_memo_name != blank %}
+            <p class="clineitem-property__field">
+              <label style="display: block;" for="{{lineitem_property_memo_id}}">{{lineitem_property_memo_label}}</label>
+              <textarea id="{{lineitem_property_memo_id}}" name="{{lineitem_property_memo_name}}" style="
+                width: 100%;
+                min-height: 10em;
+                padding: .5em;
+            "></textarea>
+            </p>
+          {% endif %}
+
+
+          {%- if gift_card_recipient_feature_active -%}
+            {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+          {%- endif -%}
+
+          <div class="product-form__buttons">
+            {%- liquid
+              assign check_against_inventory = true
+              if product.selected_or_first_available_variant.inventory_management != 'shopify' or  product.selected_or_first_available_variant.inventory_policy == 'continue'
+                assign check_against_inventory = false
+              endif
+              if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                assign quantity_rule_soldout = true
+              endif
+            -%}
+            <button
+              id = "ProductSubmitButton-{{ section_id }}"
+              type="submit"
+              name="add"
+              class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+              {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout%}
+                disabled
+              {% endif %}
+            >
+              <span>
+                {%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- else -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- endif -%}
+              </span>
+              <div class="loading-overlay__spinner hidden">
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="spinner"
+                  viewBox="0 0 66 66"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+            </button>
+            {%- if show_dynamic_checkout -%}
+              {{ form | payment_button }}
+            {%- endif -%}
+          </div>
+        {%- endform -%}
+      </product-form>
+    {% endif %}
+  {%- else -%}
+    <div class="product-form">
+      <div class="product-form__buttons form">
+        <button
+          type="submit"
+          name="add"
+          class="product-form__submit button button--full-width button--primary"
+          disabled
+        >
+          {{ 'products.product.sold_out' | t }}
+        </button>
+      </div>
+    </div>
+  {%- endif -%}
+  {% endcapture %}
+
+
+
+  {% comment %} 会員限定商品であればWrapperを表示しjsで判定 {% endcomment %}
+  {% assign is_fc = false %}
+  {% for artist_tag_valid in array_specialtags_app_member_only_artist %}
+    {%- assign product_tags_join_valid = product.tags | join: ',' | downcase -%}
+    {%- assign product_tags_split_valid = product_tags_join_valid | split: ',' -%}
+
+    {%- assign artist_tag_downcase_valid = artist_tag_valid | downcase -%}
+    {% if product.available and product_tags_split_valid contains artist_tag_downcase_valid %}
+      {% assign is_fc = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% if is_fc %}
+    <div id="product__add-to-cart-wrapper" class="product__add-to-cart-wrapper product-form"></div>
+  {% else %}
+    {{product_add_to_cart }}
+  {% endif %}
+
+{%- comment -%}アプリ会員限定ボタンjs描画処理(リファラー版)start{%- endcomment -%}
+{% if is_fc %}
+  <script>
+    let cartButtonWrapper__BuyButtons = document.getElementById('product__add-to-cart-wrapper');
+    let ProductAddToCart__BuyButtons = '{{ product_add_to_cart | strip_newlines }}';
+    let isFC__BuyButtons = false;
+  </script>
+  {% for artist_tag in array_specialtags_app_member_only_artist %}
+    {%- assign product_tags_join = product.tags | join: ',' | downcase -%}
+    {%- assign product_tags_split = product_tags_join | split: ',' -%}
+
+    {%- assign artist_tag_downcase = artist_tag | downcase -%}
+    {% if product.available and product_tags_split contains artist_tag_downcase %}
+      <script>
+        if(isFC__BuyButtons === false) {
+          if (tgApp.isMemberReferrer(['{{ array_app_members_only_valid_text_artist[forloop.index0] }}'], 'referrerAppArtist{{request.host | handleize}}{{forloop.index0}}', 'referrerAppValidDateArtist{{request.host | handleize}}{{forloop.index0}}')) {
+            // アプリ会員なら通常のボタンを表示
+            cartButtonWrapper__BuyButtons.insertAdjacentHTML('afterbegin', ProductAddToCart__BuyButtons);
+            isFC__BuyButtons = true
+          }
+        }
+      </script>
+    {% endif %}
+  {% endfor %}
+
+  <script>
+    // アプリ会員でなければ購入無効のボタンを表示
+    if (isFC__BuyButtons === false) {
+      cartButtonWrapper__BuyButtons.insertAdjacentHTML('afterbegin',' <button class="product-form__submit button button--full-width button--primary" disabled>FC会員限定</button>');
+    }
+  </script>
+{% endif %}
+{%- comment -%}アプリ会員限定ボタンjs描画処理(リファラー版) end{%- endcomment -%}
+
+  {% endunless %}
+
+  {%- if show_pickup_availability -%}
+    {{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}
+
+    {%- assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities
+      | where: 'pick_up_enabled', true
+    -%}
+
+    <pickup-availability
+      class="product__pickup-availabilities no-js-hidden quick-add-hidden"
+      {% if product.selected_or_first_available_variant.available and pick_up_availabilities.size > 0 %}
+        available
+      {% endif %}
+      data-root-url="{{ routes.root_url }}"
+      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      data-has-only-default-variant="{{ product.has_only_default_variant }}"
+    >
+      <template>
+        <pickup-availability-preview class="pickup-availability-preview">
+          {% render 'icon-unavailable' %}
+          <div class="pickup-availability-info">
+            <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+            <button class="pickup-availability-button link link--text underlined-link">
+              {{ 'products.product.pickup_availability.refresh' | t }}
+            </button>
+          </div>
+        </pickup-availability-preview>
+      </template>
+    </pickup-availability>
+
+    <script src="{{ 'pickup-availability.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</div>
+
+{%- style -%}
+  .product-form__submit  {
+    {%- if character['cart-button-color'].value != nil -%}
+      --color-button: {{ character['cart-button-color'].value.red }}, {{ character['cart-button-color'].value.green }}, {{ character['cart-button-color'].value.blue }};
+    {%- endif -%}
+    {%- if character['cart-button-text-color'].value != nil -%}
+      --color-button-text: {{ character['cart-button-text-color'].value.red }}, {{ character['cart-button-text-color'].value.green }}, {{ character['cart-button-text-color'].value.blue }};
+    {%- endif -%}
+  }
+{%- endstyle -%}

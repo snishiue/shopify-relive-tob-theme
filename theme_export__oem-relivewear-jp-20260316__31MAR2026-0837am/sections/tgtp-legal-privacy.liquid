@@ -1,0 +1,293 @@
+{{ 'tgtp-legal.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width page-width--narrow section-{{ section.id }}-padding">
+  <h1 class="tgtp-legal__title">{{ section.settings.title }}</h1>
+
+  <!-- 個人情報保護方針 -->
+  <div class="tgtp-legal__section">
+    <h2 class="tgtp-legal__heading">個人情報保護方針</h2>
+    <p class="tgtp-legal__text"><a href="{{ section.settings.company_url }}" target="_blank">{{ section.settings.company_name }}</a>（以下「当社」）は、社会に寄与する企業として個人情報の適切な取扱いに規範を示すべき立場にあるとの理念の下、個人情報を適切に取り扱うことの重要性を認識し、個人情報保護方針を定め、役員及び従業員が一体となってこれを遵守し、もって個人情報の保護及び個人の権利利益の保護に万全を尽くしてまいります。</p>
+    <ol class="tgtp-legal__ol">
+      <li>個人情報を取得するに当たっては、その利用目的をできる限り特定し、その目的の達成に必要な限度において個人情報を取得致します。</li>
+      <li>個人情報を、本人から直接、書面によって取得する場合には、弊社名、個人情報保護管理者名及び連絡先、利用目的等をお知らせした上で、必要な範囲で個人情報を取得致します。</li>
+      <li>個人情報の利用は、本人が同意を与えた利用目的の範囲内で行います。また、目的外利用を行わないため、必要な対策を講じる手順を確立し、実施致します。</li>
+      <li>保有する個人情報を適切な方法で管理し、本人の同意なしに第三者に開示・提供致しません。</li>
+      <li>保有する個人情報を利用目的に応じた必要な範囲内において、正確、かつ、最新の状態で管理し、個人情報の漏えい、滅失又は毀損などのおそれに対して、合理的な安全対策を講じ、予防並びに是正に努めます。</li>
+      <li>個人情報の処理を外部へ委託する場合は、漏えいや第三者への提供を行わない等を契約により義務づけ、委託先に対する適切な管理を実施致します。</li>
+      <li>保有する個人情報についての苦情・相談は、弊社の問合せ窓口に連絡頂くことにより、これに対応致します。</li>
+      <li>個人情報の取扱いに関する法令、国が定める指針その他の規範を遵守致します。</li>
+      <li>個人情報保護マネジメントシステムを定め、これを定期的に見直し、継続的に改善致します。</li>
+    </ol>
+    <div class="tgtp-legal__footer">
+      <p>制定日：{{ section.settings.policy_date }}</p>
+      <p>{{ section.settings.company_name }} 代表取締役 {{ section.settings.representative }}</p>
+      <br>
+      <p>個人情報保護方針についてのお問合せ先</p>
+      <p>{{ section.settings.company_name }} 個人情報相談受付窓口</p>
+      <p>{{ section.settings.address }}</p>
+      <p>電話：{{ section.settings.policy_tel }}</p>
+    </div>
+  </div>
+
+  <hr style="margin: 4rem 0; border: none; border-top: 1px solid #ddd;">
+
+  <!-- プライバシーポリシー -->
+  <div class="tgtp-legal__section">
+    <h2 class="tgtp-legal__heading">プライバシーポリシー</h2>
+    <p class="tgtp-legal__text">このプライバシーポリシー（以下「本ポリシー」といいます。）は、<a href="{{ section.settings.company_url }}" target="_blank">{{ section.settings.company_name }}</a>（以下「当社」といいます。）が運営するオンラインサイト（以下「本サイト」といいます。）において提供するサービス {{ section.settings.service_name }}（以下「本サービス」といいます。）におけるユーザーに関する情報の取り扱いについて説明させていただくものです。</p>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第1条（適用範囲）</h3>
+    <ol class="tgtp-legal__ol">
+      <li>本ポリシーは、本サービスの利用に関し適用されます。また、当社が、本サービス上に掲載するプライバシーポリシーその他の個人情報保護方針又は利用規約等においてユーザー情報の取扱いについて規定する場合、当該規定も適用されるものとし、当該規定が本ポリシーと抵触する場合には、本ポリシーが優先されるものとします。</li>
+      <li>当社が本サービスに関して提携する外部のサービスその他当社以外の者が提供するサービス（以下「提携サービス等」といいます。）については、本ポリシーの規定は適用されません。提携サービス等におけるユーザー情報の取扱いについては、当該提携サービス等を提供する事業者が別途定めるプライバシーポリシー等をご参照ください。</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第2条（当社が取得する情報）</h3>
+    <p class="tgtp-legal__text">当社は、次条に定める利用目的を達成するため、本サービスを利用する法人及び登録を希望する法人に所属する役員又は従業員等の担当者（以下「ユーザー」といいます。）に関する個人情報（個人情報保護法第2条第1項により定義された「個人情報」をいい、以下同様とします。）を含む次に定める情報（以下「ユーザー情報」といいます。）を取得します。</p>
+    <ol class="tgtp-legal__ol">
+      <li>本サービスの利用にあたりユーザーにご提供いただく情報<br>氏名、会社名・部署名、住所、電話番号、メールアドレス、クレジットカード情報、商品の届け先に関する情報（氏名、住所、電話番号）、購入商品に関する情報、ユーザーが本サービスの入力フォームを通じて入力又は送信いただく情報、その他本サービスにおいて当社が指定する情報</li>
+      <li>本サービスの利用にあたり当社が収集する情報<br>端末ID（デバイスID）、広告識別子、IPアドレス、端末位置情報、サーバーアクセスログ情報、Cookie、その他本サービスにおいて利用者が送信する情報（検索履歴、テキストデータ、画像、動画、本サービスへの投稿等）、ユーザーの同意に基づき提携サービス等から取得する情報（提携サービス等におけるユーザーのID等）</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第3条（利用目的）</h3>
+    <ol class="tgtp-legal__ol">
+      <li>当社は、ユーザー情報を、次の各号に定める目的の範囲内で、適正に取り扱います。
+        <ul class="tgtp-legal__sub-ol">
+          <li>(1) 本サービスの利用の登録審査のため</li>
+          <li>(2) 本サービスの提供及び本人確認のため</li>
+          <li>(3) 本サービスに基づく商品の注文等確認のため</li>
+          <li>(4) 本サービスに基づく商品提供（本サイトにおける電子商取引サービス、代金回収、指定された納品先への商品発送等を含みます。）のため</li>
+          <li>(5) 本サービスに関するご案内、お問い合わせ等への対応のため</li>
+          <li>(6) 本サービスに関する利用規約又は本ポリシーの変更、本サービスの停止・中止・契約解除その他本サービスに関する重要なお知らせ等の通知のため</li>
+          <li>(7) 本サービスの維持、改善及び新たなサービス等を検討するため</li>
+          <li>(8) 本サービスの利用状況等を調査及び分析するため</li>
+        </ul>
+      </li>
+      <li>当社は、前項の利用目的を、変更前の利用目的と関連性を有すると合理的に認められる範囲内において変更することがあり、変更した場合には、ユーザーに対し、通知又は本サービス上若しくは本サイトでの掲示その他分かりやすい方法により公表します。</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第4条（第三者提供）</h3>
+    <p class="tgtp-legal__text">当社は、本人の同意を得ずに、個人データ（個人情報保護法第16条第3項により定義された「個人データ」をいい、以下同様とします。）を第三者に提供しません。但し、次に掲げる場合に、第三者（日本国外にある者を含みます。）に提供する場合はこの限りではありません。</p>
+    <ol class="tgtp-legal__ol">
+      <li>クレジットカード発行会社が行う不正利用検知・防止のため、氏名、電話番号、emailアドレス、インターネット利用環境に関する情報等（IPアドレス、デバイス情報など）の個人データが提供される場合。ユーザーが利用されているカード発行会社が外国にある場合、これらの情報は当該発行会社が所属する国に移転される場合があります。当社では、ユーザーから収集した情報からは、ご利用のカード発行会社及び当該会社が所在する国を特定することができないため、以下の個人情報保護措置に関する情報を把握して、ご提供することはできません。
+        <ul class="tgtp-legal__sub-ol">
+          <li>提供先が所在する外国の名称</li>
+          <li>当該国の個人情報保護制度に関する情報</li>
+          <li>発行会社の個人情報保護の措置</li>
+        </ul>
+        なお、<a href="https://www.ppc.go.jp/" target="_blank">個人情報保護委員会のホームページ</a>では、各国における個人情報保護制度に関する情報について掲載されています。
+      </li>
+      <li>当社が本サービスにおける商品の販売委託を受けている委託元（提携先企業等）に対し、商品の発送、在庫管理、販売実績の報告、その他アフターサービス等の目的で、ユーザーの氏名、住所、電話番号、購入履歴等の個人データを提供する場合</li>
+      <li>本ポリシーに定める利用目的の達成に必要な範囲内において個人データの取扱いの全部又は一部を委託することに伴って当該個人データが提供される場合</li>
+      <li>合併その他の事由による事業の承継に伴って個人データが提供される場合</li>
+      <li>特定の者との間で共同して利用される個人データが当該特定の者に提供される場合であって、その旨並びに共同して利用される個人データの項目、共同して利用する者の範囲、利用する者の利用目的及び当該個人データの管理について責任を有する者の氏名又は名称について、あらかじめ、本人に通知し、又は本人が容易に知り得る状態に置いているとき</li>
+      <li>前各号に定めるもののほか、個人情報保護法その他の法令に基づく場合</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第5条（共同利用）</h3>
+    <p class="tgtp-legal__text">当社は、下記のとおり、提携サービス等を提供する事業者との間で、本サービスの提供に必要な範囲において、ユーザーから取得した個人情報を共同利用することがあります。</p>
+    <ol class="tgtp-legal__ol">
+      <li>共同利用者の範囲：当社及び{{ section.settings.joint_use_partner }}のグループに属する各社</li>
+      <li>共同利用される個人データの項目：第2条に定めるユーザー情報に含まれる個人データ</li>
+      <li>共同ユーザーの利用目的：第3条に定める利用目的と同様とします。</li>
+      <li>共同利用される個人データの管理について責任を有する者：<br>{{ section.settings.address }}<br>{{ section.settings.company_name }} 代表取締役 {{ section.settings.representative }}</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第6条（情報収集モジュールの利用について）</h3>
+    <p class="tgtp-legal__text">本サービスには、本サービスの利用状況及び広告効果等の情報を解析するため、当社が選定する以下の情報収集モジュールが組み込まれています。これに伴い、当社は、以下の情報収集モジュールの提供者（日本国外にある者を含みます。）に対しユーザー情報の提供を行う場合があります。これらの情報収集モジュールは、個人を特定する情報を含むことなくユーザー情報を収集し、収集された情報は、各情報収集モジュール提供者の定めるプライバシーポリシーその他の規定に基づき管理されます。</p>
+    <ul class="tgtp-legal__list">
+      <li>Google Analytics（提供者：Google LLC）</li>
+      <li>Adjust（提供者：Adjust GmbH.）</li>
+      <li>Sentry（提供者：Functional Software, Inc.）</li>
+      <li>Smartlook（提供者：Smartlook.com, s.r.o.）</li>
+    </ul>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第7条（行動ターゲティング広告）</h3>
+    <p class="tgtp-legal__text">当社は、広告配信事業者が提供するプログラムを利用して、当社が運営するウェブサイトを通じてユーザーから取得したウェブサイトの閲覧履歴や購買履歴等の情報を分析し、サービスの提供、行動ターゲティング広告を配信します。当該閲覧履歴や購買履歴等には、特定の個人を識別できる情報は含みません。</p>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第8条（個人情報の開示・訂正等の権利）</h3>
+    <p class="tgtp-legal__text">当社は、ユーザーから、個人情報保護法の定めに基づき当社が保有するデータベース上に存在する個人データの利用目的の通知、保有個人データの開示の請求、第三者提供記録の開示の請求、保有個人データの内容の訂正、追加又は削除の請求、若しくは保有個人データの利用停止、消去又は第三者提供の停止の請求（以下「開示等の請求等」といいます。）を求められたときは、ユーザーご本人からのご請求であることを確認の上で、遅滞なく対応いたします。但し、個人情報保護法を含む法令により当社がこれらの義務を負わない場合については、この限りではありません。</p>
+    <p class="tgtp-legal__text">開示等の請求等にあたっては、第13条のお問い合わせ窓口宛にご連絡ください。</p>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第9条（個人情報の提供の任意性について）</h3>
+    <p class="tgtp-legal__text">本サービスの提供等を行うために、当社が必要とする個人情報の提供は任意にてご承諾いただいております。ご提供いただけない場合は、各種サービスの提供等を行うことができない可能性があります。</p>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第10条（自動的な情報の取得について）</h3>
+    <p class="tgtp-legal__text">当社は、ユーザーが容易に認識出来ない方法（CookieやWebビーコン等）で個人情報を取得することは一切いたしません。</p>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第11条（安全管理措置）</h3>
+    <p class="tgtp-legal__text">当社は、取り扱う個人データについて、漏えい、滅失又は毀損の防止、その他の個人データの安全管理のために必要かつ適切な措置を講じます。また、従業者や委託先（再委託先等を含みます。）に対して、個人データを提供する場合は、必要かつ適切な監督を行います。個人データの安全管理措置に関しての主な内容は以下のとおりです。</p>
+    <ol class="tgtp-legal__ol">
+      <li>基本方針の策定：個人データの適正な取扱の確保のため、「関係法令・ガイドライン等の遵守」、「質問及び苦情処理の窓口」等について基本方針を策定しています。</li>
+      <li>個人データの取扱いに係る規律の整備：個人データの取得、利用、保存等を行う場合の基本的な取扱方法を整備しています。</li>
+      <li>組織的安全管理措置：整備した取扱方法に従って個人データが取り扱われていることを責任者が確認しています。また、従業者から責任者に対する報告連絡体制を整備しています。</li>
+      <li>人的安全管理措置：個人データの取扱いに関する留意事項について、従業者に定期的な研修を実施しています。</li>
+      <li>物理的安全管理措置：個人データを取り扱うことのできる従業者及び本人以外が容易に個人データを閲覧できないような措置を実施しています。また、機器、電子媒体等の盗難・紛失等を防止するための措置を実施しています。</li>
+      <li>技術的安全管理措置：個人データを取り扱うことのできる機器及び当該機器を取り扱う従業者を明確化し、不要なアクセスを防止する措置、及び不正ソフトウェアから保護する仕組みを導入しています。</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第12条（本ポリシーの変更）</h3>
+    <ol class="tgtp-legal__ol">
+      <li>当社は、ユーザー情報の取扱いに関する運用状況を適宜見直し、継続的な改善に努めるものとし、必要に応じて、随時本ポリシーを変更することがあります。但し、第3条〜第10条及び第13条の内容を変更するときは、別途当社が定める方法により、ユーザーの同意を取得します。</li>
+      <li>変更後の本ポリシーについては、本ポリシーを変更する旨及び変更後の本ポリシーの内容とその効力発生日を本サイト又は本サービス上での掲示、又はユーザーに電子メール等の電磁的記録方法での通知その他分かりやすい方法により告知します。但し、法令上ユーザーの同意が必要となるような内容の変更を行うときは、別途当社が定める方法により、ユーザーの同意を取得します。</li>
+    </ol>
+  </div>
+
+  <div class="tgtp-legal__section">
+    <h3 class="tgtp-legal__section-title">第13条（お問い合わせ）</h3>
+    <p class="tgtp-legal__text">当社の取り扱うユーザー情報に関するご意見、ご質問、開示等の要求、苦情のお申出その他ユーザー情報の取扱いに関するお問い合わせは、以下のお問い合わせ窓口へご連絡ください。</p>
+    <div class="tgtp-legal__footer">
+      <p>プライバシーポリシー及び個人情報（特定個人情報）に関するお問い合わせ先</p>
+      <p>名称：{{ section.settings.company_name }}</p>
+      <p>所在地：{{ section.settings.address }}</p>
+      <p>個人情報保護管理責任者：{{ section.settings.privacy_manager }}</p>
+      <p>連絡先：{{ section.settings.contact_email }}</p>
+      <br>
+      <p>制定 {{ section.settings.privacy_date }}</p>
+      <p>{{ section.settings.company_name }} 代表取締役 {{ section.settings.representative }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "プライバシーポリシー",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "ページタイトル",
+      "default": "プライバシーポリシー"
+    },
+    {
+      "type": "text",
+      "id": "service_name",
+      "label": "サービス名",
+      "default": "RELIVE for OEM"
+    },
+    {
+      "type": "text",
+      "id": "company_name",
+      "label": "会社名",
+      "default": "株式会社paintory"
+    },
+    {
+      "type": "text",
+      "id": "company_url",
+      "label": "会社URL",
+      "default": "https://paintory.com/"
+    },
+    {
+      "type": "text",
+      "id": "representative",
+      "label": "代表者名",
+      "default": "片山 裕太"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "所在地",
+      "default": "〒708-0061 岡山県津山市元魚町60-2"
+    },
+    {
+      "type": "text",
+      "id": "policy_tel",
+      "label": "個人情報保護方針 電話番号",
+      "default": "050-1790-0721"
+    },
+    {
+      "type": "text",
+      "id": "policy_date",
+      "label": "個人情報保護方針 制定日",
+      "default": "2023年1月16日"
+    },
+    {
+      "type": "text",
+      "id": "joint_use_partner",
+      "label": "共同利用先",
+      "default": "株式会社ギフティ"
+    },
+    {
+      "type": "text",
+      "id": "privacy_manager",
+      "label": "個人情報保護管理責任者",
+      "default": "コーポレート部 総務ユニット リーダー"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "お問い合わせメールアドレス",
+      "default": "info@paintory.com"
+    },
+    {
+      "type": "text",
+      "id": "privacy_date",
+      "label": "プライバシーポリシー 制定日",
+      "default": "2026年4月1日"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "プライバシーポリシー"
+    }
+  ]
+}
+{% endschema %}

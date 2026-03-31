@@ -1,0 +1,112 @@
+{{ 'announcement.css' | asset_url | stylesheet_tag }}
+{% assign blog = blogs[section.settings.blog] %}
+{% unless blog.empty? %}
+  {% if blog.articles.size != 0 %}
+  <div class="announcement">
+    {% assign counter = 0 %}
+    {% for article in blog.articles %}
+      <div class="announcement__Item">
+        {% assign counter = counter | plus: 1 %}
+        <a href="{{ article.url }}" class="Link">
+          {% if section.settings.title != blank %}
+            <h2 class="announcement__head">
+              {% comment %} <span class="sectionheader__heading-icon">
+                {%- render 'icon' with 'rhombus' -%}
+              </span> {% endcomment %}
+              <span class="sectionheader__heading-text notitalic">
+                {{ section.settings.title }}
+              </span>
+            </h2>
+          {% endif %}
+          <div class="announcement__title">
+            {% comment %} <span class="Article__MetaItem">{{ article.published_at | date: format: 'month_day_year_short' }}</span> {% endcomment %}
+            {{ article.title }}
+          </div>
+        </a>
+      </div>
+      {% break %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endunless %}
+
+{% style %}
+  :root {
+    --announcement_title_font_color: {{ section.settings.announcement_title_font_color }};
+    --announcement_border_color: {{ section.settings.announcement_border_color }};
+    --announcement_section_background_color: {{ section.settings.announcement_section_background_color }};
+    --announcement_background_color: {{ section.settings.announcement_background_color }};
+    --announcement_border_radius: {{ section.settings.announcement_border_radius }}px;
+    --announcement_text_font_color: {{ section.settings.announcement_text_font_color }};
+    --announcement_top_margin: {{ section.settings.announcement_top_margin }}px;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "TGTP-announcement",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "heading",
+      "default": "announcement"
+    },
+    {
+      "type": "color",
+      "id": "announcement_title_font_color",
+      "label": "Title Font Color",
+      "default": "#000000"
+    },
+    {
+      "id": "blog",
+      "type": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "color",
+      "id": "announcement_border_color",
+      "label": "Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "number",
+      "id": "announcement_border_radius",
+      "label": "Border Radius",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "announcement_section_background_color",
+      "label": "Section Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "announcement_background_color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_font_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "number",
+      "id": "announcement_top_margin",
+      "label": "Top Margin",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP-announcement",
+      "category": "Blog",
+      "settings": {
+      }
+    }
+  ]
+}
+{% endschema %}

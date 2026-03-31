@@ -1,0 +1,162 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "disabled": true,
+      "settings": {
+        "logo_position": "middle-left",
+        "menu": "main-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    },
+    "tgtp_header_FU8X76": {
+      "type": "tgtp-header",
+      "blocks": {
+        "account_menu_zJUdUF": {
+          "type": "account_menu",
+          "settings": {
+            "display_icon": true,
+            "account_btn_radius": 20,
+            "account_menu_title_enable": false,
+            "login_btn_inversion": false,
+            "separate_login_register_btn": false,
+            "display_frame_lines": false,
+            "account_btn_txt_color": "#000000",
+            "account_btn_bg_color": "#ffffff",
+            "margin_top": 0
+          }
+        },
+        "search_bar_rTtWkA": {
+          "type": "search_bar",
+          "settings": {
+            "search_bar_color": "#f5f5f5",
+            "search_bar_text_color": "#e0e0e0",
+            "search_bar_border_color": "",
+            "margin_top": 18
+          }
+        },
+        "menu_cRjgey": {
+          "type": "menu",
+          "settings": {
+            "menu_title": "",
+            "title_enable": false,
+            "menu": "main-menu",
+            "margin_top": 28
+          }
+        },
+        "menu_PrdFCt": {
+          "type": "menu",
+          "settings": {
+            "menu_title": "",
+            "title_enable": false,
+            "menu": "",
+            "margin_top": 70
+          }
+        }
+      },
+      "block_order": [
+        "account_menu_zJUdUF",
+        "search_bar_rTtWkA",
+        "menu_cRjgey",
+        "menu_PrdFCt"
+      ],
+      "settings": {
+        "header_height": 60,
+        "mobile_header_height": 64,
+        "header_margin_top": 0,
+        "header_bg_color": "#ba2a20",
+        "header_txt_color": "#ffffff",
+        "pin_cart_enable": false,
+        "pin_cart_bg_color": "#ba2a20",
+        "pin_cart_icon_color": "#ffffff",
+        "cart_bubble_txt_color": "#ffffff",
+        "cart_bubble_bg_color": "#ba2a20",
+        "logo_image": "shopify://shop_images/relive_logo_2_200x_2x_12e8d7c4-7d5e-4c28-b60d-a01ef707f682.avif",
+        "logo_max_width": 160,
+        "mobile_logo_max_width": 140,
+        "menu": "main-menu",
+        "mega_menu_bg": "#ffffff",
+        "mega_menu_text": "#050505",
+        "mobile_search_icon_position": "right",
+        "mobile_cart_icon_position": "right",
+        "mobile_hamburger_icon_position": "left",
+        "enable_language_handle": false,
+        "sidebar_padding_x": 16,
+        "sidebar_padding_top": 60,
+        "sidebar_padding_bottom": 60,
+        "border_enable": true,
+        "acordion_icon": "caret",
+        "second_layer_margin_left": 12,
+        "third_layer_margin_left": 0,
+        "menu_title_txt_color": "#858585",
+        "menu_title_bg_color": "#e4e4e4",
+        "menu_border_color": "#e4e4e4",
+        "link_icon_color": "#050505",
+        "acordion_icon_color": "#858585",
+        "main_txt_color": "#050505",
+        "main_bg_color": "#ffffff",
+        "second_txt_color": "#858585",
+        "second_bg_color": "#ffffff",
+        "third_txt_color": "#050505",
+        "third_bg_color": "#ffffff"
+      }
+    },
+    "tgtp_breadcrumb_4wgPcm": {
+      "type": "tgtp-breadcrumb",
+      "settings": {}
+    },
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "show_line_separator": true,
+        "show_social": false,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    }
+  },
+  "order": [
+    "header",
+    "tgtp_header_FU8X76",
+    "tgtp_breadcrumb_4wgPcm",
+    "announcement-bar"
+  ]
+}

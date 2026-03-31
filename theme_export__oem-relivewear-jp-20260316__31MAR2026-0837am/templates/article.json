@@ -1,0 +1,133 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "featured_image",
+        "title",
+        "share",
+        "content"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "tgtp_main_blog_pkGeUQ": {
+      "type": "tgtp-main-blog",
+      "disabled": true,
+      "settings": {
+        "title": "Collection list",
+        "subheading": "",
+        "heading_iscenter": true,
+        "heading_design": "normal",
+        "heading_color_text": "#222222",
+        "heading_color_sub1": "#fff100",
+        "heading_color_sub2": "rgba(0,0,0,0)",
+        "heading_color_sub3": "rgba(0,0,0,0)",
+        "heading_color_textshadow": "rgba(0,0,0,0)",
+        "image_picker_size": 38,
+        "heading_alternateimage_size": 200,
+        "heading_alternateimage_size_mobile": 200,
+        "subheading_color": "rgba(0,0,0,0)",
+        "title_lower_margin": 80,
+        "title_lower_margin_sp": 80,
+        "blog": "",
+        "post_limit": 3,
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_image": true,
+        "show_date": true,
+        "show_author": false,
+        "show_view_all": true,
+        "view_all_text": "お知らせ一覧",
+        "article_border_color": "#000000",
+        "article_date_font_color": "#000000",
+        "article_content-title_font_color": "#000000",
+        "article_view_all_background_color": "#000000",
+        "article_view_all_border_color": "#000000",
+        "article_view_all_border_radius": 0,
+        "article_view_all_text_color": "#000000",
+        "flexible_button_align": "center",
+        "flexible_button_sp_align": "center",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "tgtp_main_article_Njkziy": {
+      "type": "tgtp-main-article",
+      "blocks": {
+        "title_BcHnb8": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "featured_image_KghFAn": {
+          "type": "featured_image",
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "content_3kkF8m": {
+          "type": "content",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "featured_image_KghFAn",
+        "title_BcHnb8",
+        "content_3kkF8m"
+      ],
+      "settings": {
+        "padding_top": 72,
+        "padding_bottom": 156,
+        "title_align": "center",
+        "button_align": "center",
+        "sp_button_align": "center",
+        "article_view_all_text_color": "#ffffff",
+        "article_view_all_background_color": "#000000",
+        "article_view_all_border_radius": 25,
+        "button_width": 30
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tgtp_main_blog_pkGeUQ",
+    "tgtp_main_article_Njkziy"
+  ]
+}

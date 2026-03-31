@@ -1,0 +1,12 @@
+.tgtp-collection-list__list {
+  margin: 0;
+  padding-left: 0;
+}
+
+.tgtp-collection-list__item {
+  list-style: none;
+}
+
+.slick-prev, .slick-next {
+  display: none !important;
+}

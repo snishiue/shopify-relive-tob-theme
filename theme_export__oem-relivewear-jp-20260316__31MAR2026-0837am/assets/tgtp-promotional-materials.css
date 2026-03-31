@@ -1,0 +1,234 @@
+.promotional-materials__title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 40px;
+}
+
+.promotional-materials__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.promotional-materials__search {
+  flex: 1;
+  max-width: 480px;
+}
+.promotional-materials__filters {
+  display: flex;
+  gap: 12px;
+}
+.promotional-materials__select {
+  height: 46px;
+  padding: 0 36px 0 12px;
+  font-size: 14px;
+  border: 1px solid #E4E4E4;
+  border-radius: 0;
+  outline: none;
+  font-family: inherit;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23050505' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.promotional-materials__select:focus {
+  border-color: #050505;
+}
+.promotional-materials__search-input {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px;
+  font-size: 14px;
+  border: 1px solid #E4E4E4;
+  border-radius: 0;
+  outline: none;
+  font-family: inherit;
+}
+.promotional-materials__search-input:focus {
+  border-color: #050505;
+}
+
+.promotional-materials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.promotional-materials__card {
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.promotional-materials__card-image {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+.promotional-materials__card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.promotional-materials__card-info {
+  padding: 16px;
+}
+.promotional-materials__card-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.promotional-materials__card-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+.promotional-materials__download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  gap: 4px;
+  font-size: 12px;
+  color: #212121;
+  border: 1px solid #BDBDBD;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.promotional-materials__download-btn:hover {
+  background-color: #F5F5F5;
+}
+.promotional-materials__download-icon {
+  flex-shrink: 0;
+}
+.promotional-materials__download-btn--throttled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+.promotional-materials__download-btn--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
+.promotional-materials__loading {
+  text-align: center;
+  color: #9E9E9E;
+  font-size: 14px;
+  margin-top: 40px;
+}
+.promotional-materials__empty {
+  text-align: center;
+  color: #9E9E9E;
+  font-size: 14px;
+  margin-top: 40px;
+}
+.promotional-materials__card-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
+}
+.promotional-materials__card-common {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F5F5F5;
+}
+.promotional-materials__card-common img {
+  width: 108px;
+  height: 108px;
+  object-fit: contain;
+}
+
+.promotional-materials__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-top: 40px;
+}
+.promotional-materials__pagination-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  border: 1px solid #E4E4E4;
+  background: #fff;
+  color: #050505;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.promotional-materials__pagination-btn:hover:not(:disabled) {
+  background-color: #F5F5F5;
+}
+.promotional-materials__pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.promotional-materials__pagination-pages {
+  display: flex;
+  gap: 4px;
+}
+.promotional-materials__pagination-page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  font-size: 14px;
+  border: 1px solid #E4E4E4;
+  background: #fff;
+  color: #050505;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.promotional-materials__pagination-page:hover {
+  background-color: #F5F5F5;
+}
+.promotional-materials__pagination-page.is-active {
+  background-color: #050505;
+  border-color: #050505;
+  color: #fff;
+}
+
+@media screen and (max-width: 989px) {
+  .promotional-materials__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .promotional-materials__title {
+    font-size: 20px;
+    margin-bottom: 28px;
+  }
+  .promotional-materials__controls {
+    flex-direction: column;
+    margin-bottom: 28px;
+  }
+  .promotional-materials__search {
+    width: 100%;
+    max-width: 100%;
+  }
+  .promotional-materials__filters {
+    width: 100%;
+  }
+  .promotional-materials__select {
+    flex: 1;
+  }
+  .promotional-materials__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

@@ -1,0 +1,230 @@
+<div class="footer-social-wrapper">
+  <div class="footer-social {% if section.settings.enable_display_flex %}footer-social--flex{% endif %}">
+    {% if section.settings.enable_text_link %}
+      <a href="{{ section.settings.icon_link_1 }}" target="_blank" class="footer-social__link">
+        <p class="footer-social__text">{{ section.settings.text }}</p>
+        <div class="social-icons">
+          {%- if section.settings.icon_image_1 != blank -%}
+            <div class="social-icon social-icon--1"><img src="{{ section.settings.icon_image_1 | image_url: width: section.settings.icon_image_1.width }}"></div>
+          {%- endif -%}
+        </div>
+      </a>
+    {% else %}
+      <p>{{ section.settings.text }}</p>
+      <div class="social-icons">
+        {%- if section.settings.icon_image_1 != blank -%}
+          <a class="social-icon social-icon--1" href="{{section.settings.icon_link_1}}" target="_blank"><img src="{{ section.settings.icon_image_1 | image_url: width: section.settings.icon_image_1.width }}"></a>
+        {%- endif -%}
+        {%- if section.settings.icon_image_2 != blank -%}
+          <a class="social-icon social-icon--2" href="{{section.settings.icon_link_1}}" target="_blank"><img src="{{ section.settings.icon_image_2 | image_url: width: section.settings.icon_image_2.width }}"></a>
+        {%- endif -%}
+        {%- if section.settings.icon_image_3 != blank -%}
+          <a class="social-icon social-icon--3" href="{{section.settings.icon_link_1}}" target="_blank"><img src="{{ section.settings.icon_image_1 | image_url: width: section.settings.icon_image_3.width }}"></a>
+        {%- endif -%}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  a.footer-social__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    opacity: 1;
+  }
+  .social-icons,
+  .footer-social__text {
+    transition: all ease .3s;
+  }
+  .footer-social__link:hover .footer-social__text {
+    text-decoration: underline;
+    opacity: .7;
+  }
+  .footer-social__link:hover .social-icons {
+    opacity: .7;
+  }
+  .footer-social {
+    padding: 16px {{ section.settings.padding_x }}px;
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+  }
+  .social-icon--1 {
+    width: {{ section.settings.icon_width_1 }}px;
+    margin: calc({{ section.settings.icon_width_1 }}px / 2);
+  }
+  .social-icon--2 {
+    width: {{ section.settings.icon_width_2 }}px;
+    margin: calc({{ section.settings.icon_width_2 }}px / 2);
+  }
+  .social-icon--3 {
+    width: {{ section.settings.icon_width_3 }}px;
+    margin: calc({{ section.settings.icon_width_3 }}px / 2);
+  }
+  .footer-social__text {
+    color: {{ section.settings.text_color }};
+  }
+  @media screen and (max-width: 749px) {
+    .footer-social {
+      padding: 16px {{ section.settings.mobile_padding_x }}px;
+    }
+    .social-icon--1 {
+      width: {{ section.settings.mobile_icon_width_1 }}px;
+      margin: calc({{ section.settings.mobile_icon_width_1 }}px / 2);
+    }
+    .social-icon--2 {
+      width: {{ section.settings.mobile_icon_width_2 }}px;
+      margin: calc({{ section.settings.mobile_icon_width_2 }}px / 2);
+    }
+    .social-icon--3 {
+      width: {{ section.settings.mobile_icon_width_3 }}px;
+      margin: calc({{ section.settings.mobile_icon_width_3 }}px / 2);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "TGTP_footer_social",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_display_flex",
+      "label": "Align text and icons side by side"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_text_link",
+      "label": "テキストにもリンクを設定する",
+      "default": false,
+      "info": "テキストにもリンクを設定する場合は、1つ目のリンクのみが有効になります。"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "text"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "text color"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "margin top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "padding x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_x",
+      "label": "mobile padding x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "icon-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_1",
+      "label": "icon"
+    },
+    {
+      "type": "number",
+      "id": "icon_width_1",
+      "label": "icon width",
+      "default": 20
+    },
+    {
+      "type": "number",
+      "id": "mobile_icon_width_1",
+      "label": "mobile icon width",
+      "default": 20
+    },
+    {
+      "type": "url",
+      "id": "icon_link_1",
+      "label": "link"
+    },
+    {
+      "type": "header",
+      "content": "icon-2"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_2",
+      "label": "icon"
+    },
+    {
+      "type": "number",
+      "id": "icon_width_2",
+      "label": "icon width",
+      "default": 20
+    },
+    {
+      "type": "number",
+      "id": "mobile_icon_width_2",
+      "label": "mobile icon width",
+      "default": 20
+    },
+    {
+      "type": "url",
+      "id": "icon_link_2",
+      "label": "link"
+    },
+    {
+      "type": "header",
+      "content": "icon-3"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image_3",
+      "label": "icon"
+    },
+    {
+      "type": "number",
+      "id": "icon_width_3",
+      "label": "icon width",
+      "default": 20
+    },
+    {
+      "type": "number",
+      "id": "mobile_icon_width_3",
+      "label": "mobile icon width",
+      "default": 20
+    },
+    {
+      "type": "url",
+      "id": "icon_link_3",
+      "label": "link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP_footer_social"
+    }
+  ]
+}
+{% endschema %}

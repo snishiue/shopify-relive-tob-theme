@@ -1,0 +1,166 @@
+{% comment %}
+  Renders a collection card
+
+  Accepts:
+  - card_collection: {Object} Collection Liquid object
+  - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+  - columns: {Number}
+  - extend_height: {Boolean} Card height extends to available container space. Default: false (optional)
+  - wrapper_class: {String} Wrapper class for card (optional)
+  - placeholder_image: {String} Placeholder image when collection is empty (optional)
+
+  Usage:
+  {% render 'card-banner' %}
+{% endcomment %}
+
+{%- liquid
+  assign ratio = 1
+  if banner_image and media_aspect_ratio == 'portrait'
+    assign ratio = 0.8
+  elsif banner_image and media_aspect_ratio == 'adapt'
+    assign ratio = banner_image.aspect_ratio
+  endif
+  if ratio == 0 or ratio == null
+    assign ratio = 1
+  endif
+  assign card_color_scheme = settings.card_color_scheme
+  assign card_style = settings.card_style
+  if wrapper_class == null or wrapper_class == 'none'
+    assign card_color_scheme = settings.collection_card_color_scheme
+    assign card_style = settings.collection_card_style
+  endif
+-%}
+
+{% if is_disable %}
+  {% assign banner_link = blank %}
+{% endif %}
+
+<div class="card-wrapper animate-arrow {% if wrapper_class and wrapper_class != 'none' %}{{ wrapper_class }}{% else %}collection-card-wrapper{% endif %} {% if is_disable %}card-wrapper--disabled{% endif %}">
+  <div
+    class="
+      card
+      card--{{ card_style }}
+      {% if banner_image %} card--media{% else %} card--text{% endif %}
+      {% if card_style == 'card' %} color-{{ card_color_scheme }} gradient{% endif %}
+      {% if extend_height %} card--extend-height{% endif %}
+      {% if banner_image == nil and card_style == 'card' %} ratio{% endif %}
+    "
+    style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+  >
+    <div
+      class="card__inner {% if card_style == 'standard' %}color-{{ card_color_scheme }} gradient{% endif %}{% if banner_image or card_style == 'standard' %} ratio{% endif %}"
+      style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+    >
+      {%- if banner_image -%}
+        <div class="card__media">
+          <div class="media media--transparent media--hover-effect" {% if is_disable %}style="opacity:.7;"{% endif %}>
+            <img
+              srcset="
+                {%- if banner_image.width >= 165 -%}{{ banner_image | image_url: width: 165 }} 165w,{%- endif -%}
+                {%- if banner_image.width >= 330 -%}{{ banner_image | image_url: width: 330 }} 330w,{%- endif -%}
+                {%- if banner_image.width >= 535 -%}{{ banner_image | image_url: width: 535 }} 535w,{%- endif -%}
+                {%- if banner_image.width >= 750 -%}{{ banner_image | image_url: width: 750 }} 750w,{%- endif -%}
+                {%- if banner_image.width >= 1000 -%}{{ banner_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                {%- if banner_image.width >= 1500 -%}{{ banner_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                {%- if banner_image.width >= 3000 -%}{{ banner_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+                {{ banner_image | image_url }} {{ banner_image.width }}w
+              "
+              src="{{ banner_image | image_url: width: 1500 }}"
+              sizes="
+                (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+                (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+                calc(100vw - 3rem)
+              "
+              alt=""
+              height="{{ banner_image.height }}"
+              width="{{ banner_image.width }}"
+              loading="lazy"
+              class="motion-reduce"
+            >
+          </div>
+        </div>
+      {%- endif -%}
+      {%- if banner_image == blank -%}
+        <div class="card__media">
+          {{ placeholder_image | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- else -%}
+        <div class="card__content">
+          <div class="card__information" style="padding: 0; align-items: center;">
+            <h3 class="card__heading">
+              <a
+                {% if banner_link == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ banner_link }}"
+                {% endif %}
+                class="full-unstyled-link"
+              >
+                {%- if banner_title != blank -%}
+                  {{- banner_title | escape -}}sss
+                {%- endif -%}
+                {% comment %} {%- if banner_description == blank -%}
+                  <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+                {%- endif %} {% endcomment %}
+              </a>
+            </h3>
+            {%- if banner_description != blank -%}
+              <p class="card__caption">
+                {{- banner_description | strip_html | truncatewords: 12 -}}
+                <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if card_style == 'card' or banner_image -%}
+      <div class="card__content">
+        <div class="card__information" style="padding: 0; align-items: center; text-align: center;">
+          <h3 class="card__heading">
+            <a
+              {% if banner_link == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ banner_link }}"
+              {% endif %}
+              class="full-unstyled-link"
+            >
+              {%- if banner_title != blank -%}
+                {{- banner_title | escape -}}
+              {%- endif -%}
+              {% comment %} {%- if banner_image or banner_description == blank -%}
+                <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+              {%- endif %} {% endcomment %}
+            </a>
+          </h3>
+          {%- if banner_description != blank -%}
+            <p class="card__caption">
+              {{- banner_description | strip_html | truncatewords: 12 -}}
+              <!-- <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span> -->
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if banner_image == blank -%}
+      <div class="card__content">
+        <div class="card__information" style="padding: 0; align-items: center;">
+          <h3 class="card__heading card__heading--placeholder">
+            {% if is_disable %}
+              <span aria-disabled="true" class="full-unstyled-link">
+                {{ 'onboarding.collection_title' | t }}
+                <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+              </span>
+            {% else %}
+            <a role="link" aria-disabled="true" class="full-unstyled-link">
+              {{ 'onboarding.collection_title' | t }}
+              <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+            </a>
+          {% endif %}
+          </h3>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

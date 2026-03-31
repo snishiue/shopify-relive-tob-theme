@@ -1,0 +1,86 @@
+{% comment %} {% assign contains_disabled = false %} {% endcomment %}
+
+{% comment %} {% for tag in card_product.tags %}
+  {% if tag contains '_disabled:' %}
+    {% assign contains_disabled = true %}
+  {% endif %}
+{% endfor %} {% endcomment %}
+
+{% comment %} {% if card_product.available and contains_disabled == false %} {% endcomment %}
+{% if card_product.available %}
+  {% assign available = true %}
+{% endif %}
+
+{% assign should_display_price = true %}
+
+{% if card_product.metafields.datetime.start != blank %}
+  {% assign start_date = card_product.metafields.datetime.start | date: '%s' %}
+  {% assign current_date = 'now' | date: '%s' %}
+  {% if start_date > current_date and card_product.metafields.custom.hidden_price_until_selling == true %}
+    {% assign should_display_price = false %}
+  {% else %}
+    {% assign should_display_price = true %}
+  {% endif %}
+{% endif %}
+
+<a
+  href="{{card_product.url}}"
+  class="tgtp-goods-item {% unless available %}is-unavailable{% endunless %}">
+  <div class="tgtp-goods-item__media">
+    {%- if card_product.featured_image != blank -%}
+      <figure class="tgtp-goods-item__image">
+        {{ card_product.featured_image | image_url: width: 1024 | image_tag }}
+      </figure>
+    {%- endif -%}
+  </div>
+
+  {% if card_product.tags.size > 0 %}
+    <ul class="tgtp-goods-item__tagcolor">
+      {% comment %} render tags-color {% endcomment %}
+        {% render 'tgtp-tagscolor', tags: card_product.tags, is_thumnail: true, product: card_product, hidden_tag: hidden_tag %}
+      </ul>
+  {% endif %}
+
+  <h3 class="tgtp-goods-item__title">{{ card_product.title | escape | remove: whitelist | remove: '/' | strip }}</h3>
+  {% if customer %}
+    {% if should_display_price and section.settings.visible_product_price or visible_product_price %}
+      <p class="tgtp-goods-item__price">{{ card_product.price | money }}</p>
+    {% endif %}
+  {% endif %}
+  {% comment %} {%- if section.settings.visible_product_link or section.settings.visible_product_add_cart -%}
+    <p class="tgtp-goods-item__meta">
+      {%- if section.settings.visible_product_link -%}
+        {%- if section.settings.product_link_image != blank -%}
+          <a href="{{ card_product.url }}" class="tgtp-goods-item__image-more">
+            {%- liquid
+              assign image_width = section.settings.product_link_image_width
+              if image_width == 0 or image_width == nil
+                assign image_width = 100
+              endif
+              assign image_width_double = image_width | times: 2
+            -%}
+            {{ section.settings.product_link_image | image_url: width: image_width_double | image_tag }}
+          </a>
+        {%- else -%}
+          <a href="{{ card_product.url }}" class="tgtp-goods-item__more">{{ section.settings.product_link_text |  default: 'リンク'}}</a>
+        {%- endif -%}
+      {%- endif -%}
+      {%- if section.settings.visible_product_add_cart -%}
+        {%- if section.settings.product_add_cart_image != blank -%}
+          <button type="button" class="tgtp-goods-item__image-add-cart" data-id="{{ card_product.id }}">
+            {%- liquid
+              assign image_width = section.settings.product_add_cart_image_width
+              if image_width == 0 or image_width == nil
+                assign image_width = 100
+              endif
+              assign image_width_double = image_width | times: 2
+            -%}
+            {{ section.settings.product_add_cart_image | image_url: width: image_width_double | image_tag }}
+          </button>
+        {%- else -%}
+          <button type="button" class="tgtp-goods-item__add-cart" data-id="{{ card_product.id }}">カートに追加</button>
+        {%- endif -%}
+      {%- endif -%}
+    </p>
+  {%- endif -%} {% endcomment %}
+</a>

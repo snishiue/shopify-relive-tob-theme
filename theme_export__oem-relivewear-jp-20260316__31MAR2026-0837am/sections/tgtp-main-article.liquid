@@ -1,0 +1,288 @@
+{% comment %} {{ 'section-blog-post.css' | asset_url | stylesheet_tag }} {% endcomment %}
+{{ 'main-article.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    --article_date_font_color: #9e9e9e;
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="main-blog page-width page-width--narrow section-{{ section.id }}-padding">
+  <article class="article-template type-{{ blog.handle }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'featured_image' -%}
+          {%- if article.image -%}
+            <div
+              class="article-template__hero-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              <div
+                class="article-template__hero-{{ block.settings.image_height }} media"
+                {% if block.settings.image_height == 'adapt' and article.image %}
+                  style="padding-bottom: {{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%;"
+                {% endif %}
+              >
+                <img
+                  srcset="
+                    {% if article.image.width >= 350 %}{{ article.image | image_url: width: 350 }} 350w,{% endif %}
+                    {% if article.image.width >= 750 %}{{ article.image | image_url: width: 750 }} 750w,{% endif %}
+                    {% if article.image.width >= 1100 %}{{ article.image | image_url: width: 1100 }} 1100w,{% endif %}
+                    {% if article.image.width >= 1500 %}{{ article.image | image_url: width: 1500 }} 1500w,{% endif %}
+                    {% if article.image.width >= 2200 %}{{ article.image | image_url: width: 2200 }} 2200w,{% endif %}
+                    {% if article.image.width >= 3000 %}{{ article.image | image_url: width: 3000 }} 3000w,{% endif %}
+                    {{ article.image | image_url }} {{ article.image.width }}w
+                  "
+                  sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 }}px, (min-width: 750px) calc(100vw - 10rem), 100vw"
+                  src="{{ article.image | image_url: width: 1100 }}"
+                  loading="eager"
+                  fetchpriority="high"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  alt="{{ article.image.alt | escape }}"
+                >
+              </div>
+            </div>
+          {%- endif -%}
+        {%- when 'title' -%}
+          <h1 class="main-article__title">{{ article.title | escape }}</h1>
+          {%- if block.settings.blog_show_date -%}
+            <div class="main-article__date">
+              {{- article.published_at | date: "%Y.%m.%d" -}}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.blog_show_author -%}
+            <span class="">
+              <span>{{ article.author }}</span>
+            </span>
+          {%- endif -%}
+        {%- when 'content' -%}
+          <div
+            class="article-template__content rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {{ article.content }}
+          </div>
+      {%- endcase -%}
+    {%- endfor -%}
+
+    <div class="article__view-all flexible-button medium-hide{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      {% if blog.handle == 'pick-up' %}
+        <a href="{{ routes.root_url }}" class="main-article__view-all-button button">ホームに戻る</a>
+      {% else %}
+        <a href="{{ blog.url }}" class="main-article__view-all-button button">
+          {{ 'blogs.article.back_to_blog' | t: title: blog.title | escape }}
+        </a>
+      {% endif %}
+    </div>
+  </article>
+</div>
+
+<script type="application/ld+json">
+  {{ article | structured_data }}
+</script>
+
+{% style %}
+  :root {
+    --article_title_alignment: {{ section.settings.title_align }};
+    --flexible-button_align: {{ section.settings.button_align }};
+    --flexible-button_sp_align: {{ section.settings.sp_button_align }};
+    --article_view_all_text_color: {{ section.settings.article_view_all_text_color }};
+    --article_view_all_background_color: {{ section.settings.article_view_all_background_color }};
+    --article_view_all_border_radius: {{ section.settings.article_view_all_border_radius }}px;
+    --button_width: {{ section.settings.button_width }}px;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "TGTP main article",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "タイトルの配置",
+      "options": [
+        {
+          "value": "left",
+          "label": "左"
+        },
+        {
+          "value": "center",
+          "label": "中央"
+        },
+        {
+          "value": "right",
+          "label": "右"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "button_align",
+      "label": "ボタンの配置",
+      "options": [
+        {
+          "value": "left",
+          "label": "左"
+        },
+        {
+          "value": "center",
+          "label": "中央"
+        },
+        {
+          "value": "right",
+          "label": "右"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "sp_button_align",
+      "label": "スマートフォンのボタンの配置",
+      "options": [
+        {
+          "value": "left",
+          "label": "左"
+        },
+        {
+          "value": "center",
+          "label": "中央"
+        },
+        {
+          "value": "right",
+          "label": "右"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "article_view_all_text_color",
+      "label": "戻るボタンのテキストの色",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "article_view_all_background_color",
+      "label": "戻るボタンの背景の色",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "article_view_all_border_radius",
+      "label": "戻るボタンの角の丸み",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_width",
+      "label": "ボタンの幅",
+      "min": 30,
+      "max": 120,
+      "step": 1,
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_image",
+      "name": "t:sections.main-article.blocks.featured_image.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "image_height",
+          "options": [
+            {
+              "value": "adapt",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__1.label"
+            },
+            {
+              "value": "small",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__2.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__3.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.main-article.blocks.featured_image.settings.image_height.options__4.label"
+            }
+          ],
+          "default": "adapt",
+          "label": "t:sections.main-article.blocks.featured_image.settings.image_height.label",
+          "info": "t:sections.main-article.blocks.featured_image.settings.image_height.info"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "t:sections.main-article.blocks.title.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "blog_show_date",
+          "default": true,
+          "label": "t:sections.main-article.blocks.title.settings.blog_show_date.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_author",
+          "default": false,
+          "label": "t:sections.main-article.blocks.title.settings.blog_show_author.label"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "t:sections.main-article.blocks.content.name",
+      "limit": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP main article"
+    }
+  ]
+}
+{% endschema %}
+

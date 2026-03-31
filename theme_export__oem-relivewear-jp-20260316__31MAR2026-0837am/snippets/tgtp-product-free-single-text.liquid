@@ -1,0 +1,3 @@
+{% if product and body != blank %}
+  <div class="tgtp-product-free-single-text color-{{ color_scheme }}">{% if heading != blank %}{{ heading }}{% endif %}{{ body | escape }}</div>
+{% endif %}

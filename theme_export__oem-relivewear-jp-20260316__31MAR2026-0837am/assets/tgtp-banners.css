@@ -1,0 +1,10 @@
+.tgtp-banners__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 0;
+}
+
+.tgtp-banners__item {
+  list-style: none;
+}

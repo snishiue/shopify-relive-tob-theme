@@ -1,0 +1,51 @@
+{% assign no_crop = true %}
+
+{% if alt == blank %}
+	{% assign alt = image.alt %}
+{% endif %}
+
+{% if ratio == blank %}
+	{% assign ratio = image.aspect_ratio %}
+{% else %}
+  {% assign srcset_320 = 320 | times: ratio | prepend: '320x' %}
+  {% assign srcset_600 = 600 | times: ratio | prepend: '600x' %}
+  {% assign srcset_860 = 860 | times: ratio | prepend: '860x' %}
+  {% assign srcset_1100 = 1100 | times: ratio | prepend: '1100x' %}
+  {% assign srcset_1600 = 1600 | times: ratio | prepend: '1600x' %}
+  {% assign srcset_2100 = 2100 | times: ratio | prepend: '1920x' %}
+  {% assign no_crop = false %}
+{% endif %}
+
+{% if no_crop %}
+	{% capture data_src_set %} data-srcset="{{ image | img_url: '320x' }} 260w, {{ image | img_url: '600x' }} 480w, {{ image | img_url: '860x' }} 720w, {{ image | img_url: '1100x' }} 960w, {{ image | img_url: '1600x' }} 1440w, {{ image | img_url: '2100x' }} 1920w" {% endcapture %}
+{% else %}
+	{% capture data_src_set %} data-srcset="{{ image | img_url: srcset_320, crop: 'center' }} 260w, {{ image | img_url: srcset_600, crop: 'center' }} 480w, {{ image | img_url: srcset_860, crop: 'center' }} 720w, {{ image | img_url: srcset_1100, crop: 'center' }} 960w, {{ image | img_url: srcset_1600, crop: 'center' }} 1440w, {{ image | img_url: srcset_2100, crop: 'center' }} 1920w" {% endcapture %}
+{% endif %}
+
+<figure data-crop="{{ no_crop }}" class="lazy-image {% if type == 'background' %} lazy-image--background {% endif %}" {% unless ratio == blank %} data-ratio="{{ ratio }}" {% endunless %}>
+
+	<img
+	  src="{{ image | img_url: '1600x' }}" alt="{{ alt | escape }}"
+	  srcset="{{ image | img_url: '1600x' }}"
+	  {{ data_src_set }}
+	  data-sizes="auto" class="img lazyload"
+ 	/>
+	{% if settings.show_preloader %}
+		<span class="lazy-preloader"></span>
+	{% endif %}
+
+	<noscript><span class="ll-fallback" style="background-image:url({{ image | img_url: '860x' }})"></span></noscript>
+
+	{% unless caption == blank %}
+		<figcaption class="lazy-caption">{{ caption | escape }}</figcaption>
+	{% endunless %}
+
+	{% if zoom %}
+		<div class="product__image-zoom" data-image="{{ image | img_url: 'master' }}" aria-hidden="true">
+			{% render 'theme-symbols', icon: 'zoom-in' %}
+		</div>
+	{% endif %}
+
+</figure>
+
+{% assign ratio = blank %}

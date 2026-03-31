@@ -1,0 +1,90 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "disabled": true,
+      "settings": {
+        "layout": "collage",
+        "show_image": true,
+        "image_height": "medium",
+        "show_date": true,
+        "show_author": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "tgtp_main_blog_RDhqkR": {
+      "type": "tgtp-main-blog",
+      "disabled": true,
+      "settings": {
+        "title": "Collection list",
+        "subheading": "",
+        "heading_iscenter": true,
+        "heading_design": "normal",
+        "heading_color_text": "#222222",
+        "heading_color_sub1": "#fff100",
+        "heading_color_sub2": "rgba(0,0,0,0)",
+        "heading_color_sub3": "rgba(0,0,0,0)",
+        "heading_color_textshadow": "rgba(0,0,0,0)",
+        "image_picker_size": 38,
+        "heading_alternateimage_size": 200,
+        "heading_alternateimage_size_mobile": 200,
+        "subheading_color": "rgba(0,0,0,0)",
+        "title_lower_margin": 80,
+        "title_lower_margin_sp": 80,
+        "blog": "",
+        "post_limit": 3,
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_image": true,
+        "show_date": true,
+        "show_author": false,
+        "show_view_all": true,
+        "view_all_text": "お知らせ一覧",
+        "article_border_color": "#000000",
+        "article_date_font_color": "#000000",
+        "article_content-title_font_color": "#000000",
+        "article_view_all_background_color": "#000000",
+        "article_view_all_border_color": "#000000",
+        "article_view_all_border_radius": 0,
+        "article_view_all_text_color": "#000000",
+        "flexible_button_align": "center",
+        "flexible_button_sp_align": "center",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "tgtp_news_index_Fd4Vit": {
+      "type": "tgtp-news-index",
+      "settings": {
+        "title": "お知らせ一覧",
+        "title_alignment": "center",
+        "show_image": false,
+        "image_height": "medium",
+        "show_date": true,
+        "show_author": false,
+        "article_count": 20,
+        "article_content-title_font_color": "#000000",
+        "article_date_font_color": "#9e9e9e",
+        "article_border_color": "#9e9e9e",
+        "padding_top": 60,
+        "padding_bottom": 36,
+        "padding_content_top": 72
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tgtp_main_blog_RDhqkR",
+    "tgtp_news_index_Fd4Vit"
+  ]
+}

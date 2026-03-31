@@ -1,0 +1,147 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "tgtp_feature_collection_aXnRwC": {
+      "type": "tgtp-feature-collection",
+      "blocks": {
+        "featured_collection_xgpc9f": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "shopify:\/\/products\/4535123845819",
+            "banner_image": "shopify:\/\/shop_images\/tenohira_shiki__0714.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_fCjxDV": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "shopify:\/\/collections\/cabi-net",
+            "banner_image": "shopify:\/\/shop_images\/cabi-net_tougenanki.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_7KPM8G": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "shopify:\/\/collections\/storeoriginal",
+            "banner_image": "shopify:\/\/shop_images\/storeoriginal_1.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_3Y6Uwg": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "https:\/\/tougenanki-animestore.com\/collections\/kotobukiya",
+            "banner_image": "shopify:\/\/shop_images\/PV309_ARTFXJ_ShikiIchinose_4-3banner.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_XNjjAW": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "https:\/\/tougenanki-animestore.com\/collections\/bandai",
+            "banner_image": "shopify:\/\/shop_images\/WEB_7b6f331b-51e9-43ee-bf3c-300201c65769.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_pjVDpJ": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "https:\/\/tougenanki-animestore.com\/collections\/avengerz",
+            "banner_image": "shopify:\/\/shop_images\/2000x1500_banner_mini.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_y9rD3x": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "https:\/\/tougenanki-animestore.com\/blogs\/news\/postcards",
+            "banner_image": "shopify:\/\/shop_images\/15_1.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_fDXXwC": {
+          "type": "featured_collection",
+          "disabled": true,
+          "settings": {
+            "banner_link": "",
+            "banner_image": "shopify:\/\/shop_images\/0002_4x3_b0298e18-ab89-43ba-8907-441b0fba9c39.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        },
+        "featured_collection_Ez9B9t": {
+          "type": "featured_collection",
+          "settings": {
+            "banner_link": "shopify:\/\/blogs\/news\/storeopen",
+            "banner_image": "shopify:\/\/shop_images\/Tougen_puresu_250610.jpg",
+            "is_disable": false,
+            "banner_title": "",
+            "banner_description": ""
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_xgpc9f",
+        "featured_collection_fCjxDV",
+        "featured_collection_7KPM8G",
+        "featured_collection_3Y6Uwg",
+        "featured_collection_XNjjAW",
+        "featured_collection_pjVDpJ",
+        "featured_collection_y9rD3x",
+        "featured_collection_fDXXwC",
+        "featured_collection_Ez9B9t"
+      ],
+      "settings": {
+        "title": "特集一覧",
+        "heading_size": "h2",
+        "is_heading_bold": true,
+        "is_heading_center": true,
+        "image_ratio": "adapt",
+        "columns_desktop": 4,
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "is_fixed": false,
+        "is_modal": false
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tgtp_feature_collection_aXnRwC"
+  ]
+}

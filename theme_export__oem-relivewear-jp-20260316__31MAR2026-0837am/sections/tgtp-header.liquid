@@ -1,0 +1,854 @@
+<link rel="stylesheet" href="{{ 'tgtp-header.css' | asset_url }}">
+<script src="{{ 'tgtp-header.js' | asset_url }}" defer="defer"></script>
+
+<div class="header-wrapper">
+<header>
+  <div class="header__inner">
+    <div class="header-contents--PC">
+      <div class="logo logo--PC">
+        <a href="{{ routes.root_url }}" class="logo__link">
+          {%- if section.settings.logo_image != blank -%}
+            <img
+              src="{{ section.settings.logo_image | image_url: 'master' }}"
+              srcset="{{ section.settings.logo_image | image_url: width: section.settings.logo_image.width }} 1x, {{ section.settings.logo_image | image_url: width: section.settings.logo_image.width }} 2x"
+              width="{{ section.settings.logo_image.width }}"
+              height="{{ section.settings.logo_image.height }}"
+              alt="{{ section.settings.logo_image.alt | default: shop.name | escape }}"
+              class="logo-img"
+            >
+          {%- else -%}
+            <img
+              src="{{ 'relive_logo_2_200x@2x.png' | asset_url }}"
+              alt="{{ shop.name | escape }}"
+              class="logo-img"
+            >
+          {%- endif -%}
+        </a>
+      </div>
+      <div class="nav-bar">
+        <div class="nav-bar__inner">
+          {%- assign menu_handle = section.settings.menu | default: 'main-menu' -%}
+          {%- assign nav_menu = linklists[menu_handle] -%}
+          {%- for link in nav_menu.links -%}
+            <div class="nav-item">
+              {%- if link.links.size == 0 and link.url != '/' -%}
+                <a href="{{ link.url }}" class="nav-bar__link link" data-type="menuitem">{{ link.title }}</a>
+              {%- else -%}
+                {%- capture index -%}desktop-menu-0-{{ forloop.index }}{%- endcapture -%}
+                {%- if link.links == blank -%}
+                  <a href="{{ link.url }}" class="nav-bar__link link" data-type="menuitem" aria-expanded="false" aria-controls="{{ index }}" aria-haspopup="true">
+                {%- else -%}
+                  <span href="{{ link.url }}" class="nav-bar__link link" data-type="menuitem" aria-expanded="false" aria-controls="{{ index }}" aria-haspopup="true">
+                {%- endif -%}
+                  {{- link.title -}}
+                {%- if link.links == blank -%}
+                  </a>
+                {%- else -%}
+                  </span>
+                {%- endif -%}
+                {%- if link.links != blank -%}
+                {% render 'tgtp-mega-menu', mega_menu: link, index: index, menu_parent: link %}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="right-icons">
+        <div class="search">
+          <button class="search-btn icon">
+            {{ 'icon-header-search.svg' | inline_asset_content }}
+          </button>
+        </div>
+        <div>
+          <a href="{{ routes.account_url }}" class="icon account__link">
+            {{ 'icon-header-user.svg' | inline_asset_content }}
+          </a>
+        </div>
+        <div class="cart">
+          <a href="{{ routes.cart_url }}" class="icon cart__link" id="cart-icon-bubble">
+            {%- if cart != empty -%}
+              <div class="cart-count-bubble">
+                {%- if cart.item_count < 100 -%}
+                  <span aria-hidden="true">{{ cart.item_count }}</span>
+                {%- endif -%}
+                <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+              </div>
+            {%- endif -%}
+            {{ 'icon-header-cart.svg' | inline_asset_content }}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="header-contents--SP">
+      <div class="header-contents header-contents--left">
+        {%- if section.settings.mobile_hamburger_icon_position == 'left' -%}
+          <button class="hamburger icon">
+            {{ 'icon-header-hamburger.svg' | inline_asset_content }}
+          </button>
+        {%- endif -%}
+        {%- if section.settings.mobile_search_icon_position == 'left' -%}
+          <div class="search">
+            <button class="search-btn icon">
+              {{ 'icon-header-search.svg' | inline_asset_content }}
+            </button>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.mobile_cart_icon_position == 'left' -%}
+          <div class="cart">
+            <a href="{{ routes.cart_url }}" class="icon cart__link" id="cart-icon-bubble-sp">
+              {%- if cart != empty -%}
+                <div class="cart-count-bubble">
+                  {%- if cart.item_count < 100 -%}
+                    <span aria-hidden="true">{{ cart.item_count }}</span>
+                  {%- endif -%}
+                  <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+                </div>
+              {%- endif -%}
+              {{ 'icon-header-cart.svg' | inline_asset_content }}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="logo">
+        <a href="{{ routes.root_url }}" class="logo__link">
+          {%- if section.settings.logo_image != blank -%}
+            <img
+              src="{{ section.settings.logo_image | image_url: 'master' }}"
+              srcset="{{ section.settings.logo_image | image_url: width: section.settings.logo_image.width }} 1x, {{ section.settings.logo_image | image_url: width: section.settings.logo_image.width }} 2x"
+              width="{{ section.settings.logo_image.width }}"
+              height="{{ section.settings.logo_image.height }}"
+              alt="{{ section.settings.logo_image.alt | default: shop.name | escape }}"
+              class="logo-img"
+            >
+          {%- else -%}
+            <img
+              src="{{ 'relive_logo_2_200x@2x.png' | asset_url }}"
+              alt="{{ shop.name | escape }}"
+              class="logo-img"
+            >
+          {%- endif -%}
+        </a>
+      </div>
+      <div class="header-contents header-contents--right">
+        {%- if section.settings.enable_language_handle -%}
+          <div class="desktop-localization-wrapper">
+            {%- if section.settings.enable_language_handle and localization.available_countries.size > 1 -%}
+              <localization-form class="small-hide medium-hide" data-prevent-hide>
+                {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                    {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {% endif %}
+
+            {%- if section.settings.enable_language_handle and localization.available_languages.size > 1 -%}
+              <localization-form class="small-hide medium-hide" data-prevent-hide>
+                {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+                  <div>
+                    <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                    {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+                  </div>
+                {%- endform -%}
+              </localization-form>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.mobile_search_icon_position == 'right' -%}
+          <div class="search">
+            <button class="search-btn icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5299 18.4694L14.8358 13.7763C16.1963 12.1429 16.8748 10.0478 16.73 7.92694C16.5852 5.80607 15.6283 3.82268 14.0584 2.38935C12.4885 0.95602 10.4264 0.183113 8.30115 0.231413C6.1759 0.279713 4.15108 1.1455 2.64791 2.64867C1.14474 4.15184 0.27895 6.17666 0.23065 8.30191C0.18235 10.4272 0.955257 12.4892 2.38859 14.0591C3.82191 15.629 5.80531 16.5859 7.92618 16.7307C10.047 16.8755 12.1421 16.1971 13.7755 14.8366L18.4686 19.5306C18.5383 19.6003 18.621 19.6556 18.7121 19.6933C18.8031 19.731 18.9007 19.7504 18.9992 19.7504C19.0978 19.7504 19.1954 19.731 19.2864 19.6933C19.3775 19.6556 19.4602 19.6003 19.5299 19.5306C19.5995 19.4609 19.6548 19.3782 19.6925 19.2872C19.7302 19.1961 19.7497 19.0985 19.7497 19C19.7497 18.9015 19.7302 18.8039 19.6925 18.7128C19.6548 18.6218 19.5995 18.5391 19.5299 18.4694ZM1.74924 8.5C1.74924 7.16498 2.14512 5.85993 2.88682 4.7499C3.62852 3.63987 4.68272 2.77471 5.91612 2.26381C7.14953 1.75292 8.50673 1.61925 9.8161 1.8797C11.1255 2.14015 12.3282 2.78303 13.2722 3.72703C14.2162 4.67103 14.8591 5.87377 15.1195 7.18314C15.38 8.49251 15.2463 9.84971 14.7354 11.0831C14.2245 12.3165 13.3594 13.3707 12.2493 14.1124C11.1393 14.8541 9.83426 15.25 8.49924 15.25C6.70964 15.248 4.9939 14.5362 3.72846 13.2708C2.46302 12.0053 1.75122 10.2896 1.74924 8.5Z" fill="white"/></svg>
+            </button>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.mobile_cart_icon_position == 'right' -%}
+          <div class="cart">
+            <a href="{{ routes.cart_url }}" class="icon cart__link" id="cart-icon-bubble-sp">
+              {%- if cart != empty -%}
+                <div class="cart-count-bubble">
+                  {%- if cart.item_count < 100 -%}
+                    <span aria-hidden="true">{{ cart.item_count }}</span>
+                  {%- endif -%}
+                  <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+                </div>
+              {%- endif -%}
+              <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.0734 4.01864C20.003 3.9344 19.915 3.86665 19.8155 3.82016C19.7161 3.77368 19.6076 3.74959 19.4978 3.74961H4.37576L3.80583 0.615873C3.77444 0.44308 3.68339 0.286784 3.54858 0.174236C3.41376 0.0616874 3.24372 2.53822e-05 3.0681 0H0.749917C0.551026 0 0.360282 0.0790094 0.219645 0.219647C0.0790088 0.360285 0 0.55103 0 0.749922C0 0.948813 0.0790088 1.13956 0.219645 1.2802C0.360282 1.42083 0.551026 1.49984 0.749917 1.49984H2.43723L4.83321 14.6507C4.90379 15.0407 5.07615 15.4051 5.33285 15.7071C4.97855 16.038 4.72284 16.4606 4.59404 16.928C4.46525 17.3954 4.46842 17.8893 4.6032 18.355C4.73798 18.8207 4.99911 19.2399 5.35762 19.5663C5.71613 19.8926 6.15802 20.1133 6.63429 20.2038C7.11056 20.2944 7.60259 20.2512 8.05584 20.0792C8.50909 19.9071 8.90583 19.6129 9.20208 19.2292C9.49833 18.8454 9.68251 18.3871 9.73419 17.9051C9.78587 17.4231 9.70304 16.9361 9.49488 16.4983H13.7525C13.5848 16.8495 13.498 17.2339 13.4985 17.6232C13.4985 18.1423 13.6524 18.6497 13.9408 19.0814C14.2293 19.513 14.6392 19.8494 15.1188 20.0481C15.5984 20.2468 16.1261 20.2987 16.6353 20.1975C17.1444 20.0962 17.6121 19.8462 17.9792 19.4791C18.3462 19.1121 18.5962 18.6444 18.6975 18.1352C18.7988 17.6261 18.7468 17.0983 18.5481 16.6187C18.3495 16.1391 18.0131 15.7292 17.5814 15.4408C17.1498 15.1524 16.6423 14.9984 16.1232 14.9984H7.0464C6.87078 14.9984 6.70074 14.9368 6.56593 14.8242C6.43111 14.7117 6.34007 14.5554 6.30867 14.3826L6.01152 12.7487H16.8853C17.4122 12.7486 17.9223 12.5636 18.3268 12.226C18.7312 11.8883 19.0043 11.4194 19.0985 10.9011L20.2384 4.63358C20.2577 4.52525 20.2529 4.41401 20.2244 4.30773C20.1959 4.20146 20.1443 4.10276 20.0734 4.01864ZM8.24908 17.6232C8.24908 17.8456 8.18311 18.0631 8.05951 18.2481C7.93591 18.4331 7.76022 18.5773 7.55468 18.6624C7.34914 18.7476 7.12296 18.7698 6.90476 18.7264C6.68655 18.683 6.48612 18.5759 6.3288 18.4186C6.17149 18.2613 6.06435 18.0608 6.02095 17.8426C5.97754 17.6244 5.99982 17.3982 6.08496 17.1927C6.1701 16.9871 6.31428 16.8115 6.49926 16.6879C6.68425 16.5643 6.90173 16.4983 7.12421 16.4983C7.42254 16.4983 7.70866 16.6168 7.91962 16.8278C8.13057 17.0387 8.24908 17.3248 8.24908 17.6232ZM17.2481 17.6232C17.2481 17.8456 17.1821 18.0631 17.0585 18.2481C16.9349 18.4331 16.7592 18.5773 16.5537 18.6624C16.3481 18.7476 16.122 18.7698 15.9038 18.7264C15.6856 18.683 15.4851 18.5759 15.3278 18.4186C15.1705 18.2613 15.0634 18.0608 15.0199 17.8426C14.9765 17.6244 14.9988 17.3982 15.084 17.1927C15.1691 16.9871 15.3133 16.8115 15.4983 16.6879C15.6832 16.5643 15.9007 16.4983 16.1232 16.4983C16.4215 16.4983 16.7077 16.6168 16.9186 16.8278C17.1296 17.0387 17.2481 17.3248 17.2481 17.6232ZM17.623 10.633C17.5916 10.8062 17.5001 10.9629 17.3647 11.0755C17.2293 11.1881 17.0586 11.2495 16.8825 11.2488H5.73874L4.64855 5.24945H18.5989L17.623 10.633Z" fill="white"/></svg>
+            </a>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.mobile_hamburger_icon_position == 'right' -%}
+          <button class="hamburger icon">
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 7C18 7.19891 17.921 7.38968 17.7803 7.53033C17.6397 7.67098 17.4489 7.75 17.25 7.75H0.75C0.551088 7.75 0.360322 7.67098 0.21967 7.53033C0.0790178 7.38968 0 7.19891 0 7C0 6.80109 0.0790178 6.61032 0.21967 6.46967C0.360322 6.32902 0.551088 6.25 0.75 6.25H17.25C17.4489 6.25 17.6397 6.32902 17.7803 6.46967C17.921 6.61032 18 6.80109 18 7ZM0.75 1.75H17.25C17.4489 1.75 17.6397 1.67098 17.7803 1.53033C17.921 1.38968 18 1.19891 18 1C18 0.801088 17.921 0.610322 17.7803 0.46967C17.6397 0.329018 17.4489 0.25 17.25 0.25H0.75C0.551088 0.25 0.360322 0.329018 0.21967 0.46967C0.0790178 0.610322 0 0.801088 0 1C0 1.19891 0.0790178 1.38968 0.21967 1.53033C0.360322 1.67098 0.551088 1.75 0.75 1.75ZM17.25 12.25H0.75C0.551088 12.25 0.360322 12.329 0.21967 12.4697C0.0790178 12.6103 0 12.8011 0 13C0 13.1989 0.0790178 13.3897 0.21967 13.5303C0.360322 13.671 0.551088 13.75 0.75 13.75H17.25C17.4489 13.75 17.6397 13.671 17.7803 13.5303C17.921 13.3897 18 13.1989 18 13C18 12.8011 17.921 12.6103 17.7803 12.4697C17.6397 12.329 17.4489 12.25 17.25 12.25Z" fill="white"/>
+            </svg>
+          </button>
+        {%- endif -%}
+      </div>
+    </div>
+    <form action="/search" method="get" class="search-form">
+      <div class="searchbar">
+        <input type="text" name="q" placeholder="検索" aria-label="Search">
+        <button type="submit" class="icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5306 18.4693L14.8365 13.7762C16.1971 12.1428 16.8755 10.0478 16.7307 7.92691C16.5859 5.80604 15.629 3.82265 14.0591 2.38932C12.4892 0.955989 10.4271 0.183083 8.30188 0.231383C6.17663 0.279683 4.15181 1.14547 2.64864 2.64864C1.14547 4.15181 0.279683 6.17663 0.231383 8.30188C0.183083 10.4271 0.955989 12.4892 2.38932 14.0591C3.82265 15.629 5.80604 16.5859 7.92691 16.7307C10.0478 16.8755 12.1428 16.1971 13.7762 14.8365L18.4693 19.5306C18.539 19.6003 18.6218 19.6556 18.7128 19.6933C18.8038 19.731 18.9014 19.7504 19 19.7504C19.0985 19.7504 19.1961 19.731 19.2871 19.6933C19.3782 19.6556 19.4609 19.6003 19.5306 19.5306C19.6003 19.4609 19.6556 19.3782 19.6933 19.2871C19.731 19.1961 19.7504 19.0985 19.7504 19C19.7504 18.9014 19.731 18.8038 19.6933 18.7128C19.6556 18.6218 19.6003 18.539 19.5306 18.4693ZM1.74997 8.49997C1.74997 7.16495 2.14585 5.8599 2.88755 4.74987C3.62925 3.63984 4.68346 2.77467 5.91686 2.26378C7.15026 1.75289 8.50746 1.61922 9.81683 1.87967C11.1262 2.14012 12.3289 2.78299 13.2729 3.727C14.2169 4.671 14.8598 5.87374 15.1203 7.18311C15.3807 8.49248 15.2471 9.84968 14.7362 11.0831C14.2253 12.3165 13.3601 13.3707 12.2501 14.1124C11.14 14.8541 9.83499 15.25 8.49997 15.25C6.71037 15.248 4.99463 14.5362 3.72919 13.2708C2.46375 12.0053 1.75196 10.2896 1.74997 8.49997Z" fill="#212121"/></svg>
+        </button>
+      </div>
+      <div class="search-form__close">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.2806 14.2194C15.3502 14.2891 15.4055 14.3718 15.4432 14.4629C15.4809 14.5539 15.5003 14.6515 15.5003 14.7501C15.5003 14.8486 15.4809 14.9462 15.4432 15.0372C15.4055 15.1283 15.3502 15.211 15.2806 15.2807C15.2109 15.3504 15.1281 15.4056 15.0371 15.4433C14.9461 15.4811 14.8485 15.5005 14.7499 15.5005C14.6514 15.5005 14.5538 15.4811 14.4628 15.4433C14.3717 15.4056 14.289 15.3504 14.2193 15.2807L7.99993 9.06036L1.78055 15.2807C1.63982 15.4214 1.44895 15.5005 1.24993 15.5005C1.05091 15.5005 0.860034 15.4214 0.719304 15.2807C0.578573 15.1399 0.499512 14.9491 0.499512 14.7501C0.499512 14.551 0.578573 14.3602 0.719304 14.2194L6.93962 8.00005L0.719304 1.78068C0.578573 1.63995 0.499512 1.44907 0.499512 1.25005C0.499512 1.05103 0.578573 0.860156 0.719304 0.719426C0.860034 0.578695 1.05091 0.499634 1.24993 0.499634C1.44895 0.499634 1.63982 0.578695 1.78055 0.719426L7.99993 6.93974L14.2193 0.719426C14.36 0.578695 14.5509 0.499634 14.7499 0.499634C14.949 0.499634 15.1398 0.578695 15.2806 0.719426C15.4213 0.860156 15.5003 1.05103 15.5003 1.25005C15.5003 1.44907 15.4213 1.63995 15.2806 1.78068L9.06024 8.00005L15.2806 14.2194Z" fill="black"/></svg>
+      </div>
+    </form>
+  </div>
+  {%- if section.settings.pin_cart_enable -%}
+    <div class="pin-cart">
+      <a a href="{{ routes.cart_url }}" class="icon cart__link" id="cart-icon-bubble-pin">
+        {%- if cart != empty -%}
+          <div class="cart-count-bubble">
+            {%- if cart.item_count < 100 -%}
+              <span aria-hidden="true">{{ cart.item_count }}</span>
+            {%- endif -%}
+            <span class="visually-hidden">{{ 'sections.header.cart_count' | t: count: cart.item_count }}</span>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.pin_cart_icon != blank -%}
+          <img
+            src="{{ section.settings.pin_cart_icon | image_url: 'master' }}"
+            srcset="{{ section.settings.pin_cart_icon | image_url: width: section.settings.pin_cart_icon.width }} 1x, {{ section.settings.pin_cart_icon | image_url: width: section.settings.pin_cart_icon.width }} 2x"
+            width="{{ section.settings.pin_cart_icon.width }}"
+            height="{{ section.settings.pin_cart_icon.height }}"
+            alt="{{ section.settings.pin_cart_icon.alt | default: shop.name | escape }}"
+            class="pin-cart__img"
+          >
+        {%- else -%}
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.0734 4.01864C20.003 3.9344 19.915 3.86665 19.8155 3.82016C19.7161 3.77368 19.6076 3.74959 19.4978 3.74961H4.37576L3.80583 0.615873C3.77444 0.44308 3.68339 0.286784 3.54858 0.174236C3.41376 0.0616874 3.24372 2.53822e-05 3.0681 0H0.749917C0.551026 0 0.360282 0.0790094 0.219645 0.219647C0.0790088 0.360285 0 0.55103 0 0.749922C0 0.948813 0.0790088 1.13956 0.219645 1.2802C0.360282 1.42083 0.551026 1.49984 0.749917 1.49984H2.43723L4.83321 14.6507C4.90379 15.0407 5.07615 15.4051 5.33285 15.7071C4.97855 16.038 4.72284 16.4606 4.59404 16.928C4.46525 17.3954 4.46842 17.8893 4.6032 18.355C4.73798 18.8207 4.99911 19.2399 5.35762 19.5663C5.71613 19.8926 6.15802 20.1133 6.63429 20.2038C7.11056 20.2944 7.60259 20.2512 8.05584 20.0792C8.50909 19.9071 8.90583 19.6129 9.20208 19.2292C9.49833 18.8454 9.68251 18.3871 9.73419 17.9051C9.78587 17.4231 9.70304 16.9361 9.49488 16.4983H13.7525C13.5848 16.8495 13.498 17.2339 13.4985 17.6232C13.4985 18.1423 13.6524 18.6497 13.9408 19.0814C14.2293 19.513 14.6392 19.8494 15.1188 20.0481C15.5984 20.2468 16.1261 20.2987 16.6353 20.1975C17.1444 20.0962 17.6121 19.8462 17.9792 19.4791C18.3462 19.1121 18.5962 18.6444 18.6975 18.1352C18.7988 17.6261 18.7468 17.0983 18.5481 16.6187C18.3495 16.1391 18.0131 15.7292 17.5814 15.4408C17.1498 15.1524 16.6423 14.9984 16.1232 14.9984H7.0464C6.87078 14.9984 6.70074 14.9368 6.56593 14.8242C6.43111 14.7117 6.34007 14.5554 6.30867 14.3826L6.01152 12.7487H16.8853C17.4122 12.7486 17.9223 12.5636 18.3268 12.226C18.7312 11.8883 19.0043 11.4194 19.0985 10.9011L20.2384 4.63358C20.2577 4.52525 20.2529 4.41401 20.2244 4.30773C20.1959 4.20146 20.1443 4.10276 20.0734 4.01864ZM8.24908 17.6232C8.24908 17.8456 8.18311 18.0631 8.05951 18.2481C7.93591 18.4331 7.76022 18.5773 7.55468 18.6624C7.34914 18.7476 7.12296 18.7698 6.90476 18.7264C6.68655 18.683 6.48612 18.5759 6.3288 18.4186C6.17149 18.2613 6.06435 18.0608 6.02095 17.8426C5.97754 17.6244 5.99982 17.3982 6.08496 17.1927C6.1701 16.9871 6.31428 16.8115 6.49926 16.6879C6.68425 16.5643 6.90173 16.4983 7.12421 16.4983C7.42254 16.4983 7.70866 16.6168 7.91962 16.8278C8.13057 17.0387 8.24908 17.3248 8.24908 17.6232ZM17.2481 17.6232C17.2481 17.8456 17.1821 18.0631 17.0585 18.2481C16.9349 18.4331 16.7592 18.5773 16.5537 18.6624C16.3481 18.7476 16.122 18.7698 15.9038 18.7264C15.6856 18.683 15.4851 18.5759 15.3278 18.4186C15.1705 18.2613 15.0634 18.0608 15.0199 17.8426C14.9765 17.6244 14.9988 17.3982 15.084 17.1927C15.1691 16.9871 15.3133 16.8115 15.4983 16.6879C15.6832 16.5643 15.9007 16.4983 16.1232 16.4983C16.4215 16.4983 16.7077 16.6168 16.9186 16.8278C17.1296 17.0387 17.2481 17.3248 17.2481 17.6232ZM17.623 10.633C17.5916 10.8062 17.5001 10.9629 17.3647 11.0755C17.2293 11.1881 17.0586 11.2495 16.8825 11.2488H5.73874L4.64855 5.24945H18.5989L17.623 10.633Z" fill="white"/></svg>
+        {%- endif -%}
+      </a>
+    </div>
+  {%- endif -%}
+</header>
+</div>
+
+<div class="sidebar-wrapper">
+  {% render 'tgtp-header-sidebar', section: section %}
+</div>
+
+<style>
+  .header-wrapper {
+    --header-height: {{ section.settings.header_height }}px;
+    --header-margin-top: {{ section.settings.header_margin_top }}px;
+    height: calc(var(--header-height) + var(--header-margin-top));
+  }
+  header {
+    height: calc(var(--header-height) + var(--header-margin-top));
+    background-color: {{ section.settings.header_bg_color }};
+    color: {{ section.settings.header_txt_color }};
+    fill: {{ section.settings.header_txt_color }};
+    box-shadow: 0px 0px 7px 1px #19191978;
+  }
+  .header__inner {
+    height: var(--header-height);
+    margin-top: var(--header-margin-top);
+  }
+  header svg, header svg path {
+    fill: {{ section.settings.header_txt_color }};
+  }
+  .search-form {
+    height: var(--header-height);
+  }
+
+  .pin-cart {
+    background-color: {{ section.settings.pin_cart_bg_color }};
+  }
+
+  .pin-cart svg {
+    fill: {{ section.settings.pin_cart_icon_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .header-wrapper {
+      --header-height: {{ section.settings.mobile_header_height }}px;
+      --header-margin-top: 0px;
+    }
+  }
+
+  .logo-img {
+    height: 100%;
+    max-height: 64px;
+  }
+
+  {%- if section.settings.logo_image != blank -%}
+    .logo-img {
+      width: {{ section.settings.logo_max_width }}px;
+      height: auto;
+      max-height: {{ section.settings.mobile_header_height }}px;
+    }
+
+    @media screen and (max-width: 749px) {
+      .logo-img {
+        width: {{ section.settings.mobile_logo_max_width }}px;
+        height: auto;
+      }
+    }
+  {%- endif -%}
+
+  .cart-count-bubble {
+    color: {{ section.settings.cart_bubble_txt_color }};
+    background-color: {{ section.settings.cart_bubble_bg_color }};
+  }
+
+  .nav-item a.link, .nav-item span.link {
+    color: {{ section.settings.header_txt_color }};
+    font-size: 1.4rem;
+  }
+
+  .mega-menu {
+    color: {{ section.settings.mega_menu_text }};
+    background-color: {{ section.settings.mega_menu_bg }};
+  }
+
+  .mega-menu a, .mega-menu span {
+    color: {{ section.settings.mega_menu_text }}!important;
+  }
+
+  a.mega-menu__link.link:before {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    position: absolute;
+    top: 0;
+    left: -18px;
+    bottom: 0;
+    margin: auto 0;
+    border-top: 1px solid currentColor;
+    border-right: 1px solid currentColor;
+    transform: rotate(45deg);
+  }
+  .search-btn:hover {
+    opacity: 0.8;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "TGTP_header",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "range",
+      "id": "header_height",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "label": "Header height",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "mobile_header_height",
+      "min": 10,
+      "max": 100,
+      "step": 1,
+      "label": "Mobile header height",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "header_margin_top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "label": "Header margin top",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "header_bg_color",
+      "label": "Background color",
+      "default": "#BA2A20"
+    },
+    {
+      "type": "color",
+      "id": "header_txt_color",
+      "label": "txt_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "pin_cart_enable",
+      "label": "Pin cart to bottom right",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "pin_cart_icon",
+      "label": "Pin cart icon"
+    },
+    {
+      "type": "color",
+      "id": "pin_cart_bg_color",
+      "label": "Pin cart background",
+      "default": "#BA2A20"
+    },
+    {
+      "type": "color",
+      "id": "pin_cart_icon_color",
+      "label": "Pin cart icon",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cart_bubble_txt_color",
+      "label": "Cart bubble text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cart_bubble_bg_color",
+      "label": "Cart bubble background color",
+      "default": "#BA2A20"
+    },
+    {
+      "type": "header",
+      "content": "logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Image",
+    },
+    {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 50,
+      "max": 350,
+      "step": 5,
+      "unit": "px",
+      "label": "Image width",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_max_width",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile image width",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "contents"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "menu"
+    },
+    {
+      "type": "color",
+      "id": "mega_menu_bg",
+      "label": "mega menu background"
+    },
+    {
+      "type": "color",
+      "id": "mega_menu_text",
+      "label": "mega menu text"
+    },
+    {
+      "type": "header",
+      "content": "mobile-contents"
+    },
+    {
+      "type": "select",
+      "id": "mobile_search_icon_position",
+      "label": "Search icon",
+      "options": [
+        { "value": "left", "label": "左" },
+        { "value": "right", "label": "右" },
+        { "value": "none", "label": "非表示" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_cart_icon_position",
+      "label": "Cart icon",
+      "options": [
+        { "value": "left", "label": "左" },
+        { "value": "right", "label": "右" },
+        { "value": "none", "label": "非表示" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "mobile_hamburger_icon_position",
+      "label": "Hamburger icon",
+      "options": [
+        { "value": "left", "label": "左" },
+        { "value": "right", "label": "右" },
+        { "value": "none", "label": "非表示" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_handle",
+      "label": "Display language handle",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "sidebar"
+    },
+    {
+      "type": "range",
+      "id": "sidebar_padding_x",
+      "label": "sidebar-padding-x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "sidebar_padding_top",
+      "label": "sidebar-padding-top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "sidebar_padding_bottom",
+      "label": "sidebar-padding-bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "border_enable",
+      "label": "Display border",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "layer"
+    },
+    {
+      "type": "select",
+      "id": "acordion_icon",
+      "label": "Acordion icon",
+      "options": [
+        { "value": "caret", "label": "caret" },
+        { "value": "plus_minus", "label": "plus" }
+      ],
+      "default": "caret"
+    },
+    {
+      "type": "range",
+      "id": "second_layer_margin_left",
+      "label": "Second layer margin left",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "third_layer_margin_left",
+      "label": "Third layer margin left",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "menu_title_txt_color",
+      "label": "Menu title text",
+      "default": "#858585"
+    },
+    {
+      "type": "color",
+      "id": "menu_title_bg_color",
+      "label": "Menu title background",
+      "default": "#E4E4E4"
+    },
+    {
+      "type": "color",
+      "id": "menu_border_color",
+      "label": "Menu border",
+      "default": "#E4E4E4"
+    },
+    {
+      "type": "color",
+      "id": "link_icon_color",
+      "label": "Link icon",
+      "default": "#050505"
+    },
+    {
+      "type": "color",
+      "id": "acordion_icon_color",
+      "label": "Menu Acordion icon",
+      "default": "#858585"
+    },
+    {
+      "type": "color",
+      "id": "main_txt_color",
+      "label": "Main text",
+      "default": "#050505"
+    },
+    {
+      "type": "color",
+      "id": "main_bg_color",
+      "label": "Main background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "second_txt_color",
+      "label": "Second text color",
+      "default": "#858585"
+    },
+    {
+      "type": "color",
+      "id": "second_bg_color",
+      "label": "Second background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "third_txt_color",
+      "label": "Third text color",
+      "default": "#050505"
+    },
+    {
+      "type": "color",
+      "id": "third_bg_color",
+      "label": "Third background color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "account_menu",
+      "name": "account menu",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "display_icon",
+          "label": "display_icon"
+        },
+        {
+          "type": "range",
+          "id": "account_btn_radius",
+          "label": "Account button radius",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 20
+        },
+        {
+          "type": "checkbox",
+          "id": "account_menu_title_enable",
+          "label": "Display account menu title",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "login_btn_inversion",
+          "label": "Inversion login button color",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "separate_login_register_btn",
+          "label": "Separate login button and new registration button",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "display_frame_lines",
+          "label": "Display frame lines",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "account_btn_txt_color",
+          "label": "Account button text",
+          "default": "#000"
+        },
+        {
+          "type": "color",
+          "id": "account_btn_bg_color",
+          "label": "Account button background",
+          "default": "#fff"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "margin-top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "logo",
+      "name": "logo",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "sidebar_logo",
+          "label": "Logo image"
+        },
+        {
+          "type": "select",
+          "id": "logo_horizon_position",
+          "label": "Horizon_position",
+          "options": [
+            { "value": "left", "label": "左" },
+            { "value": "center", "label": "中央" },
+            { "value": "right", "label": "右" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "logo_size",
+          "label": "Logo size",
+          "min": 10,
+          "max": 350,
+          "step": 5,
+          "default": 200,
+          "info": "Maximum size depends on sidebar size."
+        },
+        {
+          "type": "range",
+          "id": "sidebar_logo_margin",
+          "label": "Spacing between logo and menu",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 15
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "margin-top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu title"
+        },
+        {
+          "type": "checkbox",
+          "id": "title_enable",
+          "label": "Display title",
+          "default": true
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "menu"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "margin-top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "banner",
+      "name": "banner",
+      "settings": [
+        {
+          "type": "url",
+          "id": "url",
+          "label": "url"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "image",
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "margin-top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "search_bar",
+      "name": "search-bar",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "color",
+          "id": "search_bar_color",
+          "label": "search bar color"
+        },
+        {
+          "type": "color",
+          "id": "search_bar_text_color",
+          "label": "search bar text color"
+        },
+        {
+          "type": "color",
+          "id": "search_bar_border_color",
+          "label": "search bar border color"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "margin-top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP_header",
+    }
+  ]
+}
+{% endschema %}

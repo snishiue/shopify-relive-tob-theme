@@ -1,0 +1,136 @@
+.main-article {
+  /* border: 1px solid var(--article_border_color); */
+}
+
+.main-article__title {
+  text-align: var(--article_title_alignment);
+  margin-bottom: var(--article_padding_content_top);
+}
+
+.main-article__title:not(:first-child) {
+  margin-top: 48px;
+}
+
+.main-article__date {
+  margin-top: 48px;
+  font-size: 14px;
+  color: var(--article_date_font_color);
+}
+
+.article-template__content {
+  margin-top: 40px;
+}
+.article-template__content ul>li {
+  list-style: disc;
+}
+.article-template__content ul>li>ul>li {
+  list-style: circle;
+}
+.main-article__content-title {
+  font-size: 16px;
+  color: var(--article_content-title_font_color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 120px);
+}
+
+.main-article__item {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--article_border_color);
+  justify-content: space-between;
+  background-color: var(--article_background_color);
+}
+
+.main-article__content-wrapper {
+  flex: 1;
+}
+
+.main-article__item::after {
+  transform: translateY(-25%) rotate(-45deg);
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  content: "";
+  transition: transform .3s;
+  flex-shrink: 0;
+
+}
+
+.main-article__list {
+  margin-bottom: 16px;
+}
+
+.main-article__content-title {
+  color: var(--article_content-title_font_color);
+}
+
+.article__view-all {
+  margin-top: 60px;
+}
+.main-article__view-all-button {
+  color: var(--article_view_all_text_color);
+  background-color: var(--article_view_all_background_color);
+  border-radius: var(--article_view_all_border_radius);
+  padding: 0 var(--button_width);
+  box-shadow: none;
+  max-width: 360px;
+}
+
+.flexible-button {
+  text-align: var(--flexible-button_align);
+}
+
+.article-template.type-pick-up .main-article__date {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .main-article__title:not(:first-child) {
+    margin-top: 32px;
+  }
+
+  .main-article__date {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--article_date_font_color);
+  }
+
+  .article-template__content {
+    margin-top: 32px;
+  }
+
+  .article__view-all {
+    margin-top: 100px;
+  }
+
+  .main-article__list {
+    margin-bottom: 8px;
+  }
+
+  .main-article__item {
+    padding-bottom: 8px;
+  }
+
+  .main-article__content-title {
+    max-width: 100%; /* スマホでは最大幅を100%に */
+  }
+
+  .main-article__view-all-button {
+    max-width: none;
+  }
+
+  .flexible-button {
+    text-align: var(--flexible-button_sp_align);
+  }
+
+  .article-template__content iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}

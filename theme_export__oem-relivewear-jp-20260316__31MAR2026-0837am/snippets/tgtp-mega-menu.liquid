@@ -1,0 +1,333 @@
+{%- if section.settings.desktop_navigation_layout == 'condensed' -%}
+  {%- assign is_condensed = true -%}
+{%- else -%}
+  {%- assign is_condensed = false -%}
+{%- endif -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  MEGA MENU
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- assign downcase_title = mega_menu.title | downcase | strip -%}
+{%- assign mega_menu_block = nil -%}
+
+{%- assign mega_menu_section_blocks = section.blocks | where: "type", "mega_menu" -%}
+{%- for block in mega_menu_section_blocks -%}
+  {%- assign downcase_block_menu_item = block.settings.menu_item | downcase | strip -%}
+
+  {%- if downcase_block_menu_item == downcase_title -%}
+    {%- assign mega_menu_block = block -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  SUB MENU
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- assign sub_menu_section_blocks = section.blocks | where: "type", "sub_menu" -%}
+{%- assign sub_menu_block = sub_menu_section_blocks | map: 'settings' | where: "sub_menu_item", downcase_title -%}
+{%- assign sub_menu_show_announcement = sub_menu_block | where: "sub_menu_show_announcement", true -%}
+{%- assign is_show_sub_menu_title = false -%}
+
+{%- if sub_menu_show_announcement.size > 0-%}
+  {%- assign is_show_sub_menu_title = true -%}
+{%- endif -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  PRODUCT MENU
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- assign product_menu_section_blocks = section.blocks | where: "type", "product_menu" -%}
+{%- for block in product_menu_section_blocks -%}
+  {%- assign downcase_block_menu_item = block.settings.product_menu_item | downcase | strip -%}
+
+  {%- if downcase_block_menu_item == downcase_title -%}
+    {%- assign product_menu_block = block -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+
+
+
+
+
+<div id="{{ index }}" class="mega-menu {% if is_floating %}mega-menu--floating{% endif %}" data-type="menu" aria-hidden="true" role="list" {{ mega_menu_block.shopify_attributes }}>
+  {%- capture mega_menu_inner -%}
+    {%- assign should_center = false -%}
+
+    {%- unless is_floating -%}
+      {%- assign should_center = true -%}
+    {%- endunless -%}
+
+    {%- assign has_two_images = false -%}
+
+    {%- if mega_menu_block.settings.image_1 != blank and mega_menu_block.settings.image_2 != blank -%}
+      {%- assign has_two_images = true -%}
+    {%- endif -%}
+
+    {%- assign mega_menu_classes = '' -%}
+
+    {%- if should_center and mega_menu.links.size <= 4 -%}
+      {%- if has_two_images -%}
+        {%- assign mega_menu_classes = 'mega-menu__inner--center' -%}
+      {%- else -%}
+        {%- assign mega_menu_classes = 'mega-menu__inner--center mega-menu__inner--large' -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    <div class="mega-menu__inner {{ mega_menu_classes }}">
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  NORMAL MENU
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+{%- if mega_menu.links.size > 0 -%}
+  {%- capture mega_menu_columns -%}
+  <div class="mega-menu__columnwrapper">
+    <div class="mega-menu__columncontentswrapper is-menu-active">
+      <div class="mega-menu__columnselector">
+        {%- for link in mega_menu.links -%}
+          {%- if link.links.size > 0 -%}
+            {%- if link.url != '/' -%}
+              <a href="{{ link.url }}" class="mega-menu__title heading mega-menu__switch-contents--index {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-index="{{ forloop.index }}">{{ link.title }}</a>
+            {%- else -%}
+              <span class="mega-menu__title heading mega-menu__switch-contents--index {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-index="{{ forloop.index }}">{{ link.title }}</span>
+            {%- endif -%}
+          {%- else -%}
+          <span class="mega-menu__item">
+            <a href="{{ link.url }}" class="mega-menu__link link">{{ link.title }}</a>
+          </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="mega-menu__columncontents">
+        {%- for link in mega_menu.links -%}
+          {%- if link.links.size > 0 -%}
+            <div class="mega-menu__column {% if forloop.first == true %}is-menu-active{% endif %}" data-menu-index="{{ forloop.index }}">
+              <ul class="mega-menu__linklist" role="list">
+                {%- for sub_link in link.links -%}
+                  <li class="mega-menu__item">
+                    <a href="{{ sub_link.url }}" class="mega-menu__link link">{{ sub_link.title | truncate: 24 }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endcapture -%}
+
+  {%- if is_floating -%}
+    {%- comment -%}
+    IMPLEMENTATION NOTE: 230 is the size in pixel of a given column (it's 170 + 60 of margin). In order to avoid setting it in JS or
+                          having very complex HTML structure to achieve positioning, I used this trick.
+    {%- endcomment -%}
+    <div class="mega-menu__column-list" style="width: {{ 230 | times: mega_menu.links.size }}px">
+      {{- mega_menu_columns -}}
+    </div>
+  {%- else -%}
+    {{- mega_menu_columns -}}
+  {%- endif -%}
+{%- endif -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  SUB MENU BLOCK
+  --------------------------------------------------------------------------------------
+
+{%- endcomment -%}
+{%- if sub_menu_block != blank -%}
+  {%- capture sub_menu_columns -%}
+  <div class="mega-menu__columnwrapper">
+  {%- comment -%} サブメニュー名を表示する場合（1階層プラス）{%- endcomment -%}
+  {%- if is_show_sub_menu_title -%}
+    <div class="mega-menu__columnselector mega-menu__columnselector--haschild">
+      {%- for block in sub_menu_block -%}
+        <span class="mega-menu__title mega-menu__switch-contents--handle heading {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-handle="{{ block.sub_navigation_menu.handle }}">{{block.sub_navigation_menu.title}}</span>
+      {%- endfor -%}
+    </div>
+    {%- for block in sub_menu_block -%}
+      <div class="mega-menu__columncontentswrapper {% if forloop.first == true %}is-menu-active{% endif %}" data-menu-handle="{{ block.sub_navigation_menu.handle }}">
+        <div class="mega-menu__columnselector">
+          {%- for link in block.sub_navigation_menu.links -%}
+            {% comment %} <a href="{{ link.url }}" class="mega-menu__title mega-menu__switch-contents--index heading {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-index="{{ forloop.index }}">{{ link.title }}</a> {% endcomment %}
+            <span class="mega-menu__title mega-menu__switch-contents--index heading {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-index="{{ forloop.index }}">{{ link.title }}</span>
+          {%- endfor -%}
+        </div>
+        <div class="mega-menu__columncontents">
+          {%- for link in block.sub_navigation_menu.links -%}
+            <div class="mega-menu__column {% if forloop.first == true %}is-menu-active{% endif %}"  data-menu-index="{{ forloop.index }}">
+              <ul class="mega-menu__linklist" role="list">
+                {%- if link.links.size > 0 -%}
+                  {%- for sub_link in link.links -%}
+                    <li class="mega-menu__item">
+                      <a href="{{ sub_link.url }}" class="mega-menu__link link">{{ sub_link.title | truncate: 24 }}</a>
+                    </li>
+                  {%- endfor -%}
+                {%- endif -%}
+              </ul>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endfor -%}
+    {%- comment -%} サブメニュー名を表示しない場合{%- endcomment -%}
+  {%- else  -%}
+    <div class="mega-menu__columncontentswrapper is-menu-active">
+      {%- for block in sub_menu_block -%}
+        <div class="mega-menu__columnselector">
+          {%- for link in block.sub_navigation_menu.links -%}
+            {%- if link.url != '/' -%}
+              <a href="{{ link.url }}" class="mega-menu__title mega-menu__switch-contents--index heading" data-menu-index="{{ forloop.index }}">{{ link.title }}</a>
+            {%- else -%}
+              <span class="mega-menu__title mega-menu__switch-contents--index heading {% if forloop.first == true %}is-menu-selected{% endif %}" data-menu-index="{{ forloop.index }}">{{ link.title }}</span>
+            {%- endif -%}
+
+          {%- endfor -%}
+        </div>
+        <div class="mega-menu__columncontents">
+          {%- for link in block.sub_navigation_menu.links -%}
+            <div class="mega-menu__column {% if forloop.first == true %}is-menu-active{% endif %}"  data-menu-index="{{ forloop.index }}">
+              <ul class="mega-menu__linklist" role="list">
+                {%- if link.links.size > 0 -%}
+                  {%- for sub_link in link.links -%}
+                    <li class="mega-menu__item">
+                      <a href="{{ sub_link.url }}" class="mega-menu__link link">{{ sub_link.title | truncate: 24 }}</a>
+                    </li>
+                  {%- endfor -%}
+                {%- endif -%}
+              </ul>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+  </div>
+  {%- endcapture -%}
+  {{- sub_menu_columns -}}
+{%- endif -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  PRODUCT MENU BLOCK
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+
+{%- comment -%}
+  --------------------------------------------------------------------------------------
+  MEGA MENU BLOCK
+  --------------------------------------------------------------------------------------
+{%- endcomment -%}
+
+      <div class="mega-menu__promowrapper">
+        {%- if mega_menu_block.settings.image_1 != blank -%}
+          <a href="{{ mega_menu_block.settings.image_1_link | default: '#' }}" class="mega-menu__promo">
+            <div class="mega-menu__image-wrapper">
+              <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: mega_menu_block.settings.image_1.aspect_ratio }}%">
+                <img class="lazyload image--fade-in" data-src="{{ mega_menu_block.settings.image_1 | img_url: '550x' }}" alt="{{ mega_menu_block.settings.image_1.alt | escape }}">
+              </div>
+            </div>
+
+            <span class="mega-menu__image-heading heading h4">{{ mega_menu_block.settings.image_1_heading | escape }}</span>
+            <p class="mega-menu__image-text">{{ mega_menu_block.settings.image_1_text | escape }}</p>
+          </a>
+        {%- endif -%}
+
+        {%- if mega_menu_block.settings.image_2 != blank -%}
+          <a href="{{ mega_menu_block.settings.image_2_link | default: '#' }}" class="mega-menu__promo">
+            <div class="mega-menu__image-wrapper">
+              <div class="aspect-ratio" style="padding-bottom: {{ 100.0 | divided_by: mega_menu_block.settings.image_2.aspect_ratio }}%">
+                <img class="lazyload image--fade-in" data-src="{{ mega_menu_block.settings.image_2 | img_url: '550x' }}" alt="{{ mega_menu_block.settings.image_2.alt | escape }}">
+              </div>
+            </div>
+
+            <span class="mega-menu__image-heading heading h4">{{ mega_menu_block.settings.image_2_heading | escape }}</span>
+            <p class="mega-menu__image-text">{{ mega_menu_block.settings.image_2_text | escape }}</p>
+          </a>
+        {%- endif -%}
+      </div>
+
+      {% if enable_detail_link %}
+        <div class="mega-menu__detail-link-wrapper"><a class="mega-menu__detail-link" href="{{ menu_parent.url }}">すべてのアイテムを見る {% render 'icon', icon: 'arrow-right' %}</a></div>
+      {% endif %}
+
+    </div>
+  {%- endcapture -%}
+
+  {%- if is_condensed -%}
+    {{- mega_menu_inner -}}
+  {%- else -%}
+    <div class="container">
+      {{- mega_menu_inner -}}
+    </div>
+  {%- endif -%}
+</div>
+
+
+<style>
+.mega-menu__columncontentswrapper:not(.is-menu-active) {
+  display: none;
+  opacity: 0;
+}
+
+.mega-menu__columncontentswrapper{
+  display: block;
+  animation: menudisplay .5s ease;
+}
+
+.mega-menu__column:not(.is-menu-active) {
+  display: none;
+  opacity: 0;
+}
+
+.mega-menu__column {
+  display: block;
+  animation: menudisplay .5s ease;
+}
+
+@keyframes menudisplay {
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+
+.mega-menu__switch-contents--handle, .mega-menu__switch-contents--index {
+  cursor: pointer;
+}
+
+.mega-menu__switch-contents--handle.is-menu-selected {
+  font-weight: bold;
+}
+
+.mega-menu__switch-contents--handle:not(.is-menu-selected) {
+  color: gray;
+}
+
+.mega-menu__switch-contents--index.is-menu-selected {
+  font-weight: bold;
+}
+
+.mega-menu__switch-contents--index:not(.is-menu-selected) {
+  color: gray;
+}
+
+</style>

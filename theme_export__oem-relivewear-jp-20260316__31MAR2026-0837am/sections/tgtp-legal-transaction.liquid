@@ -1,0 +1,164 @@
+{{ 'tgtp-legal.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="page-width page-width--narrow section-{{ section.id }}-padding">
+  <h1 class="tgtp-legal__title">{{ section.settings.title }}</h1>
+
+  <h2 class="tgtp-legal__heading">{{ section.settings.heading }}</h2>
+
+  <dl class="tgtp-legal__dl">
+    <dt>{{ 'legal.transaction.service_name_label' | t }}</dt>
+    <dd>{{ section.settings.service_name }}</dd>
+
+    <dt>{{ 'legal.transaction.seller_label' | t }}</dt>
+    <dd>{{ section.settings.seller }}</dd>
+
+    <dt>{{ 'legal.transaction.manager_label' | t }}</dt>
+    <dd>{{ section.settings.manager }}</dd>
+
+    <dt>{{ 'legal.transaction.address_label' | t }}</dt>
+    <dd>
+      {{ section.settings.address }}<br>
+      TEL : {{ section.settings.tel }}<br>
+      MAIL : {{ section.settings.email }}
+    </dd>
+
+    <dt>{{ 'legal.transaction.consigner_label' | t }}</dt>
+    <dd>{{ section.settings.consigner }}</dd>
+
+    <dt>{{ 'legal.transaction.additional_fees_label' | t }}</dt>
+    <dd>
+      <ul class="tgtp-legal__list">
+        <li>消費税</li>
+        <li>送料：ご注文数に応じて変動</li>
+        <li>振込手数料等の決済にかかる手数料</li>
+      </ul>
+    </dd>
+
+    <dt>{{ 'legal.transaction.payment_methods_label' | t }}</dt>
+    <dd>
+      <ul class="tgtp-legal__list">
+        <li>クレジットカード決済（VISA、JCB、MasterCard、AMERICAN EXPRESS、DinersClub等）</li>
+        <li>請求書払い</li>
+      </ul>
+      {%- if section.settings.payment_note != blank -%}
+        <p class="tgtp-legal__note">{{ section.settings.payment_note }}</p>
+      {%- endif -%}
+    </dd>
+
+    <dt>{{ 'legal.transaction.cancellation_label' | t }}</dt>
+    <dd>{{ section.settings.cancellation }}</dd>
+  </dl>
+</div>
+
+{% schema %}
+{
+  "name": "お取引に関する表記",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "ページタイトル",
+      "default": "お取引に関する表記"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "見出し",
+      "default": "お取引に関する表記"
+    },
+    {
+      "type": "text",
+      "id": "service_name",
+      "label": "サービス名",
+      "default": "RELIVE for OEM"
+    },
+    {
+      "type": "text",
+      "id": "seller",
+      "label": "販売事業者",
+      "default": "株式会社paintory"
+    },
+    {
+      "type": "text",
+      "id": "manager",
+      "label": "運営責任者",
+      "default": "片山 裕太"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "所在地",
+      "default": "〒708-0061 岡山県津山市元魚町60-2"
+    },
+    {
+      "type": "text",
+      "id": "tel",
+      "label": "電話番号",
+      "default": "0120-931-853"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "メールアドレス",
+      "default": "relive_oem@paintory.com"
+    },
+    {
+      "type": "text",
+      "id": "consigner",
+      "label": "販売委託元",
+      "default": "株式会社りらいぶ"
+    },
+    {
+      "type": "textarea",
+      "id": "payment_note",
+      "label": "お支払いに関する注記",
+      "default": "※請求書払いは購入限度額・支払い期限は株式会社ラクーンフィナンシャル提供のBtoB後払い/企業間決済サービスのPaidの条件に応じる"
+    },
+    {
+      "type": "textarea",
+      "id": "cancellation",
+      "label": "キャンセル・返品の対応",
+      "default": "本サービスは企業間取引（BtoB）のため、売買契約成立後の自己都合によるキャンセル・返品・交換は原則としてお受けできません。万が一、品違い、数量不足、明らかな初期不良等がございましたら、良品とお取り換え（または返金）いたしますので、商品到着後7日以内に当社までご連絡ください。（※ご返送先については、当社より別途ご案内いたします）"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "お取引に関する表記"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,131 @@
+<link rel="stylesheet" href="{{ 'tgtp-footer.css' | asset_url }}">
+
+<footer>
+  <div class="footer__inner page-width">
+    {%- if section.settings.footer_menu -%}
+      {%- assign menu_handle = section.settings.footer_menu -%}
+      {%- assign footer_menu = linklists[menu_handle] -%}
+      <div class="footer-menu">
+        <div class="footer-menu__inner">
+          {%- for link in footer_menu.links -%}
+            <a class="footer-menu__link" href="{{ link.url }}">{{ link.title }}</a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="copylight-wrapper">
+      <p class="copylight">{{ section.settings.copylight }}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 0 {{ section.settings.padding_x }}px;
+    margin-top: {{ section.settings.margin_top }}px;
+  }
+  footer a {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+  }
+  @media screen and (max-width: 749px) {
+    footer {
+      padding: 0 {{ section.settings.mobile_padding_x }}px;
+    }
+  }
+  .page-top {
+    border-bottom: 1px solid #525252;
+  }
+  .page-top__link:before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -24px;
+    margin: auto 0;
+    width: 10px;
+    height: 10px;
+    border-top: 1px solid {{ section.settings.text_color }};
+    border-right: 1px solid {{ section.settings.text_color }};
+    transform: rotate(-45deg);
+  }
+</style>
+
+{% schema %}
+{
+  "name": "TGTP_footer",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_top_btn",
+      "label": "display page top button"
+    },
+    {
+      "type": "select",
+      "id": "top_btn_position",
+      "label": "page top button position",
+      "options": [
+        { "value": "left", "label": "左" },
+        { "value": "center", "label": "中央" },
+        { "value": "right", "label": "右" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "link_list",
+      "id": "footer_menu",
+      "label": "menu"
+    },
+    {
+      "type": "text",
+      "id": "copylight",
+      "label": "copylight"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "background color"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "text color"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "margin top",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_x",
+      "label": "padding x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_x",
+      "label": "mobile padding x",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP_footer"
+    }
+  ]
+}
+{% endschema %}

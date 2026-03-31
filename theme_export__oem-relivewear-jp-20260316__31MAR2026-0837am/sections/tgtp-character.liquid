@@ -1,0 +1,383 @@
+{{ 'tgtp-swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+<script src="{{'tgtp-swiper-bundle.min.js' | asset_url}}"></script>
+{{ 'section-tgtp-character.css' | asset_url | stylesheet_tag }}
+
+<div class="tgtp-character tgtp-character--{{ section.id }}">
+  {% render 'tgtp-section__heading' %}
+  <div class="tgtp-character-list{% if section.settings.scroll_type == 'auto_scroll' %} auto-scroll{% elsif section.settings.scroll_type == 'auto_scroll' %} manual-scroll{% else %} swiper{% endif %}" 
+       style="--scroll-speed: {{ section.settings.scroll_speed }}s;">
+    {% if section.settings.scroll_type == 'swiper'%}
+      <div class="swiper-wrapper">
+        {%- for block in section.blocks -%}
+          <div class="swiper-slide ">
+            <a class="tgtp-character-item" href="{{ block.settings.collection.url }}">
+              {{ block.settings.image | image_url: width: 160 | image_tag: loading: 'eager' }}
+            </a>
+          </div>
+        {%- endfor -%}
+        {%- for block in section.blocks -%}
+          <div class="swiper-slide ">
+            <a class="tgtp-character-item" href="{{ block.settings.collection.url }}">
+              {{ block.settings.image | image_url: width: 160 | image_tag: loading: 'eager' }}
+            </a>
+          </div>
+        {%- endfor -%}
+      </div>
+    {% else %}
+      {%- for block in section.blocks -%}
+        <a class="tgtp-character-item" href="{{ block.settings.collection.url }}">
+          {{ block.settings.image | image_url: width: 160 | image_tag }}
+        </a>
+      {%- endfor -%}
+      {%- for block in section.blocks -%}
+        <a class="tgtp-character-item" href="{{ block.settings.collection.url }}">
+          {{ block.settings.image | image_url: width: 160 | image_tag }}
+        </a>
+      {%- endfor -%}
+    {% endif %}
+</div>
+
+{% if section.settings.scroll_type == 'swiper'%}
+  <script>
+    const initSwiper = () => {
+      const mySwiper = new Swiper('.tgtp-character--{{ section.id }} .swiper', {
+        speed: {{section.settings.scroll_speed | times: 100 }},
+        slidesPerView: 'auto',
+        loop: true,
+        spaceBetween: "{{ section.settings.column_gap_sp }}",
+        freeMode: {
+          enabled: true,
+          sticky: false,
+          momentum: false,
+        },
+        loopAdditionalSlides: 1,
+        autoplay: {
+          delay: 0,
+          disableOnInteraction: true,
+          pauseOnMouseEnter: true,
+        },
+         breakpoints: {
+          750: {
+            spaceBetween: "{{ section.settings.column_gap }}",
+          }
+        }
+      });
+    };
+  
+    window.addEventListener('load', function(){
+      initSwiper(); // ページ読み込み後に初期化
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "TGTP collection list",
+    "tag": "section",
+    "class": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+      {
+        "type": "header",
+        "content": "セクション情報"
+      },
+      {
+        "type": "checkbox",
+        "id": "page_width",
+        "label": "ページ幅に合わせる",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "use_default_padding",
+        "label": "デフォルトの間隔を適用",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "section_upper_padding",
+        "label": "セクション上部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_upper_padding_sp",
+        "label": "セクション上部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_lower_padding",
+        "label": "セクション下部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_lower_padding_sp",
+        "label": "セクション下部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "column_gap",
+        "label": "グリッド左右間隔",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "column_gap_sp",
+        "label": "グリッド左右間隔 スマホ",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "row_gap",
+        "label": "グリッド上下間隔",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "row_gap_sp",
+        "label": "グリッド上下間隔 スマホ",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "タイトル情報"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collection list"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subheading"
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_iscenter",
+        "label": "見出し中央寄せ",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "heading_design",
+        "label": "見出しデザイン",
+        "options": [
+          {
+            "label": "通常",
+            "value": "normal"
+          },
+          {
+            "label": "蛍光ペン",
+            "value": "highlight"
+          },
+          {
+            "label": "ボーダー(中央)",
+            "value": "border_center"
+          },
+          {
+            "label": "ボーダー(見出し下)",
+            "value": "border_bottom"
+          },
+          {
+            "label": "ボーダー(左)",
+            "value": "border_left"
+          }
+        ],
+        "default": "normal"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_text",
+        "label": "見出し文字色",
+        "default": "#222222"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_sub1",
+        "label": "見出しサブ色",
+        "default": "#fff100"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_sub2",
+        "label": "見出しサブ色2",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "text",
+        "id": "heading_color_sub3",
+        "info": "グラデーションを指定したい場合、見出しサブ色1,2の代わりに記載",
+        "label": "見出しサブ色(グラデーション)",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_textshadow",
+        "label": "見出しテキストシャドウ",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "image_picker",
+        "id": "heading_image",
+        "label": "見出しアイコン"
+      },
+      {
+        "type": "range",
+        "id": "image_picker_size",
+        "label": "見出しアイコン width",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "default": 38,
+        "unit": "px"
+      },
+      {
+        "type": "image_picker",
+        "id": "heading_alternateimage",
+        "label": "見出し差し替え画像"
+      },
+      {
+        "type": "range",
+        "id": "heading_alternateimage_size",
+        "label": "見出し差し替え画像 maxwidth",
+        "min": 50,
+        "max": 500,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "heading_alternateimage_size_mobile",
+        "label": "見出し差し替え画像 maxwidth（モバイル）",
+        "min": 50,
+        "max": 500,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Subheading 文字色",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "range",
+        "id": "title_lower_margin",
+        "label": "タイトル下部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 80,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "title_lower_margin_sp",
+        "label": "タイトル下部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 80,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "カルーセル設定"
+      },
+      {
+        "type": "select",
+        "id": "scroll_type",
+        "label": "スクロールタイプ",
+        "options": [
+          {
+            "label": "スワイパー",
+            "value": "swiper"
+          },
+          {
+            "label": "自動スクロール",
+            "value": "auto_scroll"
+          },
+          {
+            "label": "手動スクロール",
+            "value": "manual_scroll"
+          }
+        ],
+        "default": "swiper"
+      },
+      {
+        "type": "range",
+        "id": "scroll_speed",
+        "label": "スクロール速度",
+        "min": 10,
+        "max": 60,
+        "step": 1,
+        "default": 20,
+        "unit": "秒"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "要素",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "個別に表示させたい画像"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "TGTP Collection List"
+      }
+    ]
+  }
+{% endschema %}

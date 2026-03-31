@@ -1,0 +1,140 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "cart-items": {
+      "type": "main-cart-items",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "cart-footer": {
+      "type": "main-cart-footer",
+      "blocks": {
+        "subtotal": {
+          "type": "subtotal",
+          "settings": {}
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "subtotal",
+        "buttons"
+      ],
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 20,
+        "padding_bottom": 40
+      }
+    },
+    "tgtp_cart_fNk9A6": {
+      "type": "tgtp-cart",
+      "custom_css": [],
+      "settings": {
+        "color_scheme": "",
+        "padding_top": 120,
+        "padding_bottom": 240
+      }
+    },
+    "1773136486ccd0198b": {
+      "type": "apps",
+      "blocks": {
+        "paid_btob_api_block_mkKhpn": {
+          "type": "shopify://apps/paid-btob-api/blocks/block/d21a2118-25ca-424f-9f3d-9d85852ccb33",
+          "settings": {
+            "img": "468_60"
+          }
+        }
+      },
+      "block_order": [
+        "paid_btob_api_block_mkKhpn"
+      ],
+      "custom_css": [
+        ".page-width {padding-top: 20px; padding-bottom: 20px;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "rich_text_gWeUjJ": {
+      "type": "rich-text",
+      "blocks": {
+        "text_gip6Uq": {
+          "type": "text",
+          "settings": {
+            "text": "<p>※Paid決済をご利用いただくには、初回のみ事前の利用申請が必要です。審査には数営業日かかる場合があります。</p>"
+          }
+        }
+      },
+      "block_order": [
+        "text_gip6Uq"
+      ],
+      "custom_css": [
+        "p {color: red; font-size: 14px;}"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "tgtp_cart_footer_r4kzyM": {
+      "type": "tgtp-cart-footer",
+      "blocks": {
+        "subtotal_3pkMAg": {
+          "type": "subtotal",
+          "settings": {}
+        },
+        "buttons_TGYgWe": {
+          "type": "buttons",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "subtotal_3pkMAg",
+        "buttons_TGYgWe"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "padding_top": 24,
+        "padding_bottom": 48,
+        "sp_padding_top": 28,
+        "sp_padding_bottom": 48
+      }
+    },
+    "17720077117a6937d4": {
+      "type": "apps",
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "cart-items",
+    "cart-footer",
+    "tgtp_cart_fNk9A6",
+    "1773136486ccd0198b",
+    "rich_text_gWeUjJ",
+    "tgtp_cart_footer_r4kzyM",
+    "17720077117a6937d4"
+  ]
+}

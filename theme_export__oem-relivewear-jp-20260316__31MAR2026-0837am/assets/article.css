@@ -1,0 +1,111 @@
+.article {
+  /* border: 1px solid var(--article_border_color); */
+}
+
+.article__title {
+  font-size: 16px;
+  /* color: var(--article_title_font_color); */
+}
+
+.article__date {
+  font-size: 14px;
+  color: var(--article_date_font_color);
+}
+
+.article__content-title {
+  font-size: 14px;
+  color: var(--article_content-title_font_color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 120px); /* 日付部分のスペースを考慮 */
+}
+
+.article__item {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--article_border_color);
+  /* border-radius: var(--article_border_radius); */
+  background-color: var(--article_background_color);
+}
+
+.main-article__item::after {
+  transform: translateY(-25%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  content: "";
+  transition: transform .3s;
+  flex-shrink: 0;
+
+}
+
+.article__list {
+  margin-bottom: 16px;
+}
+
+.article__date {
+  color: var(--article_date_font_color);
+  margin-bottom: 5px;
+}
+
+.article__content-title {
+  color: var(--article_content-title_font_color);
+}
+
+.main-article__content-wrapper {
+  flex: 1;
+}
+
+.article__view-all {
+
+}
+
+.article__view-all-button {
+  color: var(--article_view_all_text_color);
+  background-color: var(--article_view_all_background_color);
+  border-radius: var(--article_view_all_border_radius);
+  margin-top:32px;
+  width: auto;
+}
+
+.flexible-button {
+  text-align: var(--flexible-button_align);
+}
+
+@media screen and (min-width: 750px) {
+  .article__item {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .article__date {
+    margin-bottom: 0;
+    margin-right: 20px;
+    min-width: 100px;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .article__list {
+    margin-bottom: 8px;
+  }
+
+  .article__item {
+    padding-bottom: 8px;
+  }
+
+  .article__content-title {
+    max-width: 100%; /* スマホでは最大幅を100%に */
+  }
+
+  .article__view-all-button {
+    margin-top: 16px;
+  }
+  .flexible-button {
+    text-align: var(--flexible-button_sp_align);
+  }
+}

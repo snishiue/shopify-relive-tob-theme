@@ -1,0 +1,75 @@
+.tgtp-youtube-banner,
+.tgtp-youtube-banner *,
+.tgtp-youtube-banner *::before,
+.tgtp-youtube-banner *::after {
+  box-sizing: border-box;
+}
+
+.tgtp-youtube-banner {
+  --padding-x: 0;
+
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-color: var(--background-color, transparent);
+}
+
+.tgtp-youtube-banner.enable-padding-x {
+  --padding-x: var(--content-padding-x, 16);
+}
+
+@media screen and (max-width: 750px) {
+  .tgtp-youtube-banner.enable-padding-x {
+    --padding-x: var(--content-padding-x-mobile, 16);
+  }
+}
+
+
+.tgtp-youtube-banner__inner {
+  padding-left: calc(var(--padding-x) * 1px);
+  padding-right: calc(var(--padding-x) * 1px);
+}
+
+.tgtp-youtube-banner__inner.full-width {
+  width: 100%;
+}
+
+.tgtp-youtube-banner__inner.manual-width {
+  max-width: calc((var(--content-width) + var(--padding-x) * 2) * 1px);
+  margin: 0 auto;
+}
+
+/**
+ * Content
+ */
+.tgtp-youtube-banner__content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+  color: var(--text-color, #000);
+}
+
+.tgtp-youtube-banner__videocontainer {
+	position: relative;
+	padding-top: 56.25%;
+	height: 0;
+  width: 100%;
+}
+
+.tgtp-youtube-banner__videocontainer .tgtp-youtube-banner__video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.tgtp-youtube-banner__blockwrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+
+@media screen and (max-width: 750px) {
+
+}

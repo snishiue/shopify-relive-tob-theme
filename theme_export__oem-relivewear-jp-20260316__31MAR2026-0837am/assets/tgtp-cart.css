@@ -1,0 +1,222 @@
+
+
+.tgtp-quantity {
+  color: rgba(var(--color-foreground));
+  position: relative;
+  width: calc(14rem / var(--font-body-scale) + var(--inputs-border-width) * 2);
+  display: flex;
+  border-radius: var(--inputs-radius);
+  min-height: calc((var(--inputs-border-width) * 2) + 4.5rem);
+}
+
+.tgtp-quantity:after {
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--inputs-radius);
+  transition: box-shadow var(--duration-short) ease;
+  z-index: 1;
+}
+
+.tgtp-quantity:before {
+  background: rgb(var(--color-background));
+  pointer-events: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: var(--inputs-radius-outset);
+  box-shadow: var(--inputs-shadow-horizontal-offset) var(--inputs-shadow-vertical-offset)
+    var(--inputs-shadow-blur-radius) rgba(var(--color-shadow), var(--inputs-shadow-opacity));
+  z-index: -1;
+}
+
+.quantity__button {
+  background-color: #fff;
+  border: 1px solid #E0E0E0;
+  color: #000000;
+  border-radius: 25px;
+}
+
+.quantity__button:hover {
+  background-color: #E0E0E0 !important;
+}
+
+.bottom-subtotal-price {
+  grid-column: 1 / 5;
+  background-color: #F5F5F5;
+  height: 37px;
+}
+
+.tgtp-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  padding: 0 3rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: rgb(var(--color-button-text));
+  transition: box-shadow var(--duration-short)ease;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: rgba(var(--color-button), var(--alpha-button-background));
+  border: 1px solid #BDBDBD !important;
+  padding: 1rem;
+  border-radius: var(--buttons-radius);
+}
+
+.tgtp-button:hover {
+  text-decoration: none !important;
+}
+
+.tgtp-cart-item__price {
+  font-size: 16px;
+  color: #000000;
+}
+
+.tgtp-cart-item__variant {
+  font-size: 12px;
+}
+
+.tgtp-cart-item__tax-included {
+  font-size: 10px;
+  color: #9E9E9E;
+}
+
+.cart__warnings {
+  margin-top: 50px;
+  padding: 0;
+}
+.cart_empty {
+  display: grid;
+  place-items: center;
+  gap: 80px;
+  font-size: 14px;
+}
+.cart_empty .button {
+  max-width: 360px;
+}
+
+.cart__contents {
+  margin-top: 40px;
+}
+.cart-item__details .cart-item__name {
+  font-weight: 400;
+  font-size: 14px;
+}
+.tgtp-cart-item__price {
+  font-weight: 500;
+}
+.tgtp-cart-item__tax-included {
+  font-weight: 400;
+}
+table.cart-items {
+  margin-top: 24px;
+}
+.cart__checkout-button,
+.cart__checkout-button::after {
+  line-height: 56px;
+  --buttons-radius: 28px;
+  max-width: none;
+}
+.cart__checkout-button[disabled] {
+  border: none;
+  box-shadow: none;
+}
+.cart__checkout-button[disabled]::before  {
+  box-shadow: none;
+  border: none;
+}
+.cart__checkout-button[disabled]::after {
+  box-shadow: none;
+  border: none;
+}
+
+.cart-footer-buttons {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.tgtp-cart__ctas--inner {
+  width: 100%;
+}
+
+.cart__pharmaceutical-agreement {
+  margin-bottom: 16px;
+}
+.cart__pharmaceutical-agreement-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+.cart__pharmaceutical-agreement-checkbox {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: 4px;
+  flex-shrink: 0;
+  width: 16px !important;
+  height: 16px;
+  border: 1px solid #BDBDBD;
+  border-radius: 3px;
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+}
+.cart__pharmaceutical-agreement-checkbox:checked {
+  background-color: rgb(var(--color-brand-red-300));
+  border-color: rgb(var(--color-brand-red-300));
+}
+.cart__pharmaceutical-agreement-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.cart__pharmaceutical-agreement-link {
+  color: inherit;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 749px) {
+  .tgtp-cart-item__price {
+    font-size: 14px;
+  }
+
+  .tgtp-cart-item__variant {
+    font-size: 10px;
+  }
+
+  .tgtp-cart-item__tax-included {
+    font-size: 8px;
+  }
+
+  .cart_empty {
+    justify-items: start;
+    gap: 60px;
+  }
+  .cart_empty .button {
+    max-width: none;
+  }
+
+  .cart__contents {
+    margin-top: 28px;
+  }
+}

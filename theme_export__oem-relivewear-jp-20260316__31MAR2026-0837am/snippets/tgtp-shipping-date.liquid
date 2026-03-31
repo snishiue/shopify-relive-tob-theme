@@ -1,0 +1,10 @@
+{% if product.metafields.custom.reservation_period != blank or product.metafields.custom.estimated_delivery != blank %}
+  <div class="tgtp-shipping-date color-{{ color_scheme }}">
+    <div class="tgtp-shipping-date-item">
+      {{ product.metafields.custom.reservation_period | newline_to_br }}
+    </div>
+    <div class="tgtp-shipping-date-item">
+      {{ product.metafields.custom.estimated_delivery | newline_to_br }}
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,120 @@
+{{ 'tgtp-breadcrumb.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  メタオブジェクトから設定を取得する
+{% endcomment %}
+{%- assign subcategory_title = nil -%}
+{%- assign subcategory_url = nil -%}
+{%- assign title = '' -%}
+{%- if product -%}
+  {%- assign title = product.title -%}
+  {%- if product.collections.size > 0 -%}
+    {% for collection in product.collections %}
+      {%- if collection.metafields.custom.is_category == true -%}
+        {%- assign subcategory_title = collection.title -%}
+        {%- assign subcategory_url = collection.url -%}
+        {%- break -%}
+      {%- endif -%}
+    {% endfor %}
+  {%- endif -%}
+{%- elsif article -%}
+  {%- assign title = article.title -%}
+  {% if article.metafields.custom.is_special %}
+    {%- assign subcategory_title = pages['feature_collection'].title -%}
+    {%- assign subcategory_url = pages['feature_collection'].url -%}
+  {% elsif blog %}
+    {%- assign subcategory_title = blog.title -%}
+    {%- assign subcategory_url = blog.url -%}
+  {% endif %}
+{%- elsif blog -%}
+  {%- assign title = blog.metafields.custom.title -%}
+  {%- if title == blank -%}
+    {%- assign title = blog.title -%}
+  {%- endif -%}
+{%- elsif collection -%}
+  {%- assign title = collection.title -%}
+  {% if collection.metafields.custom.is_special %}
+    {%- assign subcategory_title = pages['feature_collection'].title -%}
+    {%- assign subcategory_url = pages['feature_collection'].url -%}
+  {% endif %}
+{%- elsif search -%}
+  {%- assign title = "検索結果" -%}
+{%- elsif request.path contains 'privacy-policy' -%}
+  {%- assign title = 'プライバシーポリシー' -%}
+{%- elsif request.path contains 'legal-notice' -%}
+  {%- assign title = '特定商取引法に基づく表記' -%}
+{%- elsif request.path contains 'terms-of-service' -%}
+  {%- assign title = '利用規約' -%}
+{%- elsif request.path contains 'return-policy' -%}
+  {%- assign title = '返品ポリシー' -%}
+{%- elsif request.path contains 'shipping-policy' -%}
+  {%- assign title = '配送ポリシー' -%}
+{%- else -%}
+  {%- assign title = page.title -%}
+{%- endif -%}
+
+{%- assign enable_breadcrumb = false -%}
+{%- if product or collection or blog or page or search or request.page_type == 'policy' -%}
+  {%- assign enable_breadcrumb = true -%}
+{%- endif -%}
+
+{%- if enable_breadcrumb -%}
+  <div class="section-breadcrumb">
+    <nav aria-label="パンくずリスト">
+      <ul class="breadcrumb ">
+        <li class="breadcrumb__item">
+          <a href="{{ routes.root_url }}">ホーム</a>
+        </li>
+
+        {% if subcategory_title != blank and subcategory_url != blank %}
+          <li class="breadcrumb__item">
+            <a href="{{ subcategory_url }}">{{ subcategory_title }}</a>
+          </li>
+        {% endif %}
+
+        <li class="breadcrumb__item">
+          <span>{{ title }}</span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  {% comment %} <script>
+    let items = document.querySelectorAll('.section-breadcrumb .collection-item');
+    if (items?.length) {
+      for (let i = 0; i < items.length; ++i) {
+        const link = items[i].querySelector('a');
+        if (link.href === document.referrer) {
+          items[i].style.display = 'flex';
+        }
+      }
+    }
+  </script>
+
+  {%- style -%}
+    {%- assign background_color = character["background-color"] -%}
+    {%- if background_color -%}
+      #shopify-section-{{ section.id }} {
+        background-color: {{ background_color }};
+      }
+    {%- endif -%}
+  {%- endstyle -%} {% endcomment %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "パンくずリスト",
+  "tag": "section",
+  "class": "section-breadcrumb-main",
+  "limit": 1,
+  "settings": [],
+  "presets": [
+    {
+      "name": "パンくずリスト"
+    }
+  ],
+  "disabled_on": {
+    "templates": ["*"]
+  }
+}
+{% endschema %}

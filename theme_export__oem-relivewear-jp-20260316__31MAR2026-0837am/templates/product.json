@@ -1,0 +1,319 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "tags_TnUHhq": {
+          "type": "tags",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "shipping_date_Fk6BKa": {
+          "type": "shipping_date",
+          "settings": {
+            "color_scheme": "scheme-af8ccd3b-94d0-4ab9-994a-a39b89927388"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": false
+          }
+        },
+        "contact_form_btn": {
+          "type": "contact_form",
+          "settings": {
+            "url": "https:\/\/docs.google.com\/forms\/d\/e\/1FAIpQLSd7Fe2VKPGWdan-m2OniAFeMw8wD-EHsa3kRigchf0v5Wo30Q\/viewform?usp=dialog"
+          }
+        },
+        "guide_4WnGGj": {
+          "type": "guide",
+          "settings": {
+            "text": "薬機法\/景表法",
+            "icon": "info",
+            "url": "https:\/\/cdn.shopify.com\/s\/files\/1\/0780\/7565\/8462\/files\/PDF.pdf?v=1772684720",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "notes_DpBN98": {
+          "type": "notes",
+          "settings": {
+            "color_scheme": "scheme-cfdcec87-e20a-49f3-94c7-41139283821b"
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "category_gfWMgW": {
+          "type": "category",
+          "settings": {
+            "color_scheme": "scheme-1"
+          }
+        },
+        "metafield_text_JEqbxw": {
+          "type": "metafield_text",
+          "settings": {
+            "namespace": "custom",
+            "key": "jan",
+            "heading": "JANコード：",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "free_single_text_XEMxnV": {
+          "type": "free_single_text",
+          "settings": {
+            "heading": "メーカー：",
+            "body": "{{ product.vendor }}",
+            "color_scheme": "scheme-1"
+          }
+        },
+        "copy_rights_JRkN8f": {
+          "type": "copy_rights",
+          "settings": {
+            "color_scheme": "scheme-1"
+          }
+        }
+      },
+      "block_order": [
+        "tags_TnUHhq",
+        "title",
+        "price",
+        "shipping_date_Fk6BKa",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "guide_4WnGGj",
+        "notes_DpBN98",
+        "description",
+        "contact_form_btn",
+        "category_gfWMgW",
+        "metafield_text_JEqbxw",
+        "free_single_text_XEMxnV",
+        "copy_rights_JRkN8f"
+      ],
+      "settings": {
+        "layout": "normal",
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "media_position": "left",
+        "image_zoom": "none",
+        "mobile_thumbnails": "show",
+        "enable_arrows": false,
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    },
+    "tgtp_related_products_4b8hYE": {
+      "type": "tgtp-related-products",
+      "settings": {
+        "page_width": false,
+        "use_default_padding": false,
+        "section_upper_padding": 60,
+        "section_upper_padding_sp": 60,
+        "section_lower_padding": 60,
+        "section_lower_padding_sp": 60,
+        "column_gap": 24,
+        "column_gap_sp": 24,
+        "row_gap": 24,
+        "row_gap_sp": 24,
+        "title": "こちらもおすすめ",
+        "subheading": "",
+        "heading_iscenter": false,
+        "heading_design": "normal",
+        "heading_color_text": "#222222",
+        "heading_color_sub1": "#fff100",
+        "heading_color_sub2": "rgba(0,0,0,0)",
+        "heading_color_sub3": "rgba(0,0,0,0)",
+        "heading_color_textshadow": "rgba(0,0,0,0)",
+        "image_picker_size": 38,
+        "heading_alternateimage_size": 200,
+        "subheading_color": "rgba(0,0,0,0)",
+        "title_lower_margin": 16,
+        "title_lower_margin_sp": 16,
+        "background_color": "rgba(0,0,0,0)",
+        "background_color_grad": "rgba(0,0,0,0)",
+        "caption_upper_padding": 16,
+        "caption_upper_padding_sp": 16,
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "tgtp_recently_products_rfJpH6": {
+      "type": "tgtp-recently-products",
+      "disabled": true,
+      "settings": {
+        "page_width": true,
+        "use_default_padding": false,
+        "section_upper_padding": 60,
+        "section_upper_padding_sp": 60,
+        "section_lower_padding": 60,
+        "section_lower_padding_sp": 60,
+        "column_gap": 24,
+        "column_gap_sp": 24,
+        "row_gap": 24,
+        "row_gap_sp": 24,
+        "title": "最近閲覧した商品",
+        "subheading": "",
+        "heading_iscenter": false,
+        "heading_design": "normal",
+        "heading_color_text": "#222222",
+        "heading_color_sub1": "#fff100",
+        "heading_color_sub2": "rgba(0,0,0,0)",
+        "heading_color_sub3": "rgba(0,0,0,0)",
+        "heading_color_textshadow": "rgba(0,0,0,0)",
+        "image_picker_size": 38,
+        "heading_alternateimage_size": 200,
+        "subheading_color": "rgba(0,0,0,0)",
+        "title_lower_margin": 16,
+        "title_lower_margin_sp": 16,
+        "background_color": "rgba(0,0,0,0)",
+        "background_color_grad": "rgba(0,0,0,0)",
+        "display_quantity": 10,
+        "row_quantity": 5,
+        "row_quantity_mobile": 3
+      }
+    },
+    "tgtp_section_goods_83zXDp": {
+      "type": "tgtp-section-goods",
+      "name": "TGTP Goods",
+      "settings": {
+        "id": "",
+        "title": "最近閲覧した商品",
+        "title_lower_margin": 16,
+        "title_lower_margin_sp": 16,
+        "subheading": "",
+        "heading_iscenter": false,
+        "title_align": "left",
+        "enable_filter": true,
+        "filter_tab_text_color": "",
+        "filter_tab_background_color": "",
+        "filter_tab_active_text_color": "",
+        "filter_tab_active_background_color": "",
+        "is_scroll_view_pc": false,
+        "is_scroll_view_mobile": true,
+        "scroll_view_min_width": 240,
+        "scroll_view_min_width_mobile": 112,
+        "is_history_view": true,
+        "collection": "",
+        "products_to_show": 12,
+        "grid_column": 6,
+        "grid_column_mobile": 2,
+        "visible_product_price": true,
+        "product_card_border": "",
+        "product_card_radius": 0,
+        "product_card_radius_mobile": 0,
+        "product_card_text_color": "",
+        "product_card_background_color": "",
+        "product_card_padding": 0,
+        "product_card_padding_mobile": 0,
+        "product_card_gap": 16,
+        "product_card_gap_mobile": 8,
+        "product_card_title_font_size_pc": 12,
+        "product_card_title_font_size_mobile": 12,
+        "product_card_price_font_size_pc": 12,
+        "product_card_price_font_size_mobile": 12,
+        "product_tag_pos": "hidden",
+        "product_tag_text_color": "",
+        "product_tag_background_color": "",
+        "product_tag_border_color": "",
+        "product_tag_border_width": 0,
+        "visible_product_link": false,
+        "product_link_text": "リンク",
+        "product_link_text_color": "",
+        "product_link_background_color": "",
+        "visible_product_add_cart": false,
+        "product_add_cart_text_color": "",
+        "product_add_cart_background_color": "",
+        "background_type": "loop",
+        "background_loop_size_pc": "",
+        "background_loop_size_smp": "",
+        "background_color": "",
+        "view_more_enable": false,
+        "view_more_text": "VIEW MORE",
+        "view_more_url": "",
+        "view_more_text_color": "",
+        "view_more_background_color": "",
+        "content_padding_x_enable": true,
+        "content_width_type": "manual",
+        "manual_content_width_enable": true,
+        "content_width": 1100,
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "padding_side": 50,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 58,
+        "padding_side_mobile": 16
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "tgtp_related_products_4b8hYE",
+    "tgtp_recently_products_rfJpH6",
+    "tgtp_section_goods_83zXDp"
+  ]
+}

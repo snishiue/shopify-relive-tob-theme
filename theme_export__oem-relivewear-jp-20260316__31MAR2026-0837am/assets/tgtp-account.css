@@ -1,0 +1,97 @@
+.tgtp-account h2 {
+  font-size: 18px;
+}
+.tgtp-account-content {
+  margin-top: 60px;
+}
+.tgtp-account-info-content {
+  margin-top: 24px;
+  font-size: 14px;
+}
+.tgtp-account-info-content .name {
+  font-size: 16px;
+  font-weight: 500;
+}
+.tgtp-account-info-content .note {
+  margin-top: 16px;
+  font-size: 12px;
+}
+.tgtp-account-info-content .note a {
+  color: inherit;
+  text-decoration: underline;
+}
+.tgtp-account-order {
+  margin-top: 60px;
+}
+.tgtp-account-order-content {
+  margin-top: 24px;
+}
+.tgtp-account .tgtp-button {
+  margin: 80px auto 0;
+  width: 100%;
+}
+.tgtp-account .order-history {
+  margin: -5px;
+}
+.tgtp-account .order-cell {
+  white-space: nowrap;
+}
+.tgtp-account .order-cell .tgtp-button {
+  margin: -10px 0 -10px 24px;
+  line-height: 32px;
+  padding: 0 24px;
+  width: auto;
+}
+.tgtp-account .order-history-table-details--disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+.tgtp-account-edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+.tgtp-account-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #212121;
+  border: 1px solid #BDBDBD;
+  border-radius: 6px;
+  text-decoration: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s;
+}
+.tgtp-account-edit-btn:hover {
+  background-color: #F5F5F5;
+  text-decoration: none;
+}
+
+@media screen and (min-width: 750px) {
+  .tgtp-account h2 {
+    font-size: 22px;
+  }
+  .tgtp-account-content {
+    margin-top: 100px;
+  }
+  .tgtp-account-info-content {
+    font-size: 16px;
+  }
+  .tgtp-account-info-content .name {
+    font-size: 18px;
+  }
+  .tgtp-account-info-content .note {
+    font-size: 14px;
+  }
+  .tgtp-account-order {
+    margin-top: 54px;
+  }
+  .tgtp-account .tgtp-button {
+    max-width: 360px;
+  }
+}

@@ -1,0 +1,348 @@
+{{ 'tgtp-youtube-banner.css' | asset_url | stylesheet_tag }}
+
+{% comment %} start basic style settings {% endcomment %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    --background-color: rgb({{ section.settings.background_color.red }} {{ section.settings.background_color.green }} {{ section.settings.background_color.blue }} / {{ section.settings.background_color.alpha | times: 100 | append: '%' }});
+    --text-color: rgb({{ section.settings.text_color.red }} {{ section.settings.text_color.green }} {{ section.settings.text_color.blue }} / {{ section.settings.text_color.alpha | times: 100 | append: '%' }});
+    --button-text-color: rgb({{ section.settings.button_text_color.red }} {{ section.settings.button_text_color.green }} {{ section.settings.button_text_color.blue }} / {{ section.settings.button_text_color.alpha | times: 100 | append: '%' }});
+    --button-background-color: rgb({{ section.settings.button_background_color.red }} {{ section.settings.button_background_color.green }} {{ section.settings.button_background_color.blue }} / {{ section.settings.button_background_color.alpha | times: 100 | append: '%' }});
+    
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+
+  @media screen and (max-width: 750px) {
+    .section-{{ section.id }}-padding {
+      --background-color: rgb({{ section.settings.background_color_mobile.red }} {{ section.settings.background_color_mobile.green }} {{ section.settings.background_color_mobile.blue }} / {{ section.settings.background_color_mobile.alpha | times: 100 | append: '%' }});
+
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+
+      margin-top: {{ section.settings.margin_top_mobile }}px;
+      margin-bottom: {{ section.settings.margin_bottom_mobile }}px;
+    }
+  }
+
+  {%- if section.settings.background_image != blank -%}
+    .section-{{ section.id }}-padding {
+      background-image: url({{ section.settings.background_image | image_url }});
+      {%- if section.settings.background_type == 'loop' -%}
+        background-size: contain;
+        background-repeat: repeat;
+      {%- elsif section.settings.background_type == 'full_trim' -%}
+        background-size: auto;
+        background-repeat: no-repeat;
+        background-position: center;
+      {%- endif -%}
+    }
+
+    {%- if section.settings.background_loop_size_pc != blank and section.settings.background_type == 'loop' -%}
+      .section-{{ section.id }}-padding {
+        background-size: {{ section.settings.background_loop_size_pc }};
+      }
+    {%- endif -%}
+
+    {%- if section.settings.background_loop_size_smp != blank and section.settings.background_type == 'loop' -%}
+      @media screen and (max-width: 750px) {
+        .section-{{ section.id }}-padding {
+          background-size: {{ section.settings.background_loop_size_smp }};
+        }
+      }
+    {%- endif -%}
+
+  {%- endif -%}
+
+  {%- if section.settings.manual_content_width_enable -%}
+    .section-{{ section.id }}-padding .tgtp-section__inner {
+      --content-width: {{ section.settings.content_width }};
+    }
+  {%- endif -%}
+{%- endstyle -%}
+{% comment %} end basic style settings {% endcomment %}
+
+{% comment %} start custom style settings {% endcomment %}
+{%- style -%}
+    {%- if section.settings.video_width -%}
+    .section-{{ section.id }}-padding .tgtp-youtube-banner__videosize {
+      width: {{ section.settings.video_width }}px;
+      max-width: 100%;
+    }
+  {%- endif -%}
+{%- endstyle -%}
+
+{% comment %} end basic style settings {% endcomment %}
+
+<div {% if section.settings.id != blank %}id="{{ section.settings.id }}"{% endif %} class="tgtp-youtube-banner section-{{ section.id }}-padding{% if section.settings.content_padding_x_enable %} enable-padding-x{% endif %}">
+  <div class="tgtp-section__inner tgtp-youtube-banner__inner {{ section.settings.content_width_type }}-width">
+    {%- if section.blocks.size > 0 -%}
+      <div class="tgtp-youtube-banner__content">
+        <div class="tgtp-youtube-banner__blockwrapper">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'youtube' -%}
+                {% if block.settings.thumb_image != blank %}
+                  <div>
+                    <img src="{{ block.settings.thumb_image | image_url }}" alt="サムネイル" class="tgtp-youtube-banner__thumb">
+                  </div>
+                {% endif %}
+                {% if block.settings.video_id != blank %}
+                  <div class="tgtp-youtube-banner__videosize">
+                    <div class="tgtp-youtube-banner__videocontainer">
+                      <div class="tgtp-youtube-banner__playthumb"></div>
+                      <iframe width="560" height="315"
+                      class="tgtp-youtube-banner__video"
+                      src="https://www.youtube.com/embed/{{ block.settings.video_id }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                  </div>
+                {% endif %}
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- schema -%}
+{
+  "name": "TGTP Youtube Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "id",
+      "label": "アンカー用ID"
+    },
+    {
+      "type": "header",
+      "content": "色"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "ボタン文字色"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "ボタン背景色"
+    },
+    {
+      "type": "header",
+      "content": "背景"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "color",
+      "id": "background_color_mobile",
+      "label": "背景色(モバイル)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "背景画像"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "背景種類",
+      "options": [
+        {
+          "value": "full_trim",
+          "label": "フル幅トリミング"
+        },
+        {
+          "value": "loop",
+          "label": "ループパターン"
+        }
+      ],
+      "default": "loop"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_pc",
+      "label": "繰り返しパターン最大サイズ(PC)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_smp",
+      "label": "繰り返しパターン最大サイズ(SMP)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "header",
+      "content": "セクション設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_padding_x_enable",
+      "label": "左右の余白を付ける",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_width_type",
+      "label": "コンテンツ幅",
+      "options": [
+        {
+          "value": "full",
+          "label": "フル幅"
+        },
+        {
+          "value": "manual",
+          "label": "ページ設定の幅"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "manual_content_width_enable",
+      "label": "独自のコンテンツ幅を設定する",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "コンテンツの幅",
+      "min": 640,
+      "max": 1440,
+      "step": 8,
+      "unit": "px",
+      "default": 1024
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部マージン",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部マージン",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部マージン（モバイル）",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部マージン（モバイル）",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "動画"
+    },
+    {
+      "type": "range",
+      "id": "video_width",
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "label": "ビデオ幅",
+      "default": 400
+    },
+  ],
+  "blocks": [
+    {
+      "type": "youtube",
+      "name": "YouTube",
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_id",
+          "label": "YouTube Video ID"
+        },
+        {
+          "type": "image_picker",
+          "id": "thumb_image",
+          "label": "サムネ画像"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP YouTube Banner"
+    }
+  ]
+}
+{%- endschema -%}

@@ -1,0 +1,1062 @@
+{{ 'tgtp-section-goods.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    --background-color: rgb({{ section.settings.background_color.red }} {{ section.settings.background_color.green }} {{ section.settings.background_color.blue }} / {{ section.settings.background_color.alpha | times: 100 | append: '%' }});
+    --product-link-text-color: rgb({{ section.settings.product_link_text_color.red }} {{ section.settings.product_link_text_color.green }} {{ section.settings.product_link_text_color.blue }} / {{ section.settings.product_link_text_color.alpha | times: 100 | append: '%' }});
+    --product-link-background-color: rgb({{ section.settings.product_link_background_color.red }} {{ section.settings.product_link_background_color.green }} {{ section.settings.product_link_background_color.blue }} / {{ section.settings.product_link_background_color.alpha | times: 100 | append: '%' }});
+    --product-add-cart-text-color: rgb({{ section.settings.product_add_cart_text_color.red }} {{ section.settings.product_add_cart_text_color.green }} {{ section.settings.product_add_cart_text_color.blue }} / {{ section.settings.product_add_cart_text_color.alpha | times: 100 | append: '%' }});
+    --product-add-cart-background-color: rgb({{ section.settings.product_add_cart_background_color.red }} {{ section.settings.product_add_cart_background_color.green }} {{ section.settings.product_add_cart_background_color.blue }} / {{ section.settings.product_add_cart_background_color.alpha | times: 100 | append: '%' }});
+    --product-card-border-color: rgb({{ section.settings.product_card_border.red }} {{ section.settings.product_card_border.green }} {{ section.settings.product_card_border.blue }} / {{ section.settings.product_card_border.alpha | times: 100 | append: '%' }});
+    --product-card-radius: {{ section.settings.product_card_radius }};
+    --product-card-text-color: rgb({{ section.settings.product_card_text_color.red }} {{ section.settings.product_card_text_color.green }} {{ section.settings.product_card_text_color.blue }} / {{ section.settings.product_card_text_color.alpha | times: 100 | append: '%' }});
+    --product-card-background-color: rgb({{ section.settings.product_card_background_color.red }} {{ section.settings.product_card_background_color.green }} {{ section.settings.product_card_background_color.blue }} / {{ section.settings.product_card_background_color.alpha | times: 100 | append: '%' }});
+    --product-card-padding: {{ section.settings.product_card_padding }};
+    --product-card-gap: {{ section.settings.product_card_gap }};
+    --product-tag-text-color: rgb({{ section.settings.product_tag_text_color.red }} {{ section.settings.product_tag_text_color.green }} {{ section.settings.product_tag_text_color.blue }} / {{ section.settings.product_tag_text_color.alpha | times: 100 | append: '%' }});
+    --product-tag-background-color: rgb({{ section.settings.product_tag_background_color.red }} {{ section.settings.product_tag_background_color.green }} {{ section.settings.product_tag_background_color.blue }} / {{ section.settings.product_tag_background_color.alpha | times: 100 | append: '%' }});
+    --product-tag-border-color: rgb({{ section.settings.product_tag_border_color.red }} {{ section.settings.product_tag_border_color.green }} {{ section.settings.product_tag_border_color.blue }} / {{ section.settings.product_tag_border_color.alpha | times: 100 | append: '%' }});
+    --product-tag-border-width: {{ section.settings.product_tag_border_width }};
+    --view-more-text-color: rgb({{ section.settings.view_more_text_color.red }} {{ section.settings.view_more_text_color.green }} {{ section.settings.view_more_text_color.blue }} / {{ section.settings.view_more_text_color.alpha | times: 100 | append: '%' }});
+    --view-more-background-color: rgb({{ section.settings.view_more_background_color.red }} {{ section.settings.view_more_background_color.green }} {{ section.settings.view_more_background_color.blue }} / {{ section.settings.view_more_background_color.alpha | times: 100 | append: '%' }});
+    --filter-tab-text-color: rgb({{ section.settings.filter_tab_text_color.red }} {{ section.settings.filter_tab_text_color.green }} {{ section.settings.filter_tab_text_color.blue }} / {{ section.settings.filter_tab_text_color.alpha | times: 100 | append: '%' }});
+    --filter-tab-background-color: rgb({{ section.settings.filter_tab_background_color.red }} {{ section.settings.filter_tab_background_color.green }} {{ section.settings.filter_tab_background_color.blue }} / {{ section.settings.filter_tab_background_color.alpha | times: 100 | append: '%' }});
+    --filter-tab-active-text-color: rgb({{ section.settings.filter_tab_active_text_color.red }} {{ section.settings.filter_tab_active_text_color.green }} {{ section.settings.filter_tab_active_text_color.blue }} / {{ section.settings.filter_tab_active_text_color.alpha | times: 100 | append: '%' }});
+    --filter-tab-active-background-color: rgb({{ section.settings.filter_tab_active_background_color.red }} {{ section.settings.filter_tab_active_background_color.green }} {{ section.settings.filter_tab_active_background_color.blue }} / {{ section.settings.filter_tab_active_background_color.alpha | times: 100 | append: '%' }});
+    --scroll-view-min-width: {{ section.settings.scroll_view_min_width }}px;
+    --scroll-view-min-width-mobile: {{ section.settings.scroll_view_min_width_mobile }}px;
+
+    --product-card-title-font-size-pc: {{ section.settings.product_card_title_font_size_pc }}px;
+    --product-card-title-font-size-mobile: {{ section.settings.product_card_title_font_size_mobile }}px;
+    --product-card-price-font-size-pc: {{ section.settings.product_card_price_font_size_pc }}px;
+    --product-card-price-font-size-mobile: {{ section.settings.product_card_price_font_size_mobile }}px;
+
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+
+    --content-padding-x: {{ section.settings.padding_side }};
+    --content-padding-x-mobile: {{ section.settings.padding_side_mobile }};
+  }
+
+  @media screen and (max-width: 750px) {
+    .section-{{ section.id }}-padding {
+      {%- if section.settings.product_card_radius_mobile != 0 -%}
+        --product-card-radius: {{ section.settings.product_card_radius_mobile }};
+      {%- endif -%}
+      {%- if section.settings.product_card_padding_mobile != 0 -%}
+        --product-card-padding: {{ section.settings.product_card_padding_mobile }};
+      {%- endif -%}
+      {%- if section.settings.product_card_gap_mobile != 0 -%}
+        --product-card-gap: {{ section.settings.product_card_gap_mobile }};
+      {%- endif -%}
+      
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+  }
+
+  {%- if section.settings.background_image != blank -%}
+    .section-{{ section.id }}-padding {
+      background-image: url({{ section.settings.background_image | image_url }});
+      {%- if section.settings.background_type == 'loop' -%}
+        background-size: contain;
+        background-repeat: repeat;
+      {%- elsif section.settings.background_type == 'full_trim' -%}
+        background-size: auto;
+        background-repeat: no-repeat;
+        background-position: center;
+      {%- endif -%}
+    }
+
+    {%- if section.settings.background_loop_size_pc != blank and section.settings.background_type == 'loop' -%}
+      .section-{{ section.id }}-padding {
+        background-size: {{ section.settings.background_loop_size_pc }};
+      }
+    {%- endif -%}
+
+    {%- if section.settings.background_loop_size_smp != blank and section.settings.background_type == 'loop' -%}
+      @media screen and (max-width: 750px) {
+        .section-{{ section.id }}-padding {
+          background-size: {{ section.settings.background_loop_size_smp }};
+        }
+      }
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if section.settings.manual_content_width_enable -%}
+    .section-{{ section.id }}-padding .tgtp-goods__inner {
+      --content-width: {{ section.settings.content_width }};
+    }
+  {%- endif -%}
+
+  {%- if section.settings.product_link_image != blank -%}
+    {%- liquid
+      assign image_width = section.settings.product_link_image_width
+      if image_width == 0 or image_width == nil
+        assign image_width = 100
+      endif
+    -%}
+    .section-{{ section.id }}-padding {
+      --goods-link-image-width: {{ image_width }};
+    }
+
+    {%- if section.settings.product_link_image_width_mobile != blank and section.settings.product_link_image_width_mobile != 0 -%}
+      @media screen and (max-width: 750px) {
+        .section-{{ section.id }}-padding {
+          --goods-link-image-width: {{ section.settings.product_link_image_width_mobile }};
+        }
+      }
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if section.settings.product_add_cart_image != blank -%}
+    {%- liquid
+      assign image_width = section.settings.product_add_cart_image_width
+      if image_width == 0 or image_width == nil
+        assign image_width = 100
+      endif
+    -%}
+    .section-{{ section.id }}-padding {
+      --goods-add-cart-image-width: {{ image_width }};
+    }
+
+    {%- if section.settings.product_add_cart_image_width_mobile != blank and section.settings.product_add_cart_image_width_mobile != 0 -%}
+      @media screen and (max-width: 750px) {
+        .section-{{ section.id }}-padding {
+          --goods-add-cart-image-width: {{ section.settings.product_add_cart_image_width_mobile }};
+        }
+      }
+    {%- endif -%}
+  {%- endif -%}
+{%- endstyle -%}
+
+{%- liquid
+  assign fixed_products = section.blocks.size
+  assign products_to_display = fixed_products | plus: section.settings.collection.all_products_count
+
+  if products_to_display > section.settings.products_to_show
+    assign products_to_display = section.settings.products_to_show
+  endif
+
+  assign columns_mobile_int = section.settings.grid_column_mobile | plus: 0
+  assign show_mobile_slider = false
+  if section.settings.swipe_on_mobile and products_to_display > columns_mobile_int
+    assign show_mobile_slider = true
+  endif
+
+  assign show_desktop_slider = false
+  if section.settings.enable_desktop_slider and products_to_display > section.settings.grid_column
+    assign show_desktop_slider = true
+  endif
+-%}
+
+<div {% if section.id != blank %}id="shopify-section-{{ section.id }}"{% endif %} class="tgtp-goods section-{{ section.id }}-padding{% if section.settings.content_padding_x_enable %} enable-padding-x{% endif %}">
+  <div class="tgtp-goods__inner {{ section.settings.content_width_type }}-width">
+    {% render 'tgtp-section__heading' %}
+
+    {% comment %} {%- if section.settings.title != blank or section.settings.title_image != blank -%}
+      <h2 class="tgtp-goods__heading align-{{ section.settings.title_align }}">
+        {%- if section.settings.title_image != blank -%}
+          {%- liquid
+            assign image_width = section.settings.title_image_width
+            if image_width == 0 or image_width == nil
+              assign image_width = 100
+            endif
+            assign image_width_double = image_width | times: 2
+          -%}
+          {{ section.settings.title_image | image_url: width: image_width_double | image_tag: alt: section.settings.title }}
+          {%- style -%}
+            .section-{{ section.id }}-padding {
+              --heading-image-width: {{ image_width }};
+            }
+
+            {%- if section.settings.title_image_width_mobile != blank and section.settings.title_image_width_mobile != 0 -%}
+              @media screen and (max-width: 750px) {
+                .section-{{ section.id }}-padding {
+                  --heading-image-width: {{ section.settings.title_image_width_mobile }};
+                }
+              }
+            {%- endif -%}
+          {%- endstyle -%}
+        {%- else -%}
+          {{ section.settings.title | escape | newline_to_br }}
+        {%- endif -%}
+      </h2>
+    {%- endif -%} {% endcomment %}
+
+    {%- assign collection_limit = products_to_display -%}
+
+    <div class="tgtp-goods-list-wrapper grid-col-{{ section.settings.grid_column }} grid-col-{{ section.settings.grid_column_mobile }}-mobile">
+        {% if section.settings.is_history_view == true %}
+          <div class="tgtp-goods-list product-history {% if section.settings.is_scroll_view_pc %}tgtp-goods-list--scroll-pc{% endif %}{% if section.settings.is_scroll_view_mobile %} tgtp-goods-list--scroll-sp{% endif %}" data-shown="{{ section.settings.products_to_show }}" data-parent-section="shopify-section-{{ section.id }}"></div>
+          <script src="{{ 'tgtp-js-cookie.min.js' | asset_url }}" defer="defer"></script>
+          <script src="{{ 'tgtp-product-history-visible.js' | asset_url }}" defer="defer"></script>
+        {% else %}
+            <div class="tgtp-goods-list {% if section.settings.is_scroll_view_pc %}tgtp-goods-list--scroll-pc{% endif %}{% if section.settings.is_scroll_view_mobile %} tgtp-goods-list--scroll-sp{% endif %}">
+            {% assign hidden_tag = false %}
+            {%- if section.settings.product_tag_pos == 'hidden' -%}
+              {% assign hidden_tag = true %}
+            {%- endif -%}
+            {%- for product in section.settings.collection.products limit: collection_limit -%}
+              {% render 'tgtp-card-product',
+                card_product: product,
+                media_aspect_ratio: section.settings.image_ratio,
+                image_shape: section.settings.image_shape,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_type: section.settings.show_type,
+                show_rating: section.settings.show_rating,
+                show_quick_add: section.settings.enable_quick_add,
+                section_id: section.id
+                hidden_tag: hidden_tag,
+              %}
+            {%- endfor -%}
+            </div>
+        {% endif %}
+    </div>
+
+    {% comment %} <slider-component class="slider-mobile-gutter{% if section.settings.full_width %} slider-component-full-width{% endif %}{% if show_mobile_slider == false %} page-width{% endif %}{% if show_desktop_slider == false and section.settings.full_width == false %} page-width-desktop{% endif %}{% if show_desktop_slider %} slider-component-desktop{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <ul
+        id="Slider-{{ section.id }}"
+        class="grid product-grid contains-card contains-card--product{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid--{{ section.settings.grid_column }}-col-desktop{% if section.settings.collection == blank %} grid--2-col-tablet-down{% else %} grid--{{ section.settings.columns_mobile }}-col-tablet-down{% endif %}{% if show_mobile_slider or show_desktop_slider %} slider{% if show_desktop_slider %} slider--desktop{% endif %}{% if show_mobile_slider %} slider--tablet grid--peek{% endif %}{% endif %}"
+        role="list"
+        aria-label="{{ 'general.slider.name' | t }}"
+      >
+        {%- if products_to_display > 0 -%}
+          {%- for block in section.blocks limit: products_to_display -%}
+            {%- assign product = block.settings.product -%}
+            <li
+              id="Slide-{{ section.id }}-{{ forloop.index }}"
+              class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ forloop.index }};"
+              {% endif %}
+            >
+              {% render 'tgtp-card-product',
+                card_product: product,
+                media_aspect_ratio: section.settings.image_ratio,
+                image_shape: section.settings.image_shape,
+                show_secondary_image: section.settings.show_secondary_image,
+                show_vendor: section.settings.show_vendor,
+                show_type: section.settings.show_type,
+                show_rating: section.settings.show_rating,
+                show_quick_add: section.settings.enable_quick_add,
+                section_id: section.id
+              %}
+            </li>
+          {%- endfor -%}
+
+          {%- assign collection_limit = products_to_display | minus: fixed_products -%}
+          {%- if collection_limit > 0 -%}
+            {%- for product in section.settings.collection.products limit: collection_limit -%}
+              <li
+                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: {{ forloop.index }};"
+                {% endif %}
+              >
+                {% render 'tgtp-card-product',
+                  card_product: product,
+                  media_aspect_ratio: section.settings.image_ratio,
+                  image_shape: section.settings.image_shape,
+                  show_secondary_image: section.settings.show_secondary_image,
+                  show_vendor: section.settings.show_vendor,
+                  show_type: section.settings.show_type,
+                  show_rating: section.settings.show_rating,
+                  show_quick_add: section.settings.enable_quick_add,
+                  section_id: section.id
+                %}
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <li
+              class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+              {% if settings.animations_reveal_on_scroll %}
+                data-cascade
+                style="--animation-order: {{ forloop.index }};"
+              {% endif %}
+            >
+              {%- assign placeholder_image = 'product-apparel-' | append: forloop.rindex -%}
+              {% render 'tgtp-card-product',
+                show_vendor: section.settings.show_vendor,
+                show_type: section.settings.show_type,
+                placeholder_image: placeholder_image
+              %}
+            </li>
+          {%- endfor -%}
+        {%- endif -%}
+      </ul>
+      {%- if show_mobile_slider or show_desktop_slider -%}
+        <div class="slider-buttons no-js-hidden">
+          <button
+            type="button"
+            class="slider-button slider-button--prev"
+            name="previous"
+            aria-label="{{ 'general.slider.previous_slide' | t }}"
+            aria-controls="Slider-{{ section.id }}"
+          >
+            <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+            </svg>
+          </button>
+          <div class="slider-counter caption">
+            <span class="slider-counter--current">1</span>
+            <span aria-hidden="true"> / </span>
+            <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+            <span class="slider-counter--total">{{ products_to_display }}</span>
+          </div>
+          <button
+            type="button"
+            class="slider-button slider-button--next"
+            name="next"
+            aria-label="{{ 'general.slider.next_slide' | t }}"
+            aria-controls="Slider-{{ section.id }}"
+          >
+            <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+            </svg>
+          </button>
+        </div>
+      {%- endif -%}
+    </slider-component> {% endcomment %}
+    
+
+    {%- if section.settings.view_more_enable -%}
+      <div class="tgtp-goods-view-more">
+        {%- if section.settings.view_more_image != blank -%}
+          <a href="{{ section.settings.view_more_url }}" class="tgtp-goods-view-more__image-link">
+            {%- liquid
+              assign image_width = section.settings.view_more_image_width
+              if image_width == 0 or image_width == nil
+                assign image_width = 100
+              endif
+              assign image_width_double = image_width | times: 2
+            -%}
+            {{ section.settings.view_more_image | image_url: width: image_width_double | image_tag: alt: section.settings.view_more_text }}
+          </a>
+          {%- style -%}
+            .section-{{ section.id }}-padding {
+              --view-more-image-width: {{ image_width }};
+            }
+
+            {%- if section.settings.view_more_image_width_mobile != blank and section.settings.view_more_image_width_mobile != 0 -%}
+              @media screen and (max-width: 750px) {
+                .section-{{ section.id }}-padding {
+                  --view-more-image-width: {{ section.settings.view_more_image_width_mobile }};
+                }
+              }
+            {%- endif -%}
+          {%- endstyle -%}
+        {%- else -%}
+          <a href="{{ section.settings.view_more_url }}" class="tgtp-goods-view-more__link">
+            <span>{{ section.settings.view_more_text | escape }}</span>
+            {% comment %} <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <path d="M0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM241 377c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l87-87-87-87c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L345 239c9.4 9.4 9.4 24.6 0 33.9L241 377z" fill="currentColor" />
+            </svg> {% endcomment %}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+
+{%- schema -%}
+{
+  "name": "TGTP Goods",
+  "class": "section-goods",
+  "settings": [
+    {
+      "type": "text",
+      "id": "id",
+      "label": "アンカー用ID"
+    },
+    {
+      "type": "header",
+      "content": "タイトル"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "タイトル"
+    },
+    {
+      "type": "range",
+      "id": "title_lower_margin",
+      "label": "タイトル下部 間隔",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_lower_margin_sp",
+      "label": "タイトル下部 間隔 スマホ",
+      "min": 8,
+      "max": 80,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "image_picker",
+      "id": "heading_image",
+      "label": "タイトル画像（代替）"
+    },
+    {
+      "type": "number",
+      "id": "image_picker_size",
+      "label": "画像の幅"
+    },
+    {
+      "type": "number",
+      "id": "image_picker_size_mobile",
+      "label": "画像の幅（モバイル）"
+    },
+    {
+      "type": "image_picker",
+      "id": "heading_alternateimage",
+      "label": "サブタイトル画像（代替）"
+    },
+    {
+      "type": "number",
+      "id": "heading_alternateimage_size",
+      "label": "サブ画像の幅"
+    },
+    {
+      "type": "number",
+      "id": "heading_alternateimage_size_mobile",
+      "label": "サブ画像の幅（モバイル）"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "サブタイトル"
+    },
+    {
+      "type": "checkbox",
+      "id": "heading_iscenter",
+      "label": "中央寄せ",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "文字位置",
+      "options": [
+        {
+          "value": "left",
+          "label": "左寄せ"
+        },
+        {
+          "value": "center",
+          "label": "中央"
+        },
+        {
+          "value": "right",
+          "label": "右寄せ"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "フィルター設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_filter",
+      "label": "表示する",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "filter_tab_text_color",
+      "label": "タブの文字色"
+    },
+    {
+      "type": "color",
+      "id": "filter_tab_background_color",
+      "label": "タブの背景色"
+    },
+    {
+      "type": "color",
+      "id": "filter_tab_active_text_color",
+      "label": "タブの文字色（選択中）"
+    },
+    {
+      "type": "color",
+      "id": "filter_tab_active_background_color",
+      "label": "タブの背景色（選択中）"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_scroll_view_pc",
+      "label": "横スクロールview(PC)",
+      "info": "横スクロールになります",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "is_scroll_view_mobile",
+      "label": "横スクロールview(スマホ)",
+      "info": "横スクロールになります",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "scroll_view_min_width",
+      "label": "横スクロールのときの商品サイズ",
+      "min": 0,
+      "max": 800,
+      "step": 8,
+      "default": 240
+    },
+    {
+      "type": "range",
+      "id": "scroll_view_min_width_mobile",
+      "label": "横スクロールのときの商品サイズ(スマホ)",
+      "min": 0,
+      "max": 800,
+      "step": 8,
+      "default": 240
+    },
+    {
+      "type": "header",
+      "content": "商品設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_history_view",
+      "label": "コレクションの代わりに閲覧履歴を表示する",
+      "info": "コレクションは無効になります",
+      "default": false
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "コレクション"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 25,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.featured-collection.settings.products_to_show.label"
+    },
+    {
+      "type": "range",
+      "id": "grid_column",
+      "label": "列数",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "grid_column_mobile",
+      "label": "列数（モバイル）",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "商品カード設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "visible_product_price",
+      "label": "値段を表示する",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "product_card_border",
+      "label": "枠線の色"
+    },
+    {
+      "type": "range",
+      "id": "product_card_radius",
+      "label": "角の半径",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "range",
+      "id": "product_card_radius_mobile",
+      "label": "角の半径（モバイル）",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 0,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "color",
+      "id": "product_card_text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "product_card_background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "range",
+      "id": "product_card_padding",
+      "label": "背景色周りの余白",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "range",
+      "id": "product_card_padding_mobile",
+      "label": "背景色周りの余白（モバイル）",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "range",
+      "id": "product_card_gap",
+      "label": "商品カード間の余白",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "range",
+      "id": "product_card_gap_mobile",
+      "label": "商品カード間の余白（モバイル）",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16,
+      "info": "0の場合無効"
+    },
+    {
+      "type": "range",
+      "id": "product_card_title_font_size_pc",
+      "label": "商品名のフォントサイズ(PC)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_card_title_font_size_mobile",
+      "label": "商品名のフォントサイズ(スマホ)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "product_card_price_font_size_pc",
+      "label": "価格のフォントサイズ(PC)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "product_card_price_font_size_mobile",
+      "label": "価格のフォントサイズ(スマホ)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "商品タグ"
+    },
+    {
+      "type": "select",
+      "id": "product_tag_pos",
+      "label": "タグ表示位置",
+      "options": [
+        {
+          "value": "default",
+          "label": "デフォルト"
+        },
+        {
+          "value": "hidden",
+          "label": "非表示"
+        },
+        {
+          "value": "top-left",
+          "label": "左上"
+        },
+        {
+          "value": "top-right",
+          "label": "右上"
+        },
+        {
+          "value": "bottom-right",
+          "label": "右下"
+        },
+        {
+          "value": "bottom-left",
+          "label": "左下"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "color",
+      "id": "product_tag_text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "product_tag_background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "color",
+      "id": "product_tag_border_color",
+      "label": "枠線の色"
+    },
+    {
+      "type": "range",
+      "id": "product_tag_border_width",
+      "label": "枠線の太さ",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "商品リンク"
+    },
+    {
+      "type": "checkbox",
+      "id": "visible_product_link",
+      "label": "表示する",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_link_text",
+      "label": "文字",
+      "default": "リンク"
+    },
+    {
+      "type": "color",
+      "id": "product_link_text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "product_link_background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_link_image",
+      "label": "画像（代替）"
+    },
+    {
+      "type": "number",
+      "id": "product_link_image_width",
+      "label": "画像の幅"
+    },
+    {
+      "type": "number",
+      "id": "product_link_image_width_mobile",
+      "label": "画像の幅（モバイル）"
+    },
+    {
+      "type": "header",
+      "content": "カートに追加ボタン"
+    },
+    {
+      "type": "checkbox",
+      "id": "visible_product_add_cart",
+      "label": "表示する",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "product_add_cart_text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "product_add_cart_background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_add_cart_image",
+      "label": "画像（代替）"
+    },
+    {
+      "type": "number",
+      "id": "product_add_cart_image_width",
+      "label": "画像の幅"
+    },
+    {
+      "type": "number",
+      "id": "product_add_cart_image_width_mobile",
+      "label": "画像の幅（モバイル）"
+    },
+    {
+      "type": "header",
+      "content": "背景"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "背景画像"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "背景種類",
+      "options": [
+        {
+          "value": "full_trim",
+          "label": "フル幅トリミング"
+        },
+        {
+          "value": "loop",
+          "label": "ループパターン"
+        }
+      ],
+      "default": "loop"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_pc",
+      "label": "繰り返しパターン最大サイズ(PC)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_smp",
+      "label": "繰り返しパターン最大サイズ(SMP)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "header",
+      "content": "もっと見る"
+    },
+    {
+      "type": "checkbox",
+      "id": "view_more_enable",
+      "label": "表示する",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_more_text",
+      "label": "テキスト",
+      "default": "VIEW MORE"
+    },
+    {
+      "type": "url",
+      "id": "view_more_url",
+      "label": "URL"
+    },
+    {
+      "type": "color",
+      "id": "view_more_text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "view_more_background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "image_picker",
+      "id": "view_more_image",
+      "label": "画像（代替）"
+    },
+    {
+      "type": "number",
+      "id": "view_more_image_width",
+      "label": "画像の幅"
+    },
+    {
+      "type": "number",
+      "id": "view_more_image_width_mobile",
+      "label": "画像の幅（モバイル）"
+    },
+    {
+      "type": "header",
+      "content": "セクション設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_padding_x_enable",
+      "label": "左右の余白を付ける",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_width_type",
+      "label": "コンテンツ幅",
+      "options": [
+        {
+          "value": "full",
+          "label": "フル幅"
+        },
+        {
+          "value": "manual",
+          "label": "ページ設定の幅"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "manual_content_width_enable",
+      "label": "独自のコンテンツ幅を設定する",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "コンテンツの幅",
+      "min": 1024,
+      "max": 1424,
+      "step": 4,
+      "unit": "px",
+      "default": 1024
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "上部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "下部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_side",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "左右",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "上部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "下部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_side_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "左右（モバイル）",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "表示する商品",
+      "settings": [
+        {
+          "type": "text",
+          "id": "enable_variant_name",
+          "label": "表示するバリエーションのオプション名"
+        },
+        {
+          "type": "text",
+          "id": "tab_name",
+          "label": "タブ名"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "商品"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP Goods"
+    }
+  ]
+}
+{%- endschema -%}

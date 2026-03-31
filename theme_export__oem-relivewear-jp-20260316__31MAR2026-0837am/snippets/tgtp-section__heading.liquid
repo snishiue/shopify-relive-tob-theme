@@ -1,0 +1,264 @@
+{% comment %} margin padding {% endcomment %}
+{% unless section.settings.use_default_padding %}
+  {% style %}
+    #shopify-section-{{ section.id }} {
+      padding-top: {{section.settings.section_upper_padding}}px;
+      padding-bottom: {{section.settings.section_lower_padding}}px;
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading {
+      margin-bottom: {{section.settings.title_lower_margin}}px;
+    }
+    #shopify-section-{{ section.id }} .featured-collection__view_all {
+      margin-top: {{section.settings.btn_upper_margin}}px;
+      margin-bottom: {{section.settings.btn_lower_margin}}px;
+    }
+    #shopify-section-{{ section.id }} .collection--grid {
+      grid-column-gap: {{section.settings.column_gap}}px;
+      grid-row-gap: {{section.settings.row_gap}}px;
+    }
+    #shopify-section-{{ section.id }} .product-item__caption {
+      padding-top: {{caption_upper_padding}}px;
+    }
+    #shopify-section-{{ section.id }} .underline-animation {
+      padding-bottom: {{section.settings.product_name_lower_padding_sp}}px;
+    }
+
+    @media screen and (max-width: 420px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{section.settings.section_upper_padding_sp}}px;
+        padding-bottom: {{section.settings.section_lower_padding_sp}}px;
+      }
+      #shopify-section-{{ section.id }} .tgtp-section__heading {
+        margin-bottom: {{section.settings.title_lower_margin_sp}}px;
+      }
+      #shopify-section-{{ section.id }} .featured-collection__view_all {
+        margin-top: {{section.settings.btn_upper_margin_sp}}px;
+        margin-bottom: {{section.settings.btn_lower_margin_sp}}px;
+      }
+      #shopify-section-{{ section.id }} .product-item__caption {
+        padding-top: {{caption_upper_padding}}px;
+      }
+      #shopify-section-{{ section.id }} .underline-animation {
+        padding-bottom: {{section.settings.product_name_lower_padding_sp}}px;
+      }
+    }
+  {% endstyle %}
+{% endunless %}
+
+
+<div class="tgtp-section__heading_wrapper">
+  {% unless section.settings.title == blank %}
+    <h2 class="tgtp-section__heading">
+      {% if section.settings.heading_image %}
+        <span class="tgtp-section__heading-image">
+          {%- assign img_height = section.settings.image_picker_size | divided_by: section.settings.heading_image.aspect_ratio | ceil -%}
+          {%- assign widths_string = section.settings.image_picker_size | times: 2 | append: ', ' | append: section.settings.image_picker_size | to_s -%}
+          {{
+            section.settings.heading_image
+            | image_url: width: section.settings.image_picker_size
+            | image_tag:
+              loading: 'lazy',
+              decoding: 'async',
+              width: section.settings.image_picker_size,
+              widths: widths_string,
+              height: img_height,
+              alt: section.settings.heading_image.alt
+          }}
+        </span>
+      {% endif %}
+      <span class="tgtp-section__heading-text">
+        {% if section.settings.heading_alternateimage %}
+          {%- assign img_size_desktop = section.settings.heading_alternateimage_size -%} {%- comment %} PCの表示サイズ {%- endcomment %}
+          {%- assign img_size_mobile = section.settings.heading_alternateimage_size_mobile | default: img_size_desktop -%} {%- comment %} スマホの表示サイズ（なければPCサイズを使う） {%- endcomment %}
+          {%- assign img_size_2x = img_size_desktop | times: 2 -%} {%- comment %} 2x解像度用 {%- endcomment %}
+
+          {%- assign img_height_desktop = img_size_desktop | divided_by: section.settings.heading_alternateimage.aspect_ratio | ceil -%}
+          {%- assign img_height_mobile = img_size_mobile | divided_by: section.settings.heading_alternateimage.aspect_ratio | ceil -%}
+          {%- assign img_height_2x = img_size_2x | divided_by: section.settings.heading_alternateimage.aspect_ratio | ceil -%}
+
+          {%- capture srcset_value -%}
+            {{ section.settings.heading_alternateimage | image_url: width: img_size_mobile }} {{ img_size_mobile }}w,
+            {{ section.settings.heading_alternateimage | image_url: width: img_size_desktop }} {{ img_size_desktop }}w,
+            {{ section.settings.heading_alternateimage | image_url: width: img_size_2x }} {{ img_size_2x }}w
+          {%- endcapture -%}
+
+          {%- capture sizes_value -%}
+            (max-width: 768px) {{ img_size_mobile }}px, {{ img_size_desktop }}px
+          {%- endcapture -%}
+
+          <img 
+            src="{{ section.settings.heading_alternateimage | image_url: width: img_size_desktop }}" 
+            srcset="{{ srcset_value }}" 
+            sizes="{{ sizes_value }}" 
+            alt="{{ section.settings.title }}" 
+            loading="lazy" 
+            decoding="async"
+            style="max-width: 100%; height: auto; aspect-ratio: {{ section.settings.heading_alternateimage.aspect_ratio }};">
+        {% else %}
+          {{ section.settings.title | escape | strip }}
+        {% endif %}
+      </span>
+
+
+      
+      
+    </h2>
+  {% endunless %}
+
+  {% unless section.settings.subheading == blank %}
+    <p class="tgtp-section__caption">{{ section.settings.subheading | escape | strip }}</p>
+  {% endunless %}
+</div>
+
+
+{% comment %} ヘッダーデザイン {% endcomment %}
+{% style %}
+  #shopify-section-{{ section.id }} .tgtp-section__heading-image {
+    width: {{ section.settings.image_picker_size }}px;
+  }
+  #shopify-section-{{ section.id }} .tgtp-section__heading {
+    color: {{ section.settings.heading_color_text }};
+    {% comment %}
+    {% if section.settings.heading_color_textshadow != 'rgba(0,0,0,0)' %}
+      text-shadow: 2px 2px 0 {{ section.settings.heading_color_textshadow }};
+    {% endif %}
+    {% endcomment %}
+  }
+{% endstyle %}
+
+{% if section.settings.heading_design == 'highlight' %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading {
+      background: linear-gradient(transparent 53%, {{ section.settings.heading_color_sub1 }} 80%);
+      display: inline-block;
+      padding-bottom: 0.2em;
+    }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.heading_design == 'border_center' %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading {
+      position: relative;
+      padding: 0px 65px;
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading::before, #shopify-section-{{ section.id }} .tgtp-section__heading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      display: inline-block;
+      width: 50px;
+      height: 3px;
+      {% if section.settings.heading_color_sub1 != 'rgba(0,0,0,0)' %}
+        background-color: {{section.settings.heading_color_sub1}};
+        {% comment %} background: linear-gradient(46deg,#ff73b4 25%, #95e336 25% 50%, #d078fe 50% 75%, #19BBED 75% ); {% endcomment %}
+      {% endif %}
+      {% if section.settings.heading_color_sub3 != 'rgba(0,0,0,0)' and section.settings.heading_color_sub3 %}
+        background: {{section.settings.heading_color_sub3}}
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading::before {
+      left: 0;
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading::after {
+      right: 0;
+    }
+    @media screen and (max-width: 420px) {
+      #shopify-section-{{ section.id }} .tgtp-section__heading {
+        padding: 0px 30px;
+      }
+      #shopify-section-{{ section.id }} .tgtp-section__heading::before, #shopify-section-{{ section.id }} .tgtp-section__heading::after {
+        width: 26px;
+      }
+      #shopify-section-{{ section.id }} .tgtp-section__heading::before {
+        left: -5px;
+      }
+      #shopify-section-{{ section.id }} .tgtp-section__heading::after {
+        right: -5px;
+      }
+    }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.heading_design == 'border_bottom' %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading {
+      position: relative;
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading::before {
+      content: '';
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-block;
+      width: 145px;
+      height: 3px;
+      {% if section.settings.heading_iscenter == false %}
+        width: 100%;
+      {% endif %}
+      {% if section.settings.heading_color_sub1 != 'rgba(0,0,0,0)' %}
+        background-color: {{section.settings.heading_color_sub1}};
+        {% comment %} background: linear-gradient(46deg,#ff73b4 25%, #95e336 25% 50%, #d078fe 50% 75%, #19BBED 75% ); {% endcomment %}
+      {% endif %}
+      {% if section.settings.heading_color_sub3 != 'rgba(0,0,0,0)' and section.settings.heading_color_sub3 %}
+        background: {{section.settings.heading_color_sub3}}
+      {% endif %}
+    }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.heading_design == 'border_left' %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading {
+      position: relative;
+      padding-left: 0.5em;
+    }
+    #shopify-section-{{ section.id }} .tgtp-section__heading::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      display: inline-block;
+      width: 5px;
+      height: 100%;
+      {% if section.settings.heading_color_sub1 != 'rgba(0,0,0,0)' %}
+        background-color: {{section.settings.heading_color_sub1}};
+        {% comment %} background: linear-gradient(46deg,#ff73b4 25%, #95e336 25% 50%, #d078fe 50% 75%, #19BBED 75% ); {% endcomment %}
+      {% endif %}
+      {% if section.settings.heading_color_sub3 != 'rgba(0,0,0,0)' and section.settings.heading_color_sub3 %}
+        background: {{section.settings.heading_color_sub3}}
+      {% endif %}
+    }
+  {% endstyle %}
+{% endif %}
+
+{% if section.settings.heading_iscenter == true %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading_wrapper {
+      text-align: center;
+    }
+  {% endstyle %}
+{% else %}
+  {% style %}
+    #shopify-section-{{ section.id }} .tgtp-section__heading_wrapper {
+      padding-right: 10%;
+    }
+  {% endstyle %}
+{% endif %}
+
+{% comment %} その他スタイル {% endcomment %}
+{% style %}
+  #shopify-section-{{ section.id }} {
+    {% if section.settings.background_color != 'rgba(0,0,0,0)' %}
+      background-color: {{ section.settings.background_color }};
+    {% endif %}
+    {% if section.settings.background_color_grad != 'rgba(0,0,0,0)' and section.settings.background_color_grad %}
+      background: {{ section.settings.background_color_grad }};
+    {% endif %}
+    {% if section.settings.background_image %}
+      background: url({{ section.settings.background_image | img_url: 'master' }});
+			background-repeat: repeat;
+    {% endif %}
+  }
+{% endstyle %}
+

@@ -1,0 +1,586 @@
+{{ 'tgtp-banners.css' | asset_url | stylesheet_tag }}
+
+{% comment %} セクションの表示数がブロックの表示数より多い場合はブロックの表示数に合わせる {% endcomment %}
+{%  liquid 
+  assign display_desktop = section.settings.display_desktop
+%}
+
+
+{% style %}
+  #shopify-section-{{ section.id }} .tgtp-banners__list {
+    {% if section.settings.section_width == 0 %}
+      max-width: none;
+    {% else %}
+      max-width: {{ section.settings.section_width }}px;
+      margin: auto;
+    {% endif %}
+    padding: 0 {{ section.settings.item_margin_desktop }}px;
+    {% if section.settings.display_desktop > section.blocks.size %}
+      display: flex;
+      justify-content: center;
+    {% else %}
+      grid-template-columns: repeat({{ display_desktop }}, 1fr);
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} .tgtp-banners__item {
+    margin: 0 {{ section.settings.item_margin_desktop }}px;
+  }
+  {% if section.settings.banner_border_radius %}
+    #shopify-section-{{ section.id }} .tgtp-banners__item img {
+      border-radius: {{ section.settings.banner_border_radius }}px;
+    }
+  {% endif %}
+
+
+  #shopify-section-{{ section.id }} .tgtp-banners__item {
+    width: 100%;
+    max-width: 326px;
+  }
+
+
+
+  @media screen and (max-width: 749px) {
+    {% if section.settings.is_full_width_moblie %}
+      #shopify-section-{{ section.id }} .tgtp-banners__list{
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      #shopify-section-{{ section.id }} .tgtp-banners__item {
+        max-width: none;
+        max-width: initial;
+      }
+    {% endif %}
+
+    #shopify-section-{{ section.id }} .tgtp-banners__item {
+      {% if section.settings.section_width_sp == 0 %}
+        max-width: none;
+        max-width: initial;
+        margin: 0;
+      {% else %}
+        max-width: {{ section.settings.section_width_sp }}px;
+        margin: auto;
+      {% endif %}
+      margin: 0 {{ section.settings.item_margin_mobile }}px;
+      grid-template-columns: repeat({{ section.settings.display_mobile }}, 1fr);
+    }
+  }
+
+{% endstyle %}
+
+<div id="shopify-section-{{ section.id }}" class="tgtp-banners {% if section.settings.page_width %} page-width {% endif %} color-{{ section.settings.color_scheme }}">
+  {% render 'tgtp-section__heading' %}
+  <div class="tgtp-banners__body">
+    <ul
+      class="tgtp-banners__list"
+    >
+      {%- for block in section.blocks -%}
+        <li
+          id="tgtp-banners__item-{{ forloop.index }}"
+          class="tgtp-banners__item"
+          {% if settings.animations_reveal_on_scroll %}
+            data-cascade
+            style="--animation-order: {{ forloop.index }};"
+          {% endif %}
+        >
+          {%- assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1 -%}
+          {%- assign placeholder_image = 'collection-apparel-' | append: placeholder_image_index -%}
+
+          {%- liquid
+            assign card_image = block.settings.image
+            assign media_aspect_ratio = block.settings.image_ratio
+            assign columns = columns
+            assign placeholder_image = placeholder_image
+            assign card__content = section.settings.card_content
+
+            assign ratio = 1
+            if card_image and media_aspect_ratio == 'portrait'
+              assign ratio = 0.8
+            elsif card_image and media_aspect_ratio == 'adapt'
+              assign ratio = card_image.aspect_ratio
+            endif
+            if ratio == 0 or ratio == null
+              assign ratio = 1
+            endif
+            assign card_color_scheme = settings.card_color_scheme
+            assign card_style = settings.card_style
+            if wrapper_class == null or wrapper_class == 'none'
+              assign card_color_scheme = settings.collection_card_color_scheme
+              assign card_style = settings.collection_card_style
+            endif
+          -%}
+
+          <a href="{{ block.settings.url }}" class="tgtp-banners__link">
+            <div class="card-wrapper animate-arrow {% if wrapper_class and wrapper_class != 'none' %}{{ wrapper_class }}{% else %}collection-card-wrapper{% endif %}">
+              <div
+                class="
+                  card
+                  card--{{ card_style }}
+                  {% if card_collection.featured_image %} card--media{% else %} card--text{% endif %}
+                  {% if card_style == 'card' %} color-{{ card_color_scheme }} gradient{% endif %}
+                  {% if extend_height %} card--extend-height{% endif %}
+                  {% if card_collection.featured_image == nil and card_style == 'card' %} ratio{% endif %}
+                "
+                style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+              >
+                <div
+                  class="card__inner {% if card_style == 'standard' %}color-{{ card_color_scheme }} gradient{% endif %}{% if card_collection.featured_image or card_style == 'standard' %} ratio{% endif %}"
+                  style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+                >
+                  <div class="card__media">
+                    <div class="media media--transparent media--hover-effect">
+                      <img
+                        srcset="
+                          {%- if card_image.width >= 165 -%}{{ card_image | image_url: width: 165 }} 165w,{%- endif -%}
+                          {%- if card_image.width >= 330 -%}{{ card_image | image_url: width: 330 }} 330w,{%- endif -%}
+                          {%- if card_image.width >= 535 -%}{{ card_image | image_url: width: 535 }} 535w,{%- endif -%}
+                          {%- if card_image.width >= 750 -%}{{ card_image | image_url: width: 750 }} 750w,{%- endif -%}
+                          {%- if card_image.width >= 1000 -%}{{ card_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+                          {%- if card_image.width >= 1500 -%}{{ card_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                          {%- if card_image.width >= 3000 -%}{{ card_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+                          {{ card_image | image_url }} {{ card_image.width }}w
+                        "
+                        src="{{ card_image | image_url: width: 1500 }}"
+                        sizes="
+                          (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+                          (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+                          calc(100vw - 3rem)
+                        "
+                        alt="{{ card_image.alt | escape }}"
+                        height="{{ card_image.height }}"
+                        width="{{ card_image.width }}"
+                        loading="lazy"
+                        class="motion-reduce"
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "TGTP banners",
+    "tag": "section",
+    "class": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+      {
+        "type": "header",
+        "content": "セクション情報"
+      },
+      {
+        "type": "checkbox",
+        "id": "page_width",
+        "label": "ページ幅に合わせる",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "use_default_padding",
+        "label": "デフォルトの間隔を適用",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "section_width",
+        "label": "セクション最大幅",
+        "min": 0,
+        "max": 1200,
+        "step": 40,
+        "default": 960,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_width_sp",
+        "label": "セクション最大幅 スマホ",
+        "min": 0,
+        "max": 720,
+        "step": 40,
+        "default": 400,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_upper_padding",
+        "label": "セクション上部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_upper_padding_sp",
+        "label": "セクション上部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_lower_padding",
+        "label": "セクション下部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "section_lower_padding_sp",
+        "label": "セクション下部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 60,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "column_gap",
+        "label": "グリッド左右間隔",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "column_gap_sp",
+        "label": "グリッド左右間隔 スマホ",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "row_gap",
+        "label": "グリッド上下間隔",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "row_gap_sp",
+        "label": "グリッド上下間隔 スマホ",
+        "min": 0,
+        "max": 40,
+        "step": 4,
+        "default": 24,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "タイトル情報"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Collection list"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Subheading"
+      },
+      {
+        "type": "checkbox",
+        "id": "heading_iscenter",
+        "label": "見出し中央寄せ",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "heading_design",
+        "label": "見出しデザイン",
+        "options": [
+          {
+            "label": "通常",
+            "value": "normal"
+          },
+          {
+            "label": "蛍光ペン",
+            "value": "highlight"
+          },
+          {
+            "label": "ボーダー(中央)",
+            "value": "border_center"
+          },
+          {
+            "label": "ボーダー(見出し下)",
+            "value": "border_bottom"
+          },
+          {
+            "label": "ボーダー(左)",
+            "value": "border_left"
+          }
+        ],
+        "default": "normal"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_text",
+        "label": "見出し文字色",
+        "default": "#222222"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_sub1",
+        "label": "見出しサブ色",
+        "default": "#fff100"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_sub2",
+        "label": "見出しサブ色2",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "text",
+        "id": "heading_color_sub3",
+        "info": "グラデーションを指定したい場合、見出しサブ色1,2の代わりに記載",
+        "label": "見出しサブ色(グラデーション)",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "color",
+        "id": "heading_color_textshadow",
+        "label": "見出しテキストシャドウ",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "image_picker",
+        "id": "heading_image",
+        "label": "見出しアイコン"
+      },
+      {
+        "type": "range",
+        "id": "image_picker_size",
+        "label": "見出しアイコン width",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "default": 38,
+        "unit": "px"
+      },
+      {
+        "type": "image_picker",
+        "id": "heading_alternateimage",
+        "label": "見出し差し替え画像"
+      },
+      {
+        "type": "range",
+        "id": "heading_alternateimage_size",
+        "label": "見出し差し替え画像 maxwidth",
+        "min": 50,
+        "max": 500,
+        "step": 10,
+        "default": 200,
+        "unit": "px"
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Subheading 文字色",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "range",
+        "id": "title_lower_margin",
+        "label": "タイトル下部 間隔",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 80,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "title_lower_margin_sp",
+        "label": "タイトル下部 間隔 スマホ",
+        "min": 8,
+        "max": 80,
+        "step": 4,
+        "default": 80,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "その他基本スタイル情報"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "背景色",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "text",
+        "id": "background_color_grad",
+        "info": "背景色(グラデーションを指定したい場合)",
+        "label": "背景色(グラデーション)",
+        "default": "rgba(0,0,0,0)"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "背景画像"
+      },
+      {
+        "type": "header",
+        "content": "コンテンツ情報"
+      },
+      {
+        "type": "range",
+        "id": "caption_upper_padding",
+        "label": "キャプション上部 間隔",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "default": 16,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "caption_upper_padding_sp",
+        "label": "キャプション上部 間隔 スマホ",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "default": 16,
+        "unit": "px"
+      },
+      {
+        "type": "header",
+        "content": "コレクション一覧情報"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_content",
+        "label": "コレクションの見出しを表示する",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "display_desktop",
+        "label": "PC時の表示数",
+        "min": 1,
+        "max": 8,
+        "step": 1,
+        "default": 5,
+        "unit": "枚"
+      },
+      {
+        "type": "range",
+        "id": "item_margin_desktop",
+        "label": "PC時のアイテム間のマージン",
+        "min": 0,
+        "max": 24,
+        "step": 1,
+        "default": 8,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "display_mobile",
+        "label": "スマホ時の表示数",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "default": 3,
+        "unit": "枚"
+      },
+      {
+        "type": "range",
+        "id": "item_margin_mobile",
+        "label": "スマホ時のアイテム間のマージン",
+        "min": 0,
+        "max": 24,
+        "step": 1,
+        "default": 4,
+        "unit": "px"
+      },
+      {
+        "type": "checkbox",
+        "id": "is_full_width_moblie",
+        "label": "モバイルのときに幅100%にする",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "banner_border_radius",
+        "label": "バナーの角丸",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 0,
+        "unit": "px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "tgtp_collection_item",
+        "name": "TGTP collection",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "個別に表示させたい画像"
+          },
+          {
+            "type": "url",
+            "id": "url",
+            "label": "URL"
+          },
+          {
+            "type": "select",
+            "id": "image_ratio",
+            "options": [
+              {
+                "value": "adapt",
+                "label": "画像に合わせる"
+              },
+              {
+                "value": "portrait",
+                "label": "縦長"
+              },
+              {
+                "value": "square",
+                "label": "横長"
+              }
+            ],
+            "default": "adapt",
+            "label": "画像の縦横比"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "TGTP banners"
+      }
+    ]
+  }
+{% endschema %}

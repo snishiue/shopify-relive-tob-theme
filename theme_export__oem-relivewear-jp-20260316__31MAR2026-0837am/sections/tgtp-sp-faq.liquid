@@ -1,0 +1,155 @@
+{{ 'tgtp-contact-form.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+    <div class="faq-section {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+      <div class="" style="margin-bottom: 60px;">
+        {%- if section.settings.FAQ_heading != blank -%}
+          <h2 class="title center title-wrapper--no-top-margin inline-richtext" style="font-size: {{ section.settings.heading_size }}px;">
+            {{ section.settings.FAQ_heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'text' -%}
+            <h3 class="faq-title title left title-wrapper--no-top-margin inline-richtext">
+              {{ block.settings.text }}
+            </h3>
+          {%- endif -%}
+          {%- if block.type == 'faq' -%}
+            <div class="faq-accordion" style="margin-bottom: 1rem;">
+              <button class="faq-accordion__button" aria-expanded="false">
+                <div class="faq-accordion__header">
+                  <h3>{{ block.settings.faq_title }}</h3>
+                  <span class="icon-arrow"></span>
+                </div>
+              </button>
+              <div class="faq-accordion__content" hidden>
+                {%- if block.settings.faq_content != blank -%}
+                  <p>{{ block.settings.faq_content }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div style="margin: 35px 0 10px 0;">
+        <div class="" style="font-size: 14px;">
+          <p>
+            よくあるご質問をご確認いただいても解決しない場合は、<a href="{{ pages.contact.url }}" style="text-decoration: underline; color: #212121;">お問い合わせ</a>から必要事項を記載いただきお問い合わせください。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // FAQアコーディオンの機能
+  document.querySelectorAll('.faq-accordion__button').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      
+      button.setAttribute('aria-expanded', !isExpanded);
+      content.hidden = isExpanded;
+    });
+  });
+</script>
+
+
+{% schema %}
+  {
+    "name": "TGTP FAQ",
+    "tag": "section",
+    "class": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+      {
+        "type": "inline_richtext",
+        "id": "FAQ_heading",
+        "label": "FAQ タイトル"
+      },
+      {
+        "type": "range",
+        "id": "heading_size",
+        "label": "FAQ タイトルサイズ",
+        "min": 16,
+        "max": 48,
+        "step": 1,
+        "unit": "px",
+        "default": 28
+      },
+      {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "name": "Text",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "text",
+            "label": "タイトル"
+          }
+        ]
+      },
+      {
+        "type": "faq",
+        "name": "FAQ",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "faq_title",
+            "label": "FAQ タイトル"
+          },
+          {
+            "type": "richtext",
+            "id": "faq_content",
+            "label": "FAQ 内容"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "TGTP FAQ"
+      }
+    ]
+  }
+{% endschema %}
+  

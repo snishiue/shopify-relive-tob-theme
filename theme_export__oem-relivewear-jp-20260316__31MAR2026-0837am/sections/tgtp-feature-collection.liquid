@@ -1,0 +1,442 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .collection-list__item--full-width {
+      max-width: 100%;
+    }
+  }
+  
+  .grid--2-col-tablet-down {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tgtp-feature-collection .card__heading {
+    text-align: left;
+    padding-top: .2em;
+    font-size: 14px;
+  }
+  .tgtp-feature-collection .card--media {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .tgtp-feature-collection .card--media:hover {
+    opacity: 0.8;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign columns_mobile_int = section.settings.columns_mobile | plus: 0
+  assign show_mobile_slider = false
+  if section.settings.swipe_on_mobile and section.blocks.size > columns_mobile_int
+    assign show_mobile_slider = true
+  endif
+-%}
+
+{% if section.blocks.size != 0 %}
+<div class="{% if section.settings.is_modal %}js-modal-collection-list{% endif %} color-{{ section.settings.color_scheme }} gradient tgtp-feature-collection">
+  {% if section.settings.is_modal %}
+    <div class="collection-list-wrapper page-width isolate section-{{ section.id }}-padding">
+      <div style="display: flex;gap: 20px; align-items:center; justify-content:center;">
+        {% if section.settings.modal_open_button_image != blank %}
+          <div onclick="openModal(event);" style="max-width:100%;cursor:pointer;width:{{section.settings.modal_open_button_image_size | default: '260px'}};">
+            <div class="media" style="padding-bottom: {{ 100.0 | divided_by: section.settings.modal_open_button_image.aspect_ratio }}%">
+              {%- liquid
+                assign full_width = '100vw'
+                assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+                assign image_height = section.settings.modal_open_button_image.width | divided_by: section.settings.modal_open_button_image.aspect_ratio
+              -%}
+              {{
+                section.settings.modal_open_button_image
+                | image_url: width: 800
+                | image_tag:
+                  loading: 'lazy',
+                  width: section.settings.modal_open_button_image.width,
+                  height: image_height,
+                  widths: widths
+              }}
+            </div>
+          </div>
+        {% else %}
+      {% endif %}
+
+      </div>
+    </div>
+  {% endif %}
+  <div class="collection-list-wrapper page-width isolate {% if section.settings.is_modal %} collection-list-wrapper--modal{% endif %} {% if show_mobile_slider %} page-width-desktop{% endif %}{% if section.settings.title == blank %} no-heading{% endif %}{% if section.settings.show_view_all == false or section.blocks.size > collections.size %} no-mobile-link{% endif %} section-{{ section.id }}-padding"  {% if section.settings.is_modal %} style="display:none;"{% endif %}>
+
+    {%- unless section.settings.title == blank -%}
+      <div class="title-wrapper-with-link{% if show_mobile_slider %} title-wrapper--self-padded-tablet-down{% else %} title-wrapper--self-padded-mobile{% endif %} title-wrapper--no-top-margin">
+        <h2
+          id="SectionHeading-{{ section.id }}"
+          class="collection-list-title inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %} scroll-trigger animate--slide-in{% endif %}"
+        >
+          {{ section.settings.title }}
+        </h2>
+
+        {%- if section.settings.show_view_all and show_mobile_slider -%}
+          <a
+            href="{{ routes.collections_url }}"
+            id="ViewAll-{{ section.id }}"
+            class="link underlined-link large-up-hide{% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %} scroll-trigger animate--slide-in{% endif %}"
+            aria-labelledby="ViewAll-{{ section.id }} SectionHeading-{{ section.id }}"
+          >
+            {{- 'sections.collection_list.view_all' | t -}}
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endunless -%}
+    {% if section.settings.is_modal %}
+      <div onclick="closeModal(event);" style="position: absolute;right: 15px;top: 20px;width: 20px;height: 20px;cursor:pointer;">
+        {% render 'icon-close' %}
+      </div>
+      {% if section.settings.modal_open_title != blank %}
+        <div style="margin-top: .8em;
+          margin-bottom: 1.5em;
+          text-align: center;
+          font-size: 1.22em;
+          font-weight: bold;">{{section.settings.modal_open_title}}</div>
+      {% endif %}
+
+    {% endif %}
+
+    <slider-component class="slider-mobile-gutter{% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %} scroll-trigger animate--slide-in{% endif %}">
+      <ul
+        class="collection-list contains-card contains-card--collection{% if settings.card_style == 'standard' %} contains-card--standard{% endif %} grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--2-col-tablet-down{% if section.settings.swipe_on_mobile %} slider slider--tablet grid--peek{% endif %} collection-list--{{ section.blocks.size }}-items"
+        id="Slider-{{ section.id }}"
+        role="list"
+      >
+        {%- liquid
+          assign columns = section.blocks.size
+          if columns > 3
+            assign columns = 3
+          endif
+          assign is_odd = section.blocks.size | modulo: 2
+        -%}
+        {%- for block in section.blocks -%}
+          <li
+            id="Slide-{{ section.id }}-{{ forloop.index }}"
+            class="{% if section.blocks.size != 1 %}collection-list__item{% endif %} grid__item{% if show_mobile_slider %} slider__slide{% endif %}{% if block.settings.collection.featured_image == nil and block.settings.banner_image == nil %} collection-list__item--no-media{% endif %}{% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %} scroll-trigger animate--slide-in{% endif %}{% if is_odd == 1 and forloop.last and template.name != 'page' %} collection-list__item--full-width{% endif %}"
+            {{ block.shopify_attributes }}
+            {% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {%- assign placeholder_image_index = forloop.index0 | modulo: 4 | plus: 1 -%}
+            {%- assign placeholder_image = 'collection-apparel-' | append: placeholder_image_index -%}
+
+            {% if block.settings.banner_image != nil %}
+              {% render 'tgtp-card-banner',
+                banner_image: block.settings.banner_image,
+                banner_title: block.settings.banner_title,
+                banner_link: block.settings.banner_link,
+                banner_description: block.settings.banner_description,
+                media_aspect_ratio: section.settings.image_ratio,
+                columns: columns,
+                placeholder_image: placeholder_image,
+                is_disable: block.settings.is_disable
+              %}
+            {% else %}
+              {% render 'card-collection',
+                media_aspect_ratio: section.settings.image_ratio,
+                is_disable: block.settings.is_disable,
+                columns: columns,
+                placeholder_image: placeholder_image
+              %}
+            {% endif %}
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if show_mobile_slider -%}
+        <div class="slider-buttons no-js-hidden">
+          <button
+            type="button"
+            class="slider-button slider-button--prev"
+            name="previous"
+            aria-label="{{ 'general.slider.previous_slide' | t }}"
+          >
+            {% render 'icon-caret' %}
+          </button>
+          <div class="slider-counter caption">
+            <span class="slider-counter--current">1</span>
+            <span aria-hidden="true"> / </span>
+            <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
+            <span class="slider-counter--total">{{ section.blocks.size }}</span>
+          </div>
+          <button
+            type="button"
+            class="slider-button slider-button--next"
+            name="next"
+            aria-label="{{ 'general.slider.next_slide' | t }}"
+          >
+            {% render 'icon-caret' %}
+          </button>
+        </div>
+      {%- endif -%}
+    </slider-component>
+
+    {%- if section.settings.show_view_all and section.blocks.size < collections.size -%}
+      <div
+        class="center collection-list-view-all{% if show_mobile_slider %} small-hide medium-hide{% endif %}{% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %} scroll-trigger animate--slide-in{% endif %}"
+        {% if settings.animations_reveal_on_scroll and section.settings.is_fixed == false %}
+          data-cascade
+        {% endif %}
+      >
+        <a
+          href="{{ routes.collections_url }}"
+          class="button"
+          id="ViewAllButton-{{ section.id }}"
+          aria-labelledby="ViewAllButton-{{ section.id }} SectionHeading-{{ section.id }}"
+        >
+          {{- 'sections.collection_list.view_all' | t -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+
+{% if section.settings.is_fixed %}
+<style>
+  .section-fixed-possibility {
+    position: sticky;
+    bottom: 0vh;
+    width: 100%;
+    left: 0;
+    box-shadow: 0px 7px 13px 4px #00000014;
+  }
+</style>
+{% endif %}
+
+{% if section.settings.is_heading_bold %}
+<style>
+  .tgtp-feature-collection .collection-list-title {
+    font-weight: bold;
+  }
+</style>
+
+{% endif %}
+
+{% if section.settings.is_heading_center %}
+<style>
+  .tgtp-feature-collection .title-wrapper-with-link {
+    justify-content: center;
+  }
+</style>
+{% endif %}
+
+{% endif %}
+  
+
+{% schema %}
+{
+  "name": "TGTP Feature Collection",
+  "tag": "section",
+  "class": "section section-collection-list section-fixed-possibility",
+  "max_blocks": 40,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "default": "Collections",
+      "label": "t:sections.collection-list.settings.title.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_heading_bold",
+      "default": false,
+      "label": "見出しを太字にする"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_heading_center",
+      "default": false,
+      "label": "見出しをセンター寄せする"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.collection-list.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.collection-list.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.collection-list.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "square",
+      "label": "t:sections.collection-list.settings.image_ratio.label",
+      "info": "t:sections.collection-list.settings.image_ratio.info"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.collection-list.settings.columns_desktop.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "default": false,
+      "label": "t:sections.collection-list.settings.show_view_all.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collection-list.settings.header_mobile.content"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.collection-list.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.collection-list.settings.columns_mobile.options__2.label"
+        },
+        {
+          "value": "3",
+          "label": "3列"
+        }
+      ],
+      "default": "1",
+      "label": "t:sections.collection-list.settings.columns_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": false,
+      "label": "t:sections.collection-list.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "id": "is_fixed",
+      "default": true,
+      "label": "下に固定する"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_modal",
+      "default": true,
+      "label": "モーダルを利用した2段メニュー"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "バナー・コレクション",
+      "settings": [
+        {
+          "type": "url",
+          "id": "banner_link",
+          "label": "バナーリンク"
+        },
+        {
+          "type": "image_picker",
+          "id": "banner_image",
+          "label": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_disable",
+          "label": "無効化する",
+          "info": "チェックした場合バナーのリンクが無効になり透明度が下がります",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "banner_title",
+          "label": "バナータイトル"
+        },
+        {
+          "type": "text",
+          "id": "banner_description",
+          "label": "バナー説明文"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP Feature Collection",
+      "blocks": [
+        {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

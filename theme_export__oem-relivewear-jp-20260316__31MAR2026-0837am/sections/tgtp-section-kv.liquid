@@ -1,0 +1,406 @@
+{{ 'tgtp-swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+<script src="{{'tgtp-swiper-bundle.min.js' | asset_url}}"></script>
+
+{{ 'tgtp-kv.css' | asset_url | stylesheet_tag }}
+
+{% comment %} start basic style settings {% endcomment %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    --background-color: rgb({{ section.settings.background_color.red }} {{ section.settings.background_color.green }} {{ section.settings.background_color.blue }} / {{ section.settings.background_color.alpha | times: 100 | append: '%' }});
+    --text-color: rgb({{ section.settings.text_color.red }} {{ section.settings.text_color.green }} {{ section.settings.text_color.blue }} / {{ section.settings.text_color.alpha | times: 100 | append: '%' }});
+    --button-text-color: rgb({{ section.settings.button_text_color.red }} {{ section.settings.button_text_color.green }} {{ section.settings.button_text_color.blue }} / {{ section.settings.button_text_color.alpha | times: 100 | append: '%' }});
+    --button-background-color: rgb({{ section.settings.button_background_color.red }} {{ section.settings.button_background_color.green }} {{ section.settings.button_background_color.blue }} / {{ section.settings.button_background_color.alpha | times: 100 | append: '%' }});
+
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+
+  @media screen and (max-width: 750px) {
+    .section-{{ section.id }}-padding {
+      --background-color: rgb({{ section.settings.background_color_mobile.red }} {{ section.settings.background_color_mobile.green }} {{ section.settings.background_color_mobile.blue }} / {{ section.settings.background_color_mobile.alpha | times: 100 | append: '%' }});
+
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+
+      margin-top: {{ section.settings.margin_top_mobile }}px;
+      margin-bottom: {{ section.settings.margin_bottom_mobile }}px;
+    }
+  }
+
+  {%- if section.settings.background_image != blank -%}
+    .section-{{ section.id }}-padding {
+      background-image: url({{ section.settings.background_image | image_url }});
+      {%- if section.settings.background_type == 'loop' -%}
+        background-size: contain;
+        background-repeat: repeat;
+      {%- elsif section.settings.background_type == 'full_trim' -%}
+        background-size: auto;
+        background-repeat: no-repeat;
+        background-position: center;
+      {%- endif -%}
+    }
+
+    {%- if section.settings.background_loop_size_pc != blank and section.settings.background_type == 'loop' -%}
+      .section-{{ section.id }}-padding {
+        background-size: {{ section.settings.background_loop_size_pc }};
+      }
+    {%- endif -%}
+
+    {%- if section.settings.background_loop_size_smp != blank and section.settings.background_type == 'loop' -%}
+      @media screen and (max-width: 750px) {
+        .section-{{ section.id }}-padding {
+          background-size: {{ section.settings.background_loop_size_smp }};
+        }
+      }
+    {%- endif -%}
+
+  {%- endif -%}
+
+  {%- if section.settings.manual_content_width_enable -%}
+    .section-{{ section.id }}-padding .tgtp-section__inner {
+      --content-width: {{ section.settings.content_width }};
+    }
+  {%- endif -%}
+{%- endstyle -%}
+{% comment %} end basic style settings {% endcomment %}
+
+
+<section class="tgtp-section-kv section-{{ section.id }}-padding{% if section.settings.content_padding_x_enable %} enable-padding-x{% endif %}">
+  <div class="tgtp-section__inner">
+    <div class="section-swiper">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {%- for block in section.blocks -%}
+            <div class="swiper-slide" style="aspect-ratio: {{ block.settings.image.aspect_ratio }}">
+              {%- if block.settings.image != blank -%}
+                {%- liquid
+                  assign height = block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round
+                  assign sizes = '100vw'
+                  assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+                -%}
+                {%- if block.settings.link != blank -%}<a href="{{ block.settings.link.url }}" target="{%- if block.settings.link.type == "external_link" %}_blank{% else %}_self{% endif %}">{%- endif -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 3840
+                  | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths
+                }}
+                {%- if block.settings.link != blank -%}</a>{%- endif -%}
+              {%- else -%}
+                {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
+                {%- if placeholder_slide == 1 -%}
+                  {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- else -%}
+                  {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="swiper-pagination"></div>
+        {% comment %} <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-{{ section.id }}-padding .swiper-pagination-bullet {
+    background-color: #e0e0e0;
+    width: 38px;
+    height: 6px;
+    border-radius: 0px;
+  }
+  .section-{{ section.id }}-padding .swiper-pagination-bullet-active {
+    background: #424242;
+  }
+  .section-{{ section.id }}-padding .swiper-button-prev,
+  .section-{{ section.id }}-padding .swiper-button-next {
+      background-image: url("{{ character["carousel-arrow-icon"] | img_url: "master" }}");
+      display: none;
+  }
+  .section-{{ section.id }}-padding .section-swiper .swiper {
+    --swiper-pagination-color: {{ character["carousel-pagination-color-active"] }};
+    --swiper-pagination-bullet-inactive-color: {{ character["carousel-pagination-color"] }};
+  }
+</style>
+
+<script>
+  new Swiper('.section-{{ section.id }}-padding .swiper', {
+    loop: true,
+    centerMode: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    spaceBetween: 4,
+    pagination: {
+      type: "bullets",
+      clickable: true,
+      el: ".swiper-pagination",
+      enabled: true,
+    },
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    {% if section.settings.enabled_autoplay %}
+    autoplay: {
+      delay: {{ section.settings.autoplay_delay }},
+    },
+    {% endif %}
+    breakpoints: {
+      750: {
+        slidesPerView: 'auto',
+        spaceBetween: 12,
+      }
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "TGTP KV",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "色"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文字色"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "ボタン文字色"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "ボタン背景色"
+    },
+    {
+      "type": "header",
+      "content": "背景"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "背景色"
+    },
+    {
+      "type": "color",
+      "id": "background_color_mobile",
+      "label": "背景色(モバイル)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "背景画像"
+    },
+    {
+      "type": "select",
+      "id": "background_type",
+      "label": "背景種類",
+      "options": [
+        {
+          "value": "full_trim",
+          "label": "フル幅トリミング"
+        },
+        {
+          "value": "loop",
+          "label": "ループパターン"
+        }
+      ],
+      "default": "loop"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_pc",
+      "label": "繰り返しパターン最大サイズ(PC)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "text",
+      "id": "background_loop_size_smp",
+      "label": "繰り返しパターン最大サイズ(SMP)",
+      "info": "ループパターンのみ適応(設定しない場合は設定した画像のサイズでループする)"
+    },
+    {
+      "type": "header",
+      "content": "セクション設定"
+    },
+    {
+      "type": "checkbox",
+      "id": "content_padding_x_enable",
+      "label": "左右の余白を付ける",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_width_type",
+      "label": "コンテンツ幅",
+      "options": [
+        {
+          "value": "full",
+          "label": "フル幅"
+        },
+        {
+          "value": "manual",
+          "label": "ページ設定の幅"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "checkbox",
+      "id": "manual_content_width_enable",
+      "label": "独自のコンテンツ幅を設定する",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "コンテンツの幅",
+      "min": 640,
+      "max": 1440,
+      "step": 8,
+      "unit": "px",
+      "default": 1024
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部マージン",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部マージン",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部（モバイル）",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "上部マージン（モバイル）",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "下部マージン（モバイル）",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled_autoplay",
+      "label": "自動スライド送りを有効にする",
+      "default": false
+    },
+    {
+      "type": "number",
+      "id": "autoplay_delay",
+      "label": "自動スライド送りの時間",
+      "info": "単位はms",
+      "default": 3000
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "スライド",
+      "limit": 50,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "画像"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "リンク"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP KV",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,253 @@
+{{ 'tgtp-customer.css' | asset_url | stylesheet_tag }}
+{{ 'tgtp-account.css' | asset_url | stylesheet_tag }}
+{{ 'customer-fields.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  :root {
+    --button-radius: {{ section.settings.button_radius }}px;
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding page-width page-width--narrow tgtp-account">
+  <div class="center">
+    <h1 class="customer__title">{{ 'customer.account.title' | t }}</h1>
+  </div>
+
+  <div class="tgtp-account-content">
+    <div class="tgtp-account-info">
+      <div class="text-underline">
+        <h2>{{ 'customer.account.details' | t }}</h2>
+      </div>
+
+      <div class="tgtp-account-info-content">
+        <div class="vertical-line">
+          <div class="name">{{ customer.last_name }} {{ customer.first_name }}</div>
+          <div>{{ 'customer.account.email' | t }}：{{ customer.email }}</div>
+          <div>組織：{{ customer.metafields["app--960624--helium"].trade_name }}</div>
+        </div>
+        <div class="tgtp-account-edit-actions">
+          <a href="/tools/customr/edit-account" class="tgtp-account-edit-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            アカウント情報を編集
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="tgtp-account-order">
+      <div class="text-underline"><h2>{{ 'customer.orders.title' | t }}</h2></div>
+
+      <div class="tgtp-account-order-content">
+        {% paginate customer.orders by 20 %}
+          {%- if customer.orders.size > 0 -%}
+            {%- for order in customer.orders -%}
+              <div class="order-history-table">
+                <div>
+                  <table role="table" class="order-history">
+                    <caption class="visually-hidden">
+                      {{ 'customer.orders.title' | t }}
+                    </caption>
+                    <tbody role="rowgroup">
+                      <tr role="row">
+                        <th id="ColumnOrder" scope="col" role="columnheader">{{ 'customer.orders.order_number' | t }}</th>
+                        <td
+                          id="RowOrder"
+                          role="cell"
+                          headers="ColumnOrder"
+                          data-label="{{ 'customer.orders.order_number' | t }}"
+                          class="order-cell"
+                        >
+                          {{ order.name }}
+                          <a
+                            href="{{ order.customer_url }}"
+                            aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}"
+                            class="tgtp-button order-history-table-details"
+                          >
+                            {{ 'customer.orders.order_details' | t }}
+                          </a>
+                          <!-- 領収書 発行ボタン -->
+                          {% if order.financial_status == 'paid' %}
+                            <a
+                              href="https://documents-app.mixlogue.jp/print?shop=relive-partners&t=c0739da&u={{customer.id}}&o={{ order.id }}&locale=ja"
+                              class="tgtp-button order-history-table-details"
+                            >
+                              {{ 'customer.orders.receipt' | t }}
+                            </a>
+                          {% else %}
+                            <span class="tgtp-button order-history-table-details order-history-table-details--disabled">
+                              {{ 'customer.orders.receipt' | t }}
+                            </span>
+                          {% endif %}
+                          <!-- 納品書 発行ボタン -->
+                          {% if order.fulfillment_status == 'fulfilled' %}
+                            <a
+                              href="https://documents-app.mixlogue.jp/print?shop=relive-partners&t=ab39809&u={{customer.id}}&o={{ order.id }}&locale=ja"
+                              class="tgtp-button order-history-table-details"
+                            >
+                              {{ 'customer.orders.delivery_slip' | t }}
+                            </a>
+                          {% else %}
+                            <span class="tgtp-button order-history-table-details order-history-table-details--disabled">
+                              {{ 'customer.orders.delivery_slip' | t }}
+                            </span>
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr role="row">
+                        <th id="ColumnDate" scope="col" role="columnheader">{{ 'customer.orders.date' | t }}</th>
+                        <td headers="RowOrder ColumnDate" role="cell" data-label="{{ 'customer.orders.date' | t }}">
+                          {{ order.created_at | time_tag: format: 'date' }}
+                        </td>
+                      </tr>
+                      <tr role="row">
+                        <th id="ColumnPayment" scope="col" role="columnheader">{{ 'customer.orders.payment_status' | t }}</th>
+                        <td
+                          headers="RowOrder ColumnPayment"
+                          role="cell"
+                          data-label="{{ 'customer.orders.payment_status' | t }}"
+                        >
+                          {{ order.financial_status_label }}
+                        </td>
+                      </tr>
+                      <tr role="row">
+                        <th id="ColumnFulfillment" scope="col" role="columnheader">
+                          {{ 'customer.orders.fulfillment_status' | t }}
+                        </th>
+                        <td
+                          headers="RowOrder ColumnFulfillment"
+                          role="cell"
+                          data-label="{{ 'customer.orders.fulfillment_status' | t }}"
+                        >
+                          {{ order.fulfillment_status_label }}
+                        </td>
+                      </tr>
+                      <tr role="row">
+                        <th id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.orders.total' | t }}</th>
+                        <td headers="RowOrder ColumnTotal" role="cell" data-label="{{ 'customer.orders.total' | t }}">
+                          {{ order.total_net_amount | money_with_currency }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <p>{{ 'customer.orders.none' | t }}</p>
+          {%- endif -%}
+
+          {%- if paginate.pages > 1 -%}
+            {%- if paginate.parts.size > 0 -%}
+              <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+                <ul role="list">
+                  {%- if paginate.previous -%}
+                    <li>
+                      <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
+                      </a>
+                    </li>
+                  {%- endif -%}
+
+                  {%- for part in paginate.parts -%}
+                    <li>
+                      {%- if part.is_link -%}
+                        <a href="{{ part.url }}" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                          {{- part.title -}}
+                        </a>
+                      {%- else -%}
+                        {%- if part.title == paginate.current_page -%}
+                          <span aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">
+                            {{- part.title -}}
+                          </span>
+                        {%- else -%}
+                          <span>{{ part.title }}</span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+
+                  {%- if paginate.next -%}
+                    <li>
+                      <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
+                      </a>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              </nav>
+            {%- endif -%}
+          {%- endif -%}
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+
+  <div class="center">
+    <a href="{{ routes.account_logout_url }}" class="tgtp-button">
+      {{ 'customer.log_out' | t }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "TGTP Account",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button Radius",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP Account"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,83 @@
+.tgtp-recently-products__slider {
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tgtp-recently-products__slider::-webkit-scrollbar {
+  display: none;
+}
+
+.tgtp-recently-products .tgtp-section__heading {
+  font-size: 22px;
+  margin-bottom: 24px!important;
+}
+.tgtp-recently-products .tgtp-recently-products__container {
+  width: 100%;
+}
+.tgtp-recently-products .product-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  column-gap: var(--grid-desktop-horizontal-spacing);
+  width: calc((var(--tgtp-width) / var(--tgtp-row-quantity) - var(--tgtp-negative-bias)) * var(--tgtp-display-quantity) + (var(--tgtp-grid-desktop-spacing) * (var(--tgtp-display-quantity) - 1)) + var(--tgtp-margin));
+  min-width: 100%;
+  margin-top: 0;
+}
+.tgtp-recently-products .grid__item {
+  width: 176px;
+  max-width: 176px;
+}
+.tgtp-recently-products .grid__item:last-child {
+  margin-right: calc(var(--tgtp-margin));
+}
+.tgtp-recently-products .card__information {
+  padding: 0;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.tgtp-recently-products .price {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@media screen and (min-width: 1200px) {
+  .tgtp-recently-products .product-grid {
+    min-width: 1100px;
+  }
+}
+@media screen and (max-width: 749px) {
+  .thumbnail-list__item.slider__slide {
+    width: calc(22% - .6rem);
+  }
+  .tgtp-recently-products .product-grid-container {
+    padding: 15cd px;
+  }
+  .tgtp-recently-products .product-grid {
+    display: flex;
+    column-gap: var(--grid-mobile-horizontal-spacing);
+    width: calc(((100vw / var(--tgtp-row-quantity-mobile)) - var(--tgtp-negative-bias)) * var(--tgtp-display-quantity) + (var(--tgtp-grid-mobile-spacing) * (var(--tgtp-display-quantity) - 1)) + var(--tgtp-margin));
+    margin-top: 0;
+  }
+  .tgtp-recently-products .grid__item {
+    width: 110px;
+    max-width: 110px;
+  }
+  .tgtp-recently-products .grid__item:last-child {
+    margin-right: calc(var(--tgtp-margin));
+  }
+  .tgtp-recently-products .tgtp-section__heading {
+    font-size: 18px;
+  }
+  .tgtp-recently-products .card__heading {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+  .tgtp-recently-products .card__information,
+  .tgtp-recently-products .price {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+}

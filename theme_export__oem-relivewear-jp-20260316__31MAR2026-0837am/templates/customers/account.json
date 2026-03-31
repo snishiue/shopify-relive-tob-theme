@@ -1,0 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-account",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "tgtp_account_NjrLQY": {
+      "type": "tgtp-account",
+      "settings": {
+        "padding_top": 120,
+        "padding_bottom": 240,
+        "button_radius": 25
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tgtp_account_NjrLQY"
+  ]
+}

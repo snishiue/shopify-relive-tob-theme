@@ -1,0 +1,6 @@
+{% if product and namespace != blank and key != blank %}
+  {% assign metafield_value = product.metafields[namespace][key] %}
+  {% if metafield_value != blank %}
+    <div class="tgtp-product-metafield-text color-{{ color_scheme }}">{% if heading != blank %}{{ heading }}{% endif %}{{ metafield_value | escape }}</div>
+  {% endif %}
+{% endif %}

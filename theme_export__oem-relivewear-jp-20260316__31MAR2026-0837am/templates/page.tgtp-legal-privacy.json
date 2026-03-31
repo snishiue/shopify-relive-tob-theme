@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "tgtp-legal-privacy",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

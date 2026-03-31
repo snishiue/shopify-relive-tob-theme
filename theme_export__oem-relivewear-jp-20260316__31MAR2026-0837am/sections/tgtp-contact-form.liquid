@@ -1,0 +1,665 @@
+{{ 'tgtp-contact-form.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+  
+  /* ファイルアップロード関連のスタイル */
+  .file-upload-container {
+    margin-top: 10px;
+    position: relative;
+  }
+  
+  .file-upload-trigger {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .file-upload-trigger:hover {
+    opacity: 0.8;
+  }
+  
+  .file-upload-instruction {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .file-name-display {
+    margin-top: 10px;
+    font-size: 14px;
+    word-break: break-all;
+    color: #333;
+  }
+  
+  .file-name-display:not(:empty) {
+    display: block;
+  }
+  
+  .file-item {
+    background-color: #f5f5f5;
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .file-preview-container {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .file-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .file-preview.pdf-icon,
+  .file-preview.file-icon {
+    width: 24px;
+    height: 24px;
+    color: #666;
+  }
+  
+  .file-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .file-name {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .file-size {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .file-remove-button {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .file-remove-button:hover {
+    color: #e74c3c;
+  }
+  
+  .file-upload-counter {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
+    text-align: left;
+  }
+  
+  .file-selected {
+    position: relative;
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+    <div>
+      {%- if section.settings.contact_heading != blank -%}
+        <h2 class="title center title-wrapper--no-top-margin inline-richtext {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}" style="font-size: {{ section.settings.heading_size }}px;">
+        {{ section.settings.contact_heading }}
+      </h2>
+      {%- else -%}
+        <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+      {%- endif -%}
+    </div>
+      {%- liquid
+        assign contact_form_class = 'isolate'
+        if settings.animations_reveal_on_scroll
+          assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
+        endif
+      -%}
+      <form class="formrun" action="https://form.run/api/v1/r/4rl7v9t4adfx6r87d5iuyz35" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="uid" value="{{ customer.id }}">
+        <input type="hidden" name="user_agent" id="formrun-user-agent">
+        <input type="hidden" name="screen_size" id="formrun-screen-size">
+        <input type="hidden" name="platform" id="formrun-platform">
+
+        <!-- ↓自由に要素を追加・編集することができます -->
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.name' | t }}</label>
+          <span class="required">
+            {{ 'customer.login_page.required' | t }}
+          </span>
+          <div class="tgtp-contact-field">
+            <input name="{{ 'templates.contact.form.name' | t }}" type="text" data-formrun-required>
+          </div>
+          <div class="error-message" data-formrun-show-if-error="{{ 'templates.contact.form.name' | t }}" hidden>お名前を入力してください</div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.subject' | t }}</label>
+          <span class="required">
+            {{ 'customer.login_page.required' | t }}
+          </span>
+          <div class="tgtp-contact-field tgtp-contact-field-selecter">
+            <select name="{{ 'templates.contact.form.subject' | t }}" data-formrun-required>
+              <option value="">選択してください</option>
+              <option value="商品に関するお問い合わせ">商品に関するお問い合わせ</option>
+              <option value="サービスに関するお問い合わせ">サービスに関するお問い合わせ</option>
+              <option value="ご意見ご要望">ご意見ご要望</option>
+            </select>
+          </div>
+          <div class="error-message" data-formrun-show-if-error="{{ 'templates.contact.form.subject' | t }}" hidden>件名を選択してください</div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.email' | t }}</label>
+          <span class="required">
+            {{ 'customer.login_page.required' | t }}
+          </span>
+          <div class="tgtp-contact-field">
+            <input name="{{ 'templates.contact.form.email' | t }}" type="text" data-formrun-type="email" data-formrun-required>
+          </div>
+          <div class="error-message" data-formrun-show-if-error="{{ 'templates.contact.form.email' | t }}" hidden>メールアドレスを正しく入力してください</div>
+          <div class="form-warning">
+            メールアドレスでご登録の場合は、必ず登録されたメールアドレスを入力してください。<br>
+            各社キャリアメールアドレス（@docomo.ne.jp, @ezweb.ne.jp, @au.com, @softbank.jpなど）は迷惑メールフィルターが非常に強力なため、サポートからの返信が届かない場合がございます。<br>
+            確実に対応させていただくため、キャリアメール以外のアドレスでお問い合わせをお願いいたします。
+          </div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.target_product' | t }}</label>
+          <div class="tgtp-contact-field">
+            <input name="{{ 'templates.contact.form.target_product' | t }}" type="text">
+          </div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.order_number' | t }}</label>
+          <div class="tgtp-contact-field">
+            <input name="{{ 'templates.contact.form.order_number' | t }}" type="text">
+          </div>
+          <div class="form-warning">
+            購入された商品及び配送に関するお問い合わせは、注文番号の記載をお願いいたします。
+          </div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.product_picture' | t }}</label>
+          <div class="file-upload-container">
+            <input type="file" name="file1" id="hidden-file1" style="display:none;">
+            <input type="file" name="file2" id="hidden-file2" style="display:none;">
+            <input type="file" name="file3" id="hidden-file3" style="display:none;">
+            <input type="file" id="file-upload-input" class="file-input" accept=".jpg, .jpeg, .png" style="display: none;" multiple>
+            <div class="file-upload-trigger" onclick="document.getElementById('file-upload-input').click()">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0624/3994/8365/files/Group_191.png?v=1746582425"
+                alt="ファイルを選択" 
+                class="file-upload-icon" 
+                width="178"
+                height="178"
+              >
+
+            </div>
+            <div class="file-upload-counter">0/3 ファイル選択中</div>
+            <div id="file-name-display" class="file-name-display"></div>
+          </div>
+          <div class="form-warning">
+            商品破損, 不良品等のお問い合わせは、不良箇所が分かる写真の添付をお願いいたします。添付可能なファイル容量は合計300MBまでです。最大3つまでのファイルをアップロードできます。
+          </div>
+        </div>
+
+        <div class="tgtp-contact-field-container">
+          <label>{{ 'templates.contact.form.title' | t }}</label>
+          <span class="required">
+            {{ 'customer.login_page.required' | t }}
+          </span>
+          <div>
+            <textarea class="tgtp-contact-field tgtp-textarea" name="{{ 'templates.contact.form.title' | t }}" data-formrun-required></textarea>
+          </div>
+          <div class="error-message" data-formrun-show-if-error="{{ 'templates.contact.form.title' | t }}" hidden>お問い合わせ内容を入力してください</div>
+        </div>
+
+        <div style="margin: 35px 0 10px 0;">
+          <div class="" style="font-size: 14px;">
+            <p>【お問い合わせに関する注意事項】</p>
+            <p>
+              弊社からの回答は、お問い合わせいただいたお客様個人に対してお送りしております。回答内容の全部または一部を他者に共有、SNS等の不特定多数が閲覧できる場所に転載・掲載しないようお願いいたします。
+              弊社サポートを必要とする全てのお客様へサポートを行うため、また、従業員の安全を確保するため、以下のような行為があったと弊社が判断した場合には、お問い合わせへの対応をお断りさせていただく場合がございます。
+            </p>
+            <p class="bullet-points-indent">・威迫、脅迫、威嚇行為(特定の従業員や関係者個人へのものを含む)</p>
+            <p class="bullet-points-indent">・侮辱や人格を否定する言動</p>
+            <p class="bullet-points-indent">・プライバシーを侵害する行為</p>
+            <p class="bullet-points-indent">・同じ要望や質問の過剰な繰り返し等により業務に支障を及ぼす行為</p>
+            <p class="bullet-points-indent">・SNSやインターネットなどにおいて誹謗中傷を行う行為</p>
+            <p class="bullet-points-indent">・保証の範囲を超えたサポートの要求など社会通念上において過剰なサービス提供の要求</p>
+            <p class="bullet-points-indent">・合理的な理由がない謝罪の要求や金銭など保証の要求、当社関係者に対する処罰の要求</p>
+            <p>
+              特に悪質な場合には、必要に応じて警察・弁護士等に連絡のうえ、適切な対処をさせていただく場合がございます。何卒ご理解くださいますようお願い申し上げます。
+              お問い合わせの内容やお問い合わせの受信状況によっては、回答までに数日間程お時間をいただく場合がございます。
+            </p>
+          </div>
+        </div>
+
+
+        <div class="tgtp-contact-field-container privacy-consent center">
+          <div class="tgtp-select-container input">
+            <input type="checkbox" id="privacy-consent" name="個人情報利用同意" data-formrun-required>
+            <label for="privacy-consent">{{ 'templates.contact.form.agree_privacy' | t }}</label>
+          </div>
+          <div class="error-message" data-formrun-show-if-error="個人情報利用同意" hidden>同意してください</div>
+        </div>
+
+        <!-- "ボット投稿をブロックするためのタグ" -->
+        <div class="_formrun_gotcha">
+          <style media="screen">._formrun_gotcha {position:absolute!important;height:1px;width:1px;overflow:hidden;}</style>
+          <label for="_formrun_gotcha">If you are a human, ignore this field</label>
+          <input type="text" name="_formrun_gotcha" id="_formrun_gotcha" tabindex="-1">
+        </div>
+
+        <div class="contact__button center">
+          <button type="submit" class="button" data-formrun-error-text="未入力の項目があります" data-formrun-submitting-text="送信中..." style="padding: 0 5rem">
+            {{ 'templates.contact.form.send' | t }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.formrun');
+    const submitButton = form.querySelector('button[type="submit"]');
+    const privacyCheckbox = document.getElementById('privacy-consent');
+    
+    // 必須フィールドの取得
+    const requiredFields = form.querySelectorAll('[data-formrun-required]');
+    const errorMessages = {};
+    
+    // 各フィールドのエラーメッセージ要素を取得
+    requiredFields.forEach(field => {
+      const fieldName = field.getAttribute('name');
+      const errorElement = form.querySelector(`[data-formrun-show-if-error="${fieldName}"]`);
+      if (errorElement) {
+        errorMessages[fieldName] = errorElement;
+      }
+    });
+
+    // 必須項目の入力状態をチェックする関数
+    function checkRequiredFields() {
+      let allFieldsValid = true;
+      
+      requiredFields.forEach(field => {
+        let isValid = true;
+        
+        if (field.tagName === 'INPUT') {
+          if (field.getAttribute('data-formrun-type') === 'email') {
+            isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+          } else {
+            isValid = field.value.trim() !== '';
+          }
+        } else if (field.tagName === 'SELECT') {
+          isValid = field.value !== '';
+        } else if (field.tagName === 'TEXTAREA') {
+          isValid = field.value.trim() !== '';
+        } else if (field.type === 'checkbox') {
+          isValid = field.checked;
+        }
+        
+        if (!isValid) {
+          allFieldsValid = false;
+        }
+      });
+      
+      // プライバシーポリシーの同意も必須
+      allFieldsValid = allFieldsValid && privacyCheckbox.checked;
+      
+      // 送信ボタンの有効/無効を設定
+      submitButton.disabled = !allFieldsValid;
+      submitButton.classList.toggle('disabled', !allFieldsValid);
+    }
+
+    // 初期状態でチェック
+    checkRequiredFields();
+
+    // 各必須フィールドの変更を監視
+    requiredFields.forEach(field => {
+      field.addEventListener('input', checkRequiredFields);
+      field.addEventListener('change', checkRequiredFields);
+    });
+    
+    // プライバシーポリシーのチェックボックスの変更を監視
+    privacyCheckbox.addEventListener('change', checkRequiredFields);
+    
+    // フォーム送信時のバリデーション
+    form.addEventListener('submit', function(event) {
+      let hasError = false;
+      
+      // すべてのエラーメッセージを非表示にする
+      Object.values(errorMessages).forEach(element => {
+        element.hidden = true;
+      });
+      
+      // 必須フィールドのチェック
+      requiredFields.forEach(field => {
+        const fieldName = field.getAttribute('name');
+        let isValid = true;
+        
+        // フィールドタイプに応じたバリデーション
+        if (field.tagName === 'INPUT') {
+          if (field.getAttribute('data-formrun-type') === 'email') {
+            // メールアドレスの簡易バリデーション
+            isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value.trim());
+          } else {
+            isValid = field.value.trim() !== '';
+          }
+        } else if (field.tagName === 'SELECT') {
+          isValid = field.value !== '';
+        } else if (field.tagName === 'TEXTAREA') {
+          isValid = field.value.trim() !== '';
+        } else if (field.type === 'checkbox') {
+          isValid = field.checked;
+        }
+        
+        // エラーがある場合、メッセージを表示
+        if (!isValid && errorMessages[fieldName]) {
+          errorMessages[fieldName].hidden = false;
+          hasError = true;
+        }
+      });
+      
+      // エラーがある場合、送信をキャンセル
+      if (hasError) {
+        event.preventDefault();
+        
+        // 最初のエラー要素までスクロール
+        const firstErrorElement = document.querySelector('[data-formrun-show-if-error]:not([hidden])');
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
+  });
+
+  // FAQアコーディオンの機能
+  document.querySelectorAll('.faq-accordion__button').forEach(button => {
+    button.addEventListener('click', () => {
+      const content = button.nextElementSibling;
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      
+      button.setAttribute('aria-expanded', !isExpanded);
+      content.hidden = isExpanded;
+    });
+  });
+
+  // ファイルアップロード処理の修正
+  let currentFiles = []; // 現在のファイルリストを保持
+
+  document.getElementById('file-upload-input').addEventListener('change', function() {
+    const maxFiles = 3;
+    const newFiles = Array.from(this.files);
+    const fileUploadCounter = document.querySelector('.file-upload-counter');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const fileUploadTrigger = document.querySelector('.file-upload-trigger');
+    
+    // 新しいファイルを現在のファイルリストに追加
+    currentFiles = [...currentFiles, ...newFiles];
+    
+    // ファイル数が多すぎる場合
+    if (currentFiles.length > maxFiles) {
+      alert(`ファイルは最大${maxFiles}つまで選択できます。`);
+      currentFiles = currentFiles.slice(0, maxFiles);
+    }
+    
+    // ファイルリストの表示を更新
+    updateFileDisplay();
+  });
+  
+  // ファイル表示の更新関数
+  function updateFileDisplay() {
+    const fileUploadCounter = document.querySelector('.file-upload-counter');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const fileUploadTrigger = document.querySelector('.file-upload-trigger');
+    
+    // カウンター更新
+    fileUploadCounter.textContent = `${currentFiles.length}/3 ファイル選択中`;
+    
+    // ファイル表示をクリア
+    fileNameDisplay.innerHTML = '';
+    
+    // 各ファイルの表示を追加
+    currentFiles.forEach((file, index) => {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      fileItem.dataset.index = index;
+      
+      // プレビュー要素の作成
+      const previewContainer = document.createElement('div');
+      previewContainer.className = 'file-preview-container';
+      
+      const isImage = file.type.startsWith('image/');
+      const isPDF = file.type === 'application/pdf';
+      
+      if (isImage) {
+        const preview = document.createElement('img');
+        preview.className = 'file-preview';
+        preview.file = file;
+        
+        const reader = new FileReader();
+        reader.onload = (function(aImg) { 
+          return function(e) { 
+            aImg.src = e.target.result; 
+          }; 
+        })(preview);
+        reader.readAsDataURL(file);
+        
+        previewContainer.appendChild(preview);
+      } else if (isPDF) {
+        const pdfIcon = document.createElement('div');
+        pdfIcon.className = 'file-preview pdf-icon';
+        pdfIcon.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 5h-3v5.5c0 1.38-1.12 2.5-2.5 2.5S10 13.88 10 12.5s1.12-2.5 2.5-2.5c.57 0 1.08.19 1.5.51V5h4v2zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z"/></svg>';
+        previewContainer.appendChild(pdfIcon);
+      } else {
+        const fileIcon = document.createElement('div');
+        fileIcon.className = 'file-preview file-icon';
+        fileIcon.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>';
+        previewContainer.appendChild(fileIcon);
+      }
+      
+      const fileInfo = document.createElement('div');
+      fileInfo.className = 'file-info';
+      
+      const fileName = document.createElement('span');
+      fileName.className = 'file-name';
+      fileName.textContent = file.name;
+      
+      const fileSize = document.createElement('span');
+      fileSize.className = 'file-size';
+      fileSize.textContent = formatFileSize(file.size);
+      
+      const removeButton = document.createElement('button');
+      removeButton.className = 'file-remove-button';
+      removeButton.innerHTML = '&times;';
+      removeButton.setAttribute('aria-label', 'ファイルを削除');
+      removeButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // ファイルを削除
+        currentFiles.splice(index, 1);
+        
+        // 表示を更新
+        updateFileDisplay();
+        
+        // input要素のファイルリストを更新
+        const dt = new DataTransfer();
+        currentFiles.forEach(file => dt.items.add(file));
+        document.getElementById('file-upload-input').files = dt.files;
+      });
+      
+      fileInfo.appendChild(fileName);
+      fileInfo.appendChild(fileSize);
+      
+      fileItem.appendChild(previewContainer);
+      fileItem.appendChild(fileInfo);
+      fileItem.appendChild(removeButton);
+      fileNameDisplay.appendChild(fileItem);
+    });
+    
+    // ファイル選択状態の更新
+    if (currentFiles.length > 0) {
+      fileUploadTrigger.classList.add('file-selected');
+    } else {
+      fileUploadTrigger.classList.remove('file-selected');
+    }
+
+    // hidden inputs にファイルを割り振る
+    ['file1', 'file2', 'file3'].forEach((fieldName, index) => {
+      const hiddenInput = document.getElementById(`hidden-${fieldName}`);
+      const dt = new DataTransfer();
+      if (currentFiles[index]) {
+        dt.items.add(currentFiles[index]);
+      }
+      hiddenInput.files = dt.files;
+    });
+  }
+  
+  // ファイルサイズのフォーマット関数
+  function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const ua = navigator.userAgent;
+    const platform = navigator.platform;
+    const screenSize = `${screen.width}x${screen.height}`;
+
+    document.getElementById('formrun-user-agent').value = ua;
+    document.getElementById('formrun-platform').value = platform;
+    document.getElementById('formrun-screen-size').value = screenSize;
+  });
+</script>
+
+{% schema %}
+{
+  "name": "TGTP Contact Form",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "contact_heading",
+      "default": "t:sections.contact-form.settings.title.default",
+      "label": "t:sections.contact-form.settings.title.label"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.heading_size.label",
+      "default": 28
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "タイトル"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "faq_title",
+          "label": "FAQ タイトル"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "faq_content",
+          "label": "FAQ 内容"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TGTP Contact Form"
+    }
+  ]
+}
+{% endschema %}

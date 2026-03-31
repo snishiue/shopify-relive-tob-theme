@@ -1,0 +1,287 @@
+{{ 'component-cart.css' | asset_url | stylesheet_tag }}
+{{ 'component-totals.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+
+{% comment %} 時間制御 {% endcomment %}
+{% comment %} メタフィールドがある場合に比較 {% endcomment %}
+{% assign before_sale = false %}
+{% assign disable_sale = false %}
+{% if shop.metafields.time.now %}
+  {% for cart_item in cart.items %}
+    {% comment %} 開始日時 {% endcomment %}
+    {% if cart_item.product.metafields.datetime.start %}
+      {% assign timenow = shop.metafields.time.now | date: '%s' %}
+      {% assign producttime_start = product.metafields.datetime.start | date: '%s' %}
+      {% if timenow < producttime_start %}
+        {% assign before_sale = true %}
+      {% endif %}
+    {% endif %}
+    {% comment %} 終了日時 {% endcomment %}
+    {% if cart_item.product.metafields.datetime.end %}
+      {% assign timenow = shop.metafields.time.now | date: '%s' %}
+      {% assign producttime = product.metafields.datetime.end | date: '%s' %}
+      {% if timenow >= producttime %}
+        {% assign disable_sale = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="gradient color-{{ section.settings.color_scheme }}{% if cart == empty %} is-empty{% endif %}"
+  id="main-cart-footer"
+  data-id="{{ section.id }}"
+>
+  <div class="page-width">
+    <div class="cart__footer isolate section-{{ section.id }}-padding">
+      {%- if settings.show_cart_note -%}
+        <cart-note class="cart__note field">
+          <label for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+          <textarea
+            class="text-area field__input"
+            name="note"
+            form="cart"
+            id="Cart-note"
+            placeholder="{{ 'sections.cart.note' | t }}"
+          >{{ cart.note }}</textarea>
+        </cart-note>
+      {%- endif -%}
+
+      <div class="cart__blocks">
+        {% for block in section.blocks %}
+          {%- case block.type -%}
+            {%- when '@app' -%}
+              {% render block %}
+            {%- when 'subtotal' -%}
+              <div class="js-contents" {{ block.shopify_attributes }}>
+                <div>
+                  {%- if cart.cart_level_discount_applications.size > 0 -%}
+                    <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                      {%- for discount in cart.cart_level_discount_applications -%}
+                        <li class="discounts__discount discounts__discount--position">
+                          {{- 'icon-discount.svg' | inline_asset_content -}}
+                          {{ discount.title | escape }}
+                          (-{{ discount.total_allocated_amount | money }})
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </div>
+
+                <div class="totals">
+                  <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>
+                  <p class="totals__total-value">{{ cart.total_price | money_with_currency }}</p>
+                </div>
+
+                <small class="tax-note caption-large rte">
+                  {%- if cart.duties_included and cart.taxes_included -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.duties_and_taxes_included_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.duties_and_taxes_included_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included == false and cart.taxes_included -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.taxes_included_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.taxes_included_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included and cart.taxes_included == false -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.duties_included_taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- elsif cart.duties_included == false and cart.taxes_included == false -%}
+                    {%- if shop.shipping_policy.body == blank -%}
+                      {{ 'sections.cart.taxes_at_checkout_shipping_at_checkout_without_policy' | t }}
+                    {%- else -%}
+                      {{
+                        'sections.cart.taxes_at_checkout_shipping_at_checkout_with_policy_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {%- endif -%}
+                  {%- endif -%}
+                </small>
+              </div>
+            {%- else -%}
+              {%- if exceed_quantity or short_quantity or bad_combination or bad_combination_checkout_with_normal_group or disable_sale or disable_sale_6days_ago or stop_sale or is_invalid_pickup_order or cant_purchase_twice or is_purchase == false -%}
+                <div class="cart__ctas">
+                  <div class="page-width">
+                    <button class="cart__checkout-button button" disabled>
+                      ご購入手続きに進めません
+                    </button>
+                  
+                  {% if is_purchase == false %}
+                  {% elsif disable_sale_6days_ago %}
+                  <div class="Cart__Validation Error">※購入不可の商品が含まれています</div>
+                  {% elsif disable_sale or before_sale %}
+                    <div class="Cart__Validation Error">※販売期間外の商品があります</div>
+                  {% elsif stop_sale %}
+                    <div class="Cart__Validation Error">※購入不可の商品が含まれています</div>
+                  {% elsif cant_purchase_twice %}
+                  {% elsif short_quantity %}
+                    <div class="Cart__Validation Error">※購入可能点数に満たない商品があります</div>
+                  {% elsif exceed_quantity %}
+                    <div class="Cart__Validation Error">※購入可能点数を超えている商品があります</div>
+                  {% elsif bad_combination or bad_combination_checkout_with_normal_group %}
+                    <div class="Cart__Validation Error">※同時購入できない商品がカートにあります。</div>
+                  {% elsif pickup_ticket_count > 1 or pickup_ticket_count_ok_only > 1%}
+                    <div class="Cart__Validation Error">※予約日時が複数選択されています。</div>
+                  {% elsif pickup_ticket_count == 0 and pickup_ticket_count_ok_only == 0 %}
+                    <div class="Cart__Validation Error">※予約日時が選択されていません。</div>
+                  {% elsif pickup_items_count == 0 %}
+                    <div class="Cart__Validation Error">※座席数の選択をしてください。</div>
+                  {% endif %}
+                  <style>
+                    .Cart__Validation.Error {
+                      color: #eb001b;
+                      font-size: .8em;
+                      margin-top: .5em;
+                    }
+                  </style>
+                  {% if is_ticket or is_ticket_prod %}
+                    <button class="MainButton"
+                      onclick="allCartRemoveAndBacktoTop(event, '/')"
+                      style="
+                      color: currentColor;
+                      background: #5e5e5e;
+                      color: white;
+                      text-decoration: none;
+                      border: 1px solid #7d7d7d;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      padding: 1.3em 1em;
+                      font-size: .8em;
+                      border-radius: 7px;
+                      cursor: pointer;
+                      max-width: 36rem;
+                      margin: 1em auto 0;
+                  "
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false" class="icon icon-remove" style="
+                        width: 1.4em;
+                        height: 1.4em;
+                        margin-right: 0.6em;
+                        vertical-align: middle;
+                    ">
+                      <path d="M14 3h-3.53a3.07 3.07 0 00-.6-1.65C9.44.82 8.8.5 8 .5s-1.44.32-1.87.85A3.06 3.06 0 005.53 3H2a.5.5 0 000 1h1.25v10c0 .28.22.5.5.5h8.5a.5.5 0 00.5-.5V4H14a.5.5 0 000-1zM6.91 1.98c.23-.29.58-.48 1.09-.48s.85.19 1.09.48c.2.24.3.6.36 1.02h-2.9c.05-.42.17-.78.36-1.02zm4.84 11.52h-7.5V4h7.5v9.5z" fill="currentColor"></path>
+                      <path d="M6.55 5.25a.5.5 0 00-.5.5v6a.5.5 0 001 0v-6a.5.5 0 00-.5-.5zM9.45 5.25a.5.5 0 00-.5.5v6a.5.5 0 001 0v-6a.5.5 0 00-.5-.5z" fill="currentColor"></path>
+                    </svg>
+                      カートを空にしてトップに戻る</a>
+                  {% endif %}
+                </div>
+                  {% comment %} 会場受付枠は正しく選んでいるが、会場受け取り商品が一つも入っていないときはその商品一覧へのリンクを出してあげる {% endcomment %}
+                  {% comment %} {% if pickup_ticket_url != blank and pickup_items_count == 0 and is_invalid_pickup_order%}
+                    <a href="{{ pickup_ticket_url }}" class="CartCheckout__Button MainButton">買い物を続ける</a>
+                  {% else %}
+                    <a class="CartCheckout__Button MainButton session__url" onclick="buttonClick()">
+                      買い物を続ける
+                    </a>
+                  {% endif %} {% endcomment %}
+              {% else %}
+
+                <div class="cart__ctas" {{ block.shopify_attributes }}>
+                  <button
+                    type="submit"
+                    id="checkout"
+                    class="cart__checkout-button button"
+                    name="checkout"
+                    {% if cart == empty %}
+                      disabled
+                    {% endif %}
+                    form="cart"
+                  >
+                    {{ 'sections.cart.checkout' | t }}
+                  </button>
+                </div>
+              {% endif %}
+
+              {%- if additional_checkout_buttons -%}
+                <div class="cart__dynamic-checkout-buttons additional-checkout-buttons">
+                  {{ content_for_additional_checkout_buttons }}
+                </div>
+              {%- endif -%}
+          {%- endcase -%}
+        {% endfor %}
+
+        <div id="cart-errors"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-cart-footer.name",
+  "class": "cart__footer-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "subtotal",
+      "name": "t:sections.main-cart-footer.blocks.subtotal.name",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.main-cart-footer.blocks.buttons.name",
+      "limit": 1
+    },
+    {
+      "type": "@app"
+    }
+  ]
+}
+{% endschema %}

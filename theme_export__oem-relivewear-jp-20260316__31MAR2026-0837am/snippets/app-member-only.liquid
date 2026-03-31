@@ -1,0 +1,37 @@
+<script>
+  {% comment %} アプリ判定用のリファラー 個別アーティスト用 {% endcomment %}
+  {%- assign app_members_only_valid_text_artist_1 = settings.app_members_only_valid_text_artist_1 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_2 = settings.app_members_only_valid_text_artist_2 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_3 = settings.app_members_only_valid_text_artist_3 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_4 = settings.app_members_only_valid_text_artist_4 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_5 = settings.app_members_only_valid_text_artist_5 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_6 = settings.app_members_only_valid_text_artist_6 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_7 = settings.app_members_only_valid_text_artist_7 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_8 = settings.app_members_only_valid_text_artist_8 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_9 = settings.app_members_only_valid_text_artist_9 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_10 = settings.app_members_only_valid_text_artist_10 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_11 = settings.app_members_only_valid_text_artist_11 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_12 = settings.app_members_only_valid_text_artist_12 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_13 = settings.app_members_only_valid_text_artist_13 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_14 = settings.app_members_only_valid_text_artist_14 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_15 = settings.app_members_only_valid_text_artist_15 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_16 = settings.app_members_only_valid_text_artist_16 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_17 = settings.app_members_only_valid_text_artist_17 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_18 = settings.app_members_only_valid_text_artist_18 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_19 = settings.app_members_only_valid_text_artist_19 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' | append: "," -%}
+  {%- assign app_members_only_valid_text_artist_20 = settings.app_members_only_valid_text_artist_20 | default: 'DUMMYDUMMYDUMMYDUMMYDUMMY' -%}
+  {% comment %} アプリ判定用のリファラー 個別アーティスト用 配列{% endcomment %}
+  {%- assign array_app_members_only_valid_text_artist = array_app_members_only_valid_text_artist | 
+    append: app_members_only_valid_text_artist_1 | append: app_members_only_valid_text_artist_2 | append: app_members_only_valid_text_artist_3 | 
+    append: app_members_only_valid_text_artist_4 | append: app_members_only_valid_text_artist_5 | append: app_members_only_valid_text_artist_6 | append: app_members_only_valid_text_artist_7 | 
+    append: app_members_only_valid_text_artist_8 | append: app_members_only_valid_text_artist_9 | append: app_members_only_valid_text_artist_10 | 
+    append: app_members_only_valid_text_artist_11 | append: app_members_only_valid_text_artist_12 | append: app_members_only_valid_text_artist_13 | 
+    append: app_members_only_valid_text_artist_14 | append: app_members_only_valid_text_artist_15 | append: app_members_only_valid_text_artist_16 |
+    append: app_members_only_valid_text_artist_17 | append: app_members_only_valid_text_artist_18 | append: app_members_only_valid_text_artist_19 | 
+    append: app_members_only_valid_text_artist_20 | split: "," -%}
+
+  {% comment %} referrer {% endcomment %}
+  {% for artist_referrer in array_app_members_only_valid_text_artist %}
+    tgApp.isMemberReferrer(['{{ artist_referrer }}'], 'referrerAppArtist{{request.host | handleize}}{{forloop.index0}}', 'referrerAppValidDateArtist{{request.host | handleize}}{{forloop.index0}}')
+  {% endfor %}
+</script>
